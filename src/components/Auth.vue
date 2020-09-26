@@ -10,13 +10,9 @@
                 <form action="">
                     <div class="form-group">
                         <div class="form-grop-blocks">
-                            <div class="form-group-block">
-                                <label for="auth_login">Логин</label>
-                                <input type="text" name="auth_login" placeholder="Введите логин">
-                            </div>
-                            <div class="form-group-block">
-                                <label for="auth_pass">Пароль</label>
-                                <input type="text" name="auth_pass" placeholder="Введите пароль">
+                            <div class="form-group-block" v-for="(item, index) in fields" :key="index">
+                                <label :for="item.label">{{item.label}}</label>
+                                <input type="text" :name="item.label" :placeholder="item.placeholder">
                             </div>
                         </div>
                         <router-link :to="'welcome'">
@@ -32,10 +28,29 @@
 </template>
 
 <script>
+import MaskedInput from './MaskedInput'
 export default {
     data() {
         return {
+            fields:[
+                {
+                    isRequired:true,
+                    label:"Логин",
+                    name:"auth_login",
+                    placeholder:"Введите логин",
+                },
+                {
+                    isRequired:true,
+                    label:"Пароль",
+                    name:"auth_pass",
+                    placeholder:"Введите пароль",
+                },
+                
+            ]
         }
     },
+    components: {
+        MaskedInput
+    }
 }
 </script>

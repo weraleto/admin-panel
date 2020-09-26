@@ -1,7 +1,7 @@
 <template>
     <div>
 
-    <transition name="fade" mode="out-in" @leave="beforeLeave" @before-enter="enter">
+    <transition name="fade" mode="out-in" >
         <main
             v-if="!showInfo"
             key="base"
@@ -11,7 +11,6 @@
                     <header class="client-base-header">
                         <h1 class="page-header">
                             Список товаров
-                            <!-- {{searchFilter}} -->
                         </h1>
                     </header>
 
@@ -156,20 +155,6 @@ export default {
         }
     },
     methods: {
-        enter() {
-            if(document.documentElement.clientWidth>780){
-                var moveRight = document.querySelector('.move-data-right');
-                moveRight.classList.toggle('move-data-right-to')
-            }
-        },
-        beforeLeave(){
-            if(document.documentElement.clientWidth>780){
-                var moveRight = document.querySelector('.move-data-right');
-                var moveBtm = document.querySelector('.move-data-btm');
-                moveRight.classList.toggle('move-data-right-to')
-                moveBtm.classList.toggle('move-data-btm-to')
-            }
-        },
         sortType(){
             var optgroup=event.target.closest('.sort-type').querySelector('.sort-type-optgroup');
             optgroup.classList.toggle('hide')

@@ -19,12 +19,12 @@
                                     :placeholder="item.placeholder"
                                 ></masked-input>
                             </div>
-                            <!-- <div class="form-group-block agreement">
+                            <div v-if="!isReg" class="form-group-block agreement">
                                 <input type="checkbox" name="step-1_agree" id="step-1_agree">
                                 <label class="label-checkbox" for="step-1_agree">
-                                    Я согласен(на) с условиями <span>договора на оказание услуг.</span>
+                                    Я согласен(на) с условиями <span> Политики конфиденциальности. </span>
                                 </label>
-                            </div> -->
+                            </div>
                         </div>
                         
                         <div class="btn-group">
@@ -101,6 +101,9 @@ export default {
         pageName(){
             let pageName = this.$route.name == 'settings' ? 'Настройки аккаунта' : 'Регистрация'
             return pageName;
+        },
+        isReg(){
+            return this.$route.name == 'settings';
         }
     }
 }

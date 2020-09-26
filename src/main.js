@@ -22,7 +22,7 @@ const router = new VueRouter({
   mode: 'history',
   base: __dirname,
   routes: [
-    // {path:'/', name:'auth', component: Auth},
+    {path:'/auth', name:'auth', component: Auth},
     {path:'/add', name:'add', component: AddItem},
     {path:'/reg', name:'reg', component: Settings},
     {path:'/balance', name:'balance', component: Balance},
