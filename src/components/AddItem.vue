@@ -8,6 +8,18 @@
             <!-- auth form -->
             <div class="form-content step--1">
                 <form action="">
+                    <div class="upload-file__wrapper ">
+                        <div class="upload-file__item bg-white">
+                            <img class="upload-file__uploaded" :src="image" alt="" srcset="">
+                            <div class="upload_icon__wrapper" v-if="image.length<1" @click="initFileUpload">
+                                <img  
+                                    class="upload_icon" 
+                                    src="../../public/svg/plus-circle-solid.svg" alt="" srcset="">
+                            </div>
+                        </div>
+                        <input ref="inputField" style="display:none" type="file" accept=".png" @change="handleImage">
+                        <button @click.prevent="initFileUpload" class="btn btn-active btn-upload">Загрузить изображение</button>
+                    </div>
                     <div class="form-group">
                         <div class="form-grop-blocks">
                             
@@ -53,7 +65,7 @@ import MaskedInput from './MaskedInput'
 export default {
     data() {
         return {
-            
+            image: '',
             fields:[
                 {
                     isRequired:true,
@@ -118,8 +130,23 @@ export default {
     components: {
         MaskedInput
     },
-    computed: {
-        
+    methods: {
+        handleImage(e){
+            const selectedImage = e.target.files[0];
+            this.createBaseImage(selectedImage);
+            
+        },
+        createBaseImage(fileObj){
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                this.image = e.target.result;
+            }
+            reader.readAsDataURL(fileObj);
+        },
+        initFileUpload(){
+            this.$refs.inputField.click()
+        }
     }
 }
 </script>
