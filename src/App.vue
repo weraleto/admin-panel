@@ -14,7 +14,7 @@
             <nav class="nav-panel">
                 <div class="mobile-only nav-panel-logo">
                   <router-link to="/">
-                    <img src="../public/svg/mobile-nav-logo.svg" alt="menu_icon">
+                    <!-- <img src="../public/svg/mobile-nav-logo.svg" alt="menu_icon"> -->
                   </router-link>
                 </div>
                 <div class="close-btn"
@@ -25,9 +25,9 @@
                 </div>
                 
               <div class="nav-panel-inner">
-                <router-link class="nav-panel-item" :to="{name:'quiz'}">Добавить клиента</router-link>
-                <router-link class="nav-panel-item" :to="{name:'client-base'}">Поиск по базе</router-link>
-                <router-link class="nav-panel-item" :to="{name:'auth'}">Выйти</router-link>
+                <router-link v-for="(link, index) in navLinks" 
+                      :key="index"
+                      class="nav-panel-item" :to="{name:link.alias}">{{link.name}}</router-link>
               </div>
             </nav>
           </div>
@@ -36,11 +36,11 @@
         <aside class="sidebar">
             <div class="site-logo">
               <router-link to="/">
-                <img src="../public/svg/Group 18.svg" alt="logo">
+                <!-- <img src="../public/svg/Group 18.svg" alt="logo"> -->
               </router-link>
             </div>
             <footer class="sidebar-footer">
-                FACE FIT <span>© 2020</span>
+                <!-- FACE FIT <span>© 2020</span> -->
             </footer>
         </aside>
         <div class="mobile-content">
@@ -48,7 +48,7 @@
               <router-view></router-view>
           </transition>
         <footer class="footer-mobile">
-          FACE FIT © 2020
+          <!-- FACE FIT © 2020 -->
         </footer>
 
         </div>
@@ -72,7 +72,15 @@ export default {
   data () {
     return {
       auth: false,
-      showNav: false
+      showNav: false,
+      navLinks: [
+        {name: 'Все товары', alias: 'client-base'},
+        {name: 'Добавить товар', alias: 'add'},
+        {name: 'Баланс', alias: 'balance'},
+        {name: 'Настройки', alias: 'settings'},
+        {name: 'Помощь', alias: ''},
+        {name: 'Выйти', alias: 'auth'},
+      ]
     }
   },
   methods: {

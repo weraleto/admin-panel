@@ -1,0 +1,219 @@
+@import 'colors', 'fonts', 'mixins'
+
+@media screen and ( max-width: 780px )
+    .mobile-only
+        display: block
+    .desktop-only
+        display: none
+
+    .main-wrapper
+        display: block
+        overflow-y: scroll
+        height: 100%
+        
+    .mobile-content
+        display: flex
+        flex-direction: column
+        justify-content: space-between
+        height: 100%
+        min-height: 100vh
+    .site-logo
+        width: 52.2px
+        height: 39.15px
+        position: relative
+        top: 19px
+        left: 15px
+        img 
+            height: 100%
+            width: 100%
+    .sidebar, .main-content
+        height: auto
+
+    .sidebar
+        max-height: 56px
+        position: fixed 
+        top: 0
+        left: 0
+        right: 0
+        bottom: 56px
+        padding-top: 0
+        padding-left: 0
+        z-index: 1000
+        overflow: visible
+    .sidebar-footer
+        display: none
+
+    .main-content
+        text-align: center
+        margin-top: 56px
+        padding-top: 32px
+        padding-bottom: 60px
+        flex-basis: auto 
+        flex-grow: 1
+        &:not(.table-content)
+            padding-left: 4.69%
+            padding-right: 4.69%
+
+    .hamburger-icon, .close-btn
+        top: 22.3px
+        right: 15.7px
+        z-index: 1001
+        width: auto 
+        height: auto 
+        text-align: right
+
+    .nav-panel
+        left: 0
+        min-width: 100%
+        &-outer
+            display: none
+        &-inner
+            transform: translateY(0)
+        &-item
+            text-align: center
+        &-logo
+            position: fixed
+            top: 22.3px
+            left: 15px
+            width: 52.2px
+            height: 39.15px
+
+    .client-base-list
+        display: block
+        &>*:not(.client-base-table)
+            padding-left: 4.69%
+            padding-right: 4.69%
+    .btn, .remark
+        width: 100%
+        max-width: 100%
+    label
+        text-align: left
+
+    .page-header 
+        @include FontSemiheader
+
+    .quiz-welcome, .quiz-finish
+        margin-top: 0
+        &-outer 
+            display: flex
+            flex-direction: column
+        .form-subheader 
+            margin-bottom: 33px
+        .btn-group
+            margin-top: 64px
+        &-text
+            max-width: 100%
+            min-height: auto
+    .quiz-finish
+        margin-top: 35px
+        margin-bottom: 64px
+        .form-subheader 
+            margin-bottom: 18px
+            @include FontBlack16
+
+    .btn-group
+        display: flex
+        flex-wrap: wrap
+        flex-direction: column
+
+        margin-bottom: 64px
+        .page-link:not(:last-child)
+            margin-right: 0
+            margin-bottom: 16px
+        .btn:not(:last-child)
+            margin-right: 0
+            margin-bottom: 16px  
+
+    .footer-mobile
+        background-color: $white
+        display: flex
+        @include FontGray14
+        min-height: 72px
+        justify-content: center
+        align-items: center
+        flex-basis: auto 
+        flex-grow: 0
+
+    .step--1, .step--2, .client-base
+        display: block
+        &-outer 
+            display: block
+    .step--2, .client-base
+        .form-subheader:not(.form-subheader-cb)
+            margin-bottom: 18px
+        .form-subheader
+            @include FontBlack16
+            text-align: left
+    .form-group-section-outer
+        margin-bottom: 32px
+
+    .step--1 .form-grop-blocks, .form-group-section
+        grid-template-columns: 1fr
+        grid-column-gap: 0
+    .step--1,.step--3,.client-base-block
+        margin-top: 35px
+    .step--2
+        margin-top: 38px
+        .btn-group
+            margin-top: 64px
+    .step--3 .text-comment
+        min-width: 100%
+    .form-group-block
+        grid-column: 1/2
+
+    table 
+        display: none
+    .client-base-search
+        margin: 35px 0 32px
+    .client-base-table
+        &-item
+            text-align: left
+            padding: 34px 4.69%
+            position: relative
+            &:nth-child(2n-1)
+                background-color: $beige
+        &-num
+            position: absolute
+            top: 34px
+            right: 4.69%
+            @include BookGray14
+            color: $black
+        &-label
+            @include BookGray14
+            margin-bottom: 10px
+        &-content, &-quest
+            @include FontBlackReg16
+        &-content
+            max-width: 76.25%
+        &-el:not(:last-child)
+            margin-bottom: 24px
+        &-el.btns
+            margin-bottom: 16px
+        &-answer
+            display: flex
+            justify-content: space-between
+            .btn 
+                max-width: 46.74%
+
+    .client-base-pagination
+        display: none
+    .client-base-sign
+        margin-top: 30px
+        p, ul, li, textarea
+            max-width: 100%
+            text-align: left
+    .agreement .form-subheader
+        text-align: left
+        @include FontBlack16
+        margin-bottom: 34px
+    .client-base-navigation .btn-group.btn-step--3
+        max-width: 100%
+        margin-bottom: 64px
+    .form-subheader span
+        display: inline
+
+    .auth-form
+        max-width: 100%
+        margin-top: 33px
+        .form-subheader
+            margin-bottom: 18px
