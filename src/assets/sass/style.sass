@@ -232,6 +232,10 @@ input[type=checkbox]:checked + .label-checkbox::after
         bottom: 0
         width: auto
         height: 100%
+    &__actions
+        margin-left: 30px
+        display: flex
+        flex-direction: column
     
 .upload_icon 
     position: absolute
@@ -272,7 +276,6 @@ input[type=checkbox]:checked + .label-checkbox::after
             opacity: 0
             z-index: -1
     &-upload 
-        margin-left: 30px
         padding-left: 10px
         padding-right: 10px
     &:focus
@@ -412,6 +415,7 @@ tbody
     grid-template-columns: 1fr 64px
     .remark
         margin-top: 35px
+        max-width: 100%
 .step--1
     &-outer
         display: grid

@@ -17,8 +17,15 @@
                                     src="../../public/svg/plus-circle-solid.svg" alt="" srcset="">
                             </div>
                         </div>
-                        <input ref="inputField" style="display:none" type="file" accept=".png" @change="handleImage">
-                        <button @click.prevent="initFileUpload" class="btn btn-active btn-upload">Загрузить изображение</button>
+
+                        <div class="upload-file__actions">
+
+                            <input ref="inputField" style="display:none" type="file" accept=".png" @change="handleImage">
+                            <button @click.prevent="initFileUpload" class="btn btn-active btn-upload">Загрузить изображение</button>
+                            <div class="remark">
+                                * Максимальный размер фото - 500 kb. Формат .png
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <div class="form-grop-blocks">
