@@ -9,24 +9,43 @@
             <div class="form-content step--1">
                 <form action="">
                     <div class="upload-file__wrapper ">
-                        <div class="upload-file__item bg-white">
-                            <img class="upload-file__uploaded" :src="image" alt="" srcset="">
-                            <div class="upload_icon__wrapper" v-if="image.length<1" @click="initFileUpload">
+                        <draggable v-model="images" class="upload-file__wrapper">
+
+
+                            <div class="upload-file__item bg-white" v-for="(item, index) in images" :key="index">
+                                <div class="upload-file__del-icon" @click="deleteImage(item,index)">
+                                    <img :src="require('../../public/svg/times-circle-solid.svg')" alt="Удалить изображение">
+                                </div>
+                                <!-- {{item.baseData}} -->
+                                <img class="upload-file__uploaded" :src="item.base" alt="Изображение">
+                                <!-- <div class="upload_icon__wrapper" v-if="image.length<1" @click="initFileUpload">
+                                    <img  
+                                        class="upload_icon" 
+                                        src="../../public/svg/plus-circle-solid.svg" alt="">
+                                </div> -->
+                            </div>
+                        </draggable>
+                        
+                        <div class="upload-file__item bg-white"  v-if="images.length<=4" @click="initFileUpload">
+                            <!-- <img class="upload-file__uploaded" :src="item.baseData" alt=""> -->
+                            <div class="upload_icon__wrapper">
                                 <img  
                                     class="upload_icon" 
-                                    src="../../public/svg/plus-circle-solid.svg" alt="" srcset="">
+                                    src="../../public/svg/plus-circle-solid.svg" alt="">
                             </div>
                         </div>
 
-                        <div class="upload-file__actions">
+                    </div>
 
-                            <input ref="inputField" style="display:none" type="file" accept=".png" @change="handleImage">
-                            <button @click.prevent="initFileUpload" class="btn btn-active btn-upload">Загрузить изображение</button>
-                            <div class="remark">
-                                * Максимальный размер фото - 500 kb. Формат .png
-                            </div>
+                    <div class="upload-file__actions">
+
+                        <input ref="inputField" style="display:none" type="file" accept=".png" @change="handleImage" multiple>
+                        <button @click.prevent="initFileUpload" class="btn btn-active btn-upload">Загрузить изображения ( {{ this.images.length }} / 5 )</button>
+                        <div class="remark">
+                            * Максимальный размер фото - 500 kb. Формат .png
                         </div>
                     </div>
+
                     <div class="form-group">
                         <div class="form-grop-blocks">
                             
@@ -69,10 +88,14 @@
 
 <script>
 import MaskedInput from './MaskedInput'
+import draggable from 'vuedraggable'
 export default {
     data() {
         return {
+            maxFileSize: 500000,
             image: '',
+            images: [],
+            files: [],
             fields:[
                 {
                     isRequired:true,
@@ -135,24 +158,48 @@ export default {
         }
     },
     components: {
-        MaskedInput
+        MaskedInput,
+        draggable
     },
     methods: {
-        handleImage(e){
-            const selectedImage = e.target.files[0];
-            this.createBaseImage(selectedImage);
+        // handleImage(e){
+        //     const selectedImage = e.target.files[0];
+        //     this.createBaseImage(selectedImage);
             
-        },
-        createBaseImage(fileObj){
+        // },
+        createBaseImage(fileObj, i){
+            
             const reader = new FileReader();
-
             reader.onload = (e) => {
-                this.image = e.target.result;
+                this.images.push({ base: e.target.result, el: i});
+                
             }
             reader.readAsDataURL(fileObj);
+            
+        },
+        handleImage(e){
+            let uploadedFiles = this.$refs.inputField.files;
+
+            Object.keys(uploadedFiles).forEach(el=>{
+
+                if(+el < 5 && uploadedFiles[el].size <= this.maxFileSize ) {
+
+                    this.files.push(uploadedFiles[el])
+                    this.createBaseImage(uploadedFiles[el], el)
+                }
+            })
+            
         },
         initFileUpload(){
             this.$refs.inputField.click()
+        },
+        deleteImage(image, i) {
+            console.log(this.files)
+            this.images.splice(i,1);
+            delete this.files[image.el]
+            console.log(this.files)
+
+
         }
     }
 }

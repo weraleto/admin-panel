@@ -91,10 +91,15 @@
 
     .upload-file
         &__wrapper 
-            flex-direction: column
+            justify-content: space-evenly
         &__actions
-            margin-left: 0px
-            flex-direction: column-reverse
+            padding: 0
+            max-width: unset
+            // flex-direction: column-reverse
+        &__item 
+            max-width: 48%
+            &:nth-child(2n)
+                margin-right: 0
     .btn-upload 
         margin-top: 30px
 
