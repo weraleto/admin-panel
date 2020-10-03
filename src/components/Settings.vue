@@ -93,6 +93,7 @@
                                     <input
                                         placeholder="Сайт"
                                         id="auth_website"
+                                        type="text"
                                         v-model="form.shop.website_url"
                                     >
                             </div>
@@ -151,11 +152,19 @@ export default {
                     this.$route.push('welcome');
                 })
                 .catch(
-                    err=>console.log(err)
+                    err=>{
+                        this.notification(err.response.data.type)
+                    }
                 );
         },
         handle(){
             console.log(formValid)
+        },
+        notification(msg){
+            this.$notify.error({
+                title: 'Ошибка',
+                message: msg
+            })
         }
     },
     computed: {

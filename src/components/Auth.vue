@@ -7,12 +7,36 @@
             <!-- auth form -->
             <div class="form-content auth-form">
                 <h3 class="form-subheader">Войдите <span>в свой кабинет</span></h3>
-                <form action="">
+                <ValidationObserver v-slot="{ invalid }" tag="form">
+
                     <div class="form-group">
                         <div class="form-grop-blocks">
-                            <div class="form-group-block" v-for="(item, index) in fields" :key="index">
-                                <label :for="item.label">{{item.label}}</label>
-                                <input type="text" :name="item.label" :placeholder="item.placeholder">
+                            <ValidationProvider tag="div" class="form-group-block" :rules="{ regex: /^([a-z][a-z0-9]{5,9})$/, required: true }" v-slot="{classes}">
+                                <label for="auth_login">Логин </label>
+                                    <input
+                                        placeholder="Введите логин"
+                                        v-model="form.username"
+                                        id="auth_login"
+                                        :class="classes"
+                                        type="text"
+                                    >
+                            </ValidationProvider>
+                            
+                            <div class="form-group-block" >
+                                <label for="auth_pass">Пароль </label>
+                                <ValidationProvider name="password" class="input" :rules="{ regex: /^(?=.*?[A-Z])[a-zA-Z0-9]{6,}$/, required: true}"
+                                     v-slot="{classes}"
+                                >
+                                    <input
+                                        placeholder="Введите пароль"
+                                        id="auth_pass"
+                                        type="text"
+                                        autocomplete="off"
+                                        :class="classes"
+                                        v-model="form.password"
+                                    >
+
+                                </ValidationProvider>
                             </div>
                         </div>
                         <div class="remark">
@@ -22,11 +46,11 @@
                             </div>
                         <div class="btn-group">
                             
-                            <router-link :to="'client-base'">
+                            <!-- <router-link :to="'client-base'"> -->
                                 
-                                <button class="btn btn-active"
+                                <button :disabled="invalid" class="btn btn-active"
                                 >Войти</button>
-                            </router-link>
+                            <!-- </router-link> -->
                             <router-link :to="'reg'">
                                 
                                 <button class="btn btn-active"
@@ -35,7 +59,7 @@
                         </div>
                         
                     </div>
-                </form>
+                </ValidationObserver>
             </div>
             <!-- end auth form -->
         </main>
@@ -46,6 +70,10 @@ import MaskedInput from './MaskedInput'
 export default {
     data() {
         return {
+            form: {
+                username: '',
+                password: ''
+            },
             fields:[
                 {
                     isRequired:true,

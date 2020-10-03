@@ -39,6 +39,15 @@ Vue.use(axiosVue, {
   }
 })
 
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+import {Notification} from 'element-ui'
+
+Vue.use(ElementUI);
+Vue.component(Notification)
+
+
+
 
 import Auth from './components/Auth'
 import AddItem from './components/AddItem'
