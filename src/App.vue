@@ -78,7 +78,7 @@ export default {
         {name: 'Добавить товар', alias: 'add'},
         {name: 'Баланс', alias: 'balance'},
         {name: 'Настройки', alias: 'settings'},
-        {name: 'Помощь', alias: ''},
+        // {name: 'Помощь', alias: ''},
         {name: 'Выйти', alias: 'auth'},
       ]
     }

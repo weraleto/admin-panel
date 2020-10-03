@@ -2,12 +2,42 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
 
-import vSelect from 'vue-select'
+import axiosVue from 'axios-vue'
 
+import vSelect from 'vue-select'
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import * as rules from 'vee-validate/dist/rules';
+
+Object.keys(rules).forEach(rule => {
+  extend(rule, rules[rule]);
+});
+
+import { configure } from 'vee-validate';
+configure({
+  classes: {
+    valid: 'is-valid',
+    invalid: 'is-invalid'
+  }
+})
+
+extend('password', {
+  params: ['target'],
+  validate(value, { target }) {
+    return value === target;
+  },
+  // message: 'Введенные пароли не совпадают!'
+});
+
+Vue.component('ValidationObserver', ValidationObserver);
+Vue.component('ValidationProvider', ValidationProvider);
 Vue.component('v-select', vSelect)
 
-
 Vue.use(VueRouter)
+Vue.use(axiosVue, {
+  globalDefaults: {
+    baseURL: 'http://89.208.87.121:4000/'
+  }
+})
 
 
 import Auth from './components/Auth'
@@ -17,6 +47,8 @@ import Settings from './components/Settings'
 import Quiz from './components/Quiz'
 import CliBase from './components/CliBase'
 import CliInfo from './components/CliInfo'
+import Welcome from './components/Welcome'
+
 
 const router = new VueRouter({
   mode: 'history',
@@ -28,7 +60,9 @@ const router = new VueRouter({
     {path:'/balance', name:'balance', component: Balance},
     {path:'/settings', name:'settings', component: Settings},
     {path:'/quiz', name:'quiz', component: Quiz},
-    {path:'/', name:'client-base', component: CliBase},
+    {path:'/base', name:'client-base', component: CliBase},
+    {path:'/welcome', name:'welcome', component: Welcome},
+
     // {path:'/client/:id', name:'client-info', component: CliInfo},
   ],
   scrollBehavior (to, from, savedPosition) {

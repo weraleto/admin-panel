@@ -15,11 +15,25 @@
                                 <input type="text" :name="item.label" :placeholder="item.placeholder">
                             </div>
                         </div>
-                        <router-link :to="'welcome'">
+                        <div class="remark">
+                                <router-link to="#">
+                                    Забыли пароль?
+                                 </router-link>
+                            </div>
+                        <div class="btn-group">
                             
-                            <button class="btn btn-active"
-                            >Войти</button>
-                        </router-link>
+                            <router-link :to="'client-base'">
+                                
+                                <button class="btn btn-active"
+                                >Войти</button>
+                            </router-link>
+                            <router-link :to="'reg'">
+                                
+                                <button class="btn btn-active"
+                                >Регистрация</button>
+                            </router-link>
+                        </div>
+                        
                     </div>
                 </form>
             </div>

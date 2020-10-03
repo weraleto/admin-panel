@@ -7,38 +7,117 @@
             </header>
             <!-- auth form -->
             <div class="form-content step--1">
-                <form action="">
+                <ValidationObserver v-slot="{ invalid }" tag="form">
+                    
+                <!-- <form @submit.prevent="onSubmit"> -->
                     <div class="form-group">
                         <div class="form-grop-blocks">
-                            
-                            <div class="form-group-block" v-for="(item, index) in fields" :key="index">
-                                <masked-input
-                                    :isRequired="item.isRequired"
-                                    :label="item.label"
-                                    :name="item.name"
-                                    :placeholder="item.placeholder"
-                                ></masked-input>
+
+                            <!-- <div class="form-group-block" > -->
+                            <ValidationProvider tag="div" class="form-group-block" :rules="{ regex: /^([a-z][a-z0-9]{5,9})$/, required: true }" v-slot="{classes}">
+                                <label for="auth_login">Логин <span>*</span> </label>
+                                    <input
+                                        placeholder="Введите логин"
+                                        v-model="form.username"
+                                        id="auth_login"
+                                        :class="classes"
+                                        type="text"
+                                    >
+                            </ValidationProvider>
+                            <!-- </div> -->
+                            <div class="form-group-block" >
+                                <label for="auth_email">Email <span>*</span> </label>
+                                <ValidationProvider class="input" :rules="{ regex: /^.+@.+\.+./, required: true }"
+                                     v-slot="{classes}"
+                                >
+                                    <input
+                                        placeholder="Введите Email"
+                                        v-model="form.email_address"
+                                        id="auth_email"
+                                        :class="classes"
+                                        type="email"
+                                    >
+
+                                </ValidationProvider>
                             </div>
-                            <div v-if="!isReg" class="form-group-block agreement">
-                                <input type="checkbox" name="step-1_agree" id="step-1_agree">
+                            <div class="form-group-block" >
+                                <label for="auth_pass">Пароль <span>*</span> </label>
+                                <ValidationProvider name="password" class="input" :rules="{ regex: /^(?=.*?[A-Z])[a-zA-Z0-9]{6,}$/, required: true}"
+                                     v-slot="{classes}"
+                                >
+                                    <input
+                                        placeholder="Введите пароль"
+                                        id="auth_pass"
+                                        type="text"
+                                        autocomplete="off"
+                                        :class="classes"
+                                        v-model="form.password"
+                                    >
+
+                                </ValidationProvider>
+                            </div>
+                            <div class="form-group-block" >
+                                <label for="auth_pass_2">Подтверждение пароля <span>*</span> </label>
+                                <ValidationProvider class="input" :rules="{required: true, password: '@password'  }"
+                                     v-slot="{classes}"
+                                >
+                                    <input
+                                        placeholder="Введите пароль"
+                                        id="auth_pass_2"
+                                        :class="classes"
+                                        autocomplete="off"
+                                        type="text"
+                                        v-model="confirmPassword"
+                                    >
+
+                                </ValidationProvider>
+                            </div>
+                            <div class="form-group-block" >
+                                <label for="auth_shop">Название магазина <span>*</span> </label>
+                                <ValidationProvider class="input" :rules="{ regex: /^.{1,20}$/, required: true}"
+                                     v-slot="{classes}"
+                                >
+
+                                    <input
+                                        placeholder="Название магазина"
+                                        id="auth_shop"
+                                        :class="classes"
+                                        type="text"
+                                        v-model="form.shop.name"
+                                    >
+
+                                </ValidationProvider>
+                            </div>
+                            <div class="form-group-block" >
+                                <label for="auth_website">Сайт </label>
+                                    <input
+                                        placeholder="Сайт"
+                                        id="auth_website"
+                                        v-model="form.shop.website_url"
+                                    >
+                            </div>
+                            <!-- <div v-if="!isReg" class="form-group-block agreement"> -->
+                                <ValidationProvider v-if="!isReg" class="form-group-block agreement" :rules="{required:{ allowFalse: false }}">
+                                <input v-model="confirmPolicy" type="checkbox" name="step-1_agree" id="step-1_agree" >
                                 <label class="label-checkbox" for="step-1_agree">
                                     Я согласен(на) с условиями <span> Политики конфиденциальности. </span>
                                 </label>
-                            </div>
+                                </ValidationProvider>
+                            <!-- </div> -->
                         </div>
                         
                         <div class="btn-group">
                             <button
-                             class="btn btn-active">Сохранить</button>
-                            <!-- <router-link :to="{name:'home'}">
-                                <button class="btn btn-light">Назад</button>
-                            </router-link> -->
+                            @click.prevent="sendForm"
+                            :disabled="invalid"
+                             class="btn btn-active">{{submitName}}</button>
                         </div>
                         <div class="remark">
                             * Вся предоставленная информация конфиденциальна <span>и не будет передана третьим лицам.</span>
                         </div>
                     </div>
-                </form>
+                <!-- </form> -->
+                </ValidationObserver>
             </div>
             <!-- end auth form -->
         </div>
@@ -47,60 +126,45 @@
 </template>
 
 <script>
-import MaskedInput from './MaskedInput'
+
 export default {
     data() {
         return {
-            fields:[
-                {
-                    isRequired:true,
-                    label:"Логин",
-                    name:"auth_login",
-                    placeholder:"Введите логин",
+            confirmPassword: '',
+            confirmPolicy: false,
+            form: {
+                email_address:'',
+                password: '',
+                shop: {
+                    name: '',
+                    website_url: null
                 },
-                {
-                    isRequired:true,
-                    label:"Email",
-                    name:"auth_email",
-                    placeholder:"Введите Email",
-                },
-                {
-                    isRequired:true,
-                    label:"Пароль",
-                    name:"auth_pass",
-                    placeholder:"Введите пароль",
-                },
-                {
-                    isRequired:true,
-                    label:'Подтверждение пароля',
-                    name:"auth_pass_2",
-                    placeholder:"Введите пароль",
-                },
-                {
-                    isRequired:true,
-                    label:'Название магазина',
-                    name:"auth_shop",
-                    placeholder:"Название магазина",
-                },
-                {
-                    isRequired:false,
-                    label:'Сайт',
-                    name:"auth_website",
-                    placeholder:"Введите ссылку на сайт",
-                }
-            ]
+                username: ''
+            },
+
         }
     },
-    components: {
-        MaskedInput
+    methods: {
+        async sendForm(){
+            await this.$http.post('/api/register', this.form)
+                .then(response => {
+                    this.$route.push('welcome');
+                })
+                .catch(
+                    err=>console.log(err)
+                );
+        },
+        handle(){
+            console.log(formValid)
+        }
     },
-    // mounted(){
-    //     console.log(this.$route.name)
-    // },
     computed: {
         pageName(){
             let pageName = this.$route.name == 'settings' ? 'Настройки аккаунта' : 'Регистрация'
             return pageName;
+        },
+        submitName(){
+            return this.$route.name == 'settings' ? 'Сохранить' : 'Регистрация'
         },
         isReg(){
             return this.$route.name == 'settings';

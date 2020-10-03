@@ -92,7 +92,7 @@ import draggable from 'vuedraggable'
 export default {
     data() {
         return {
-            maxFileSize: 500000,
+            maxFileSize: 5000000,
             image: '',
             images: [],
             files: [],
@@ -172,7 +172,7 @@ export default {
             const reader = new FileReader();
             reader.onload = (e) => {
                 this.images.push({ base: e.target.result, el: i});
-                
+                console.log(e.target.result)
             }
             reader.readAsDataURL(fileObj);
             
@@ -186,6 +186,7 @@ export default {
 
                     this.files.push(uploadedFiles[el])
                     this.createBaseImage(uploadedFiles[el], el)
+
                 }
             })
             
