@@ -4,6 +4,7 @@
       <!-- navigation -->
         <div class="hamburger-icon"
           @click="showNav=true"
+          v-show="isAuth"
         >
             <img class="desktop-only" src="../public/svg/Group 20.svg" alt="menu_icon">
             <img class="mobile-only" src="../public/svg/hamb-mobile.svg" alt="menu_icon">
@@ -83,11 +84,21 @@ export default {
       ]
     }
   },
+  beforeMount(){
+    if(!this.isAuth&&this.$route.name!='auth'){
+      this.$router.push('auth')
+    }
+  },
   methods: {
     beforeLeave(){
       this.showNav=false;
     }
   },
+  computed:{
+    isAuth(){
+      return this.$store.state.isAuth;
+    }
+  }
 }
 </script>
 

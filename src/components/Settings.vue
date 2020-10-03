@@ -147,13 +147,15 @@ export default {
     },
     methods: {
         async sendForm(){
-            await this.$http.post('/api/register', this.form)
+            let url = this.isReg ? '/api/register' : '/';
+            await this.$http.post(url, this.form)
                 .then(response => {
-                    this.$route.push('welcome');
+                    this.$router.push('welcome');
                 })
                 .catch(
                     err=>{
                         this.notification(err.response.data.type)
+
                     }
                 );
         },

@@ -50,7 +50,7 @@
                             <tbody>
                                 <tr
                                     v-for="(client, index) in paginatedData" :key="index"
-                                    @click="showInfo=!showInfo"
+                                    
                                 >
                                     <td class="client-base-table-cell cli-number">{{client.id}}.</td>
                                     <td class="client-base-table-cell cli-fio"><div>
@@ -66,7 +66,7 @@
                         </table>
 
                         <div class="client-base-table-mobile mobile-only">
-                            <div class="client-base-table-item" @click="showInfo=!showInfo"
+                            <div class="client-base-table-item" 
                                 v-for="(client, index) in searchFilter" :key="index"
                             >
                                 <div class="client-base-table-num">{{client.id}}</div>

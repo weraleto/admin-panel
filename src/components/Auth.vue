@@ -48,7 +48,7 @@
                             
                             <!-- <router-link :to="'client-base'"> -->
                                 
-                                <button :disabled="invalid" class="btn btn-active"
+                                <button @click.prevent="auth" :disabled="invalid" class="btn btn-active"
                                 >Войти</button>
                             <!-- </router-link> -->
                             <router-link :to="'reg'">
@@ -66,33 +66,42 @@
 </template>
 
 <script>
-import MaskedInput from './MaskedInput'
 export default {
     data() {
         return {
             form: {
+                method_type: 'via_username',
                 username: '',
                 password: ''
             },
-            fields:[
-                {
-                    isRequired:true,
-                    label:"Логин",
-                    name:"auth_login",
-                    placeholder:"Введите логин",
-                },
-                {
-                    isRequired:true,
-                    label:"Пароль",
-                    name:"auth_pass",
-                    placeholder:"Введите пароль",
-                },
-                
-            ]
         }
     },
-    components: {
-        MaskedInput
+    methods: {
+        async auth(){
+            await this.$http.post('/api/accounts/log_in', this.form)
+                .then(
+                    res=>{
+                        const token = res.data.access_token;
+                        this.$http.defaults.headers.common['Authorization'] = token
+                        this.$store.state.isAuth = true;
+                        this.$store.state.access_token = token;
+                        this.$store.state.refresh_token = res.data.refresh_token
+                        this.$router.push('base')
+                    }
+                )
+                .catch(
+                    err=>{
+                        this.notification(err.response.data.type)
+
+                    }
+                );
+        },
+        notification(msg){
+            this.$notify.error({
+                title: 'Ошибка',
+                message: msg
+            })
+        }
     }
 }
 </script>
