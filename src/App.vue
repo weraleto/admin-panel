@@ -29,6 +29,7 @@
                 <router-link v-for="(link, index) in navLinks" 
                       :key="index"
                       class="nav-panel-item" :to="{name:link.alias}">{{link.name}}</router-link>
+                <a href="#" @click.prevent="logout" class="nav-panel-item" >Выйти</a>
               </div>
             </nav>
           </div>
@@ -80,7 +81,7 @@ export default {
         {name: 'Баланс', alias: 'balance'},
         {name: 'Настройки', alias: 'settings'},
         // {name: 'Помощь', alias: ''},
-        {name: 'Выйти', alias: 'auth'},
+        // {name: 'Выйти', alias: 'auth'},
       ]
     }
   },
@@ -92,11 +93,38 @@ export default {
   methods: {
     beforeLeave(){
       this.showNav=false;
+    },
+    async logout(){
+      this.$http.post('/api/accounts/log_out')
+        .then(
+          res=>{
+             this.$http.defaults.headers.common['Authorization'] = ''
+             this.isAuth = !this.isAuth
+             this.$router.push('/auth')
+             this.showNav = !this.showNav
+          }
+        )
+        .catch(
+          err => {
+            let errMsg = err.data ? err.data : 'Что-то пошло не так'
+            this.$notify.error({
+              title: 'Ошибка',
+              message: errMsg
+            })
+            this.showNav = !this.showNav
+          }
+        )
     }
   },
   computed:{
-    isAuth(){
-      return this.$store.state.isAuth;
+    isAuth: {
+      get: function() {
+				return this.$store.state.isAuth;
+			},
+			set: function(newValue) {
+				return this.$store.state.isAuth = newValue;
+			}
+      
     }
   }
 }

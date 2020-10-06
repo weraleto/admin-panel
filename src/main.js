@@ -36,9 +36,15 @@ Vue.component('v-select', vSelect)
 Vue.use(VueRouter)
 Vue.use(axiosVue, {
   globalDefaults: {
-    baseURL: 'http://89.208.87.121:4000/'
-  }
+    baseURL: 'http://89.208.87.121:4000/',
+    // headers: {
+    //   common: {
+    //     Authorization: ''
+    //   }
+    // }
+  },
 })
+
 
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
