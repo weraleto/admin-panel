@@ -58,6 +58,7 @@ import Quiz from './components/Quiz'
 import CliBase from './components/CliBase'
 import CliInfo from './components/CliInfo'
 import Welcome from './components/Welcome'
+import Forgot from './components/ResetPass'
 
 
 const router = new VueRouter({
@@ -72,6 +73,7 @@ const router = new VueRouter({
     {path:'/quiz', name:'quiz', component: Quiz},
     {path:'/base', name:'client-base', component: CliBase},
     {path:'/welcome', name:'welcome', component: Welcome},
+    {path:'/forgot-pass', name:'respass', component: Forgot},
 
     // {path:'/client/:id', name:'client-info', component: CliInfo},
   ],

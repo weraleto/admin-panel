@@ -40,7 +40,7 @@
                             </div>
                         </div>
                         <div class="remark">
-                                <router-link to="#">
+                                <router-link :to="{name:'respass'}">
                                     Забыли пароль?
                                  </router-link>
                             </div>
