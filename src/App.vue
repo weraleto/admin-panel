@@ -99,8 +99,8 @@ export default {
         .then(
           res=>{
              this.$http.defaults.headers.common['Authorization'] = ''
-             this.isAuth = !this.isAuth
              this.$router.push('/auth')
+             this.isAuth = !this.isAuth
              this.showNav = !this.showNav
           }
         )

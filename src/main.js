@@ -43,7 +43,64 @@ Vue.use(axiosVue, {
     //   }
     // }
   },
+  interceptors: {
+    responseError(error) {
+      if(error.response.status!== 401) {
+        return Promise.reject(error)
+      } else {
+      // axiosVue.interceptors.response.eject(responseError)
+
+        Vue.$http.post('/api/accounts/refresh_token', {refresh_token:store.state.refresh_token})
+          .then(
+            res=>{
+              console.log(res.response)
+              store.state.refresh_token = res.response.refresh_token
+              Vue.$http.defaults.headers.common['Authorization'] = res.response.auth_token
+              return res
+            }
+          )
+          .catch(
+            err=>{
+              Vue.$http.defaults.headers.common['Authorization'] = ''
+              router.push('/auth')
+              return Promise.reject(err)
+            }
+          )
+      }
+    },
+  },
 })
+
+// function createAxiosResponseInterceptor() {
+//   const interceptor = axios.interceptors.response.use(
+//       response => response,
+//       error => {
+//           // Reject promise if usual error
+//           if (errorResponse.status !== 401) {
+//               return Promise.reject(error);
+//           }
+
+//           /* 
+//            * When response code is 401, try to refresh the token.
+//            * Eject the interceptor so it doesn't loop in case
+//            * token refresh causes the 401 response
+//            */
+//           axios.interceptors.response.eject(interceptor);
+
+//           return axios.post('/api/refresh_token', {
+//               'refresh_token': this._getToken('refresh_token')
+//           }).then(response => {
+//               saveToken();
+//               error.response.config.headers['Authorization'] = 'Bearer ' + response.data.access_token;
+//               return axios(error.response.config);
+//           }).catch(error => {
+//               destroyToken();
+//               this.router.push('/login');
+//               return Promise.reject(error);
+//           }).finally(createAxiosResponseInterceptor);
+//       }
+//   );
+// }
 
 
 import ElementUI from 'element-ui';

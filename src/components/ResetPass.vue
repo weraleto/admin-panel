@@ -33,6 +33,10 @@
                                 
                                 <button @click.prevent="clear" :disabled="invalid" class="btn btn-active"
                                 >Сбросить пароль</button>
+                                <router-link :to="'auth'">
+                                    <button class="btn btn-light"
+                                    >Отмена</button>
+                                </router-link>
                         </div>
                         
                     </div>

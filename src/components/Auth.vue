@@ -83,10 +83,10 @@ export default {
                     res=>{
                         const token = res.data.access_token;
                         this.$http.defaults.headers.common['Authorization'] = `Bearer ${token}`
-                        this.$http.defaults.headers.common['refresh_token'] = res.data.refresh_token
+                        // this.$http.defaults.headers.common['refresh_token'] = res.data.refresh_token
                         this.$store.state.isAuth = true;
                         // this.$store.state.access_token = token;
-                        // this.$store.state.refresh_token = res.data.refresh_token
+                        this.$store.state.refresh_token = res.data.refresh_token
                         this.$router.push('base')
                     }
                 )
