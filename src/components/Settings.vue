@@ -112,6 +112,10 @@
                             @click.prevent="sendForm"
                             :disabled="invalid"
                              class="btn btn-active">{{submitName}}</button>
+                            <button
+                            @click.prevent="$router.go(-1)"
+                             class="btn btn-light">Назад</button>
+
                         </div>
                         <div class="remark">
                             * Вся предоставленная информация конфиденциальна <span>и не будет передана третьим лицам.</span>

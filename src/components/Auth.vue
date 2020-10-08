@@ -30,7 +30,7 @@
                                     <input
                                         placeholder="Введите пароль"
                                         id="auth_pass"
-                                        type="text"
+                                        type="password"
                                         autocomplete="off"
                                         :class="classes"
                                         v-model="form.password"

@@ -48,14 +48,12 @@ Vue.use(axiosVue, {
       if(error.response.status!== 401) {
         return Promise.reject(error)
       } else {
-      // axiosVue.interceptors.response.eject(responseError)
 
         Vue.$http.post('/api/accounts/refresh_token', {refresh_token:store.state.refresh_token})
           .then(
             res=>{
-              console.log(res.response)
-              store.state.refresh_token = res.response.refresh_token
-              Vue.$http.defaults.headers.common['Authorization'] = res.response.auth_token
+              store.state.refresh_token = res.data.refresh_token
+              Vue.$http.defaults.headers.common['Authorization'] = res.data.auth_token
               return res
             }
           )
@@ -63,6 +61,10 @@ Vue.use(axiosVue, {
             err=>{
               Vue.$http.defaults.headers.common['Authorization'] = ''
               router.push('/auth')
+              Vue.$notify.error({
+                'title':'Ошибка',
+                'message':'Что-то пошло не так. Попробуйте авторизоваться снова.'
+              })
               return Promise.reject(err)
             }
           )

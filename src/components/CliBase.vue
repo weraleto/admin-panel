@@ -13,7 +13,7 @@
                             Список товаров
                         </h1>
                     </header>
-
+                    
                     <div class="client-base-search">
                         <input type="text" v-model="searchIn" placeholder="Поиск">
                     </div>
@@ -24,9 +24,6 @@
                             @click="filtrationName=item.name"
                             v-for="(item, index) in filtrationCategories" :key="index"
                             >{{item.label}}</button>
-                            <!-- <button class="client-base-filtration-link btn btn-active">Опубликованные товары</button>
-                            <button class="client-base-filtration-link btn btn-active">Товары на модерации</button>
-                            <button class="client-base-filtration-link btn btn-light">Черновики</button> -->
                         </div>
                         
                     </div>
@@ -187,6 +184,7 @@ export default {
         changePageNum(num){
             this.currentPage=num;
         },
+        
     },
     computed: {
         searchFilter(){
