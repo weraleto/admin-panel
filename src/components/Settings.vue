@@ -156,21 +156,9 @@ export default {
                 .then(response => {
                     this.$router.push('welcome');
                 })
-                .catch(
-                    err=>{
-                        this.notification(err.response.data.type)
-
-                    }
-                );
         },
         handle(){
             console.log(formValid)
-        },
-        notification(msg){
-            this.$notify.error({
-                title: 'Ошибка',
-                message: msg
-            })
         }
     },
     computed: {

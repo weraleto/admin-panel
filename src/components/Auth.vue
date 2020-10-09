@@ -90,18 +90,6 @@ export default {
                         this.$router.push('base')
                     }
                 )
-                .catch(
-                    err=>{
-                        this.notification(err.response.data.type)
-
-                    }
-                );
-        },
-        notification(msg){
-            this.$notify.error({
-                title: 'Ошибка',
-                message: msg
-            })
         }
     }
 }

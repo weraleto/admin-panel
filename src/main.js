@@ -35,6 +35,18 @@ Vue.component('ValidationObserver', ValidationObserver);
 Vue.component('ValidationProvider', ValidationProvider);
 Vue.component('v-select', vSelect)
 
+
+
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+import {Notification} from 'element-ui'
+
+Vue.use(ElementUI);
+Vue.component(Notification)
+
+Vue.prototype.$notify = Notification;
+
+
 Vue.use(VueRouter)
 Vue.use(axiosVue, {
   globalDefaults: {
@@ -48,6 +60,12 @@ Vue.use(axiosVue, {
   interceptors: {
     responseError(error) {
       if(error.response.status!== 401) {
+        let respTxt = error.response.data ? error.response.data.type : 'Что-то пошло не так. Попробуйте еще раз'
+        
+        Vue.prototype.$notify.error({
+          'title':'Ошибка',
+          'message': respTxt
+        })
         return Promise.reject(error)
       } else {
 
@@ -63,7 +81,7 @@ Vue.use(axiosVue, {
             err=>{
               Vue.$http.defaults.headers.common['Authorization'] = ''
               router.push('/auth')
-              Vue.$notify.error({
+              Vue.prototype.$notify.error({
                 'title':'Ошибка',
                 'message':'Что-то пошло не так. Попробуйте авторизоваться снова.'
               })
@@ -75,13 +93,6 @@ Vue.use(axiosVue, {
   },
 })
 
-
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-import {Notification} from 'element-ui'
-
-Vue.use(ElementUI);
-Vue.component(Notification)
 
 
 
