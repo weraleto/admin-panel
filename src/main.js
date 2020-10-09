@@ -5,6 +5,8 @@ import {store} from './store'
 
 import axiosVue from 'axios-vue'
 
+import './assets/sass/style.sass'
+
 import vSelect from 'vue-select'
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import * as rules from 'vee-validate/dist/rules';
@@ -72,37 +74,6 @@ Vue.use(axiosVue, {
     },
   },
 })
-
-// function createAxiosResponseInterceptor() {
-//   const interceptor = axios.interceptors.response.use(
-//       response => response,
-//       error => {
-//           // Reject promise if usual error
-//           if (errorResponse.status !== 401) {
-//               return Promise.reject(error);
-//           }
-
-//           /* 
-//            * When response code is 401, try to refresh the token.
-//            * Eject the interceptor so it doesn't loop in case
-//            * token refresh causes the 401 response
-//            */
-//           axios.interceptors.response.eject(interceptor);
-
-//           return axios.post('/api/refresh_token', {
-//               'refresh_token': this._getToken('refresh_token')
-//           }).then(response => {
-//               saveToken();
-//               error.response.config.headers['Authorization'] = 'Bearer ' + response.data.access_token;
-//               return axios(error.response.config);
-//           }).catch(error => {
-//               destroyToken();
-//               this.router.push('/login');
-//               return Promise.reject(error);
-//           }).finally(createAxiosResponseInterceptor);
-//       }
-//   );
-// }
 
 
 import ElementUI from 'element-ui';
