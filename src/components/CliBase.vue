@@ -115,7 +115,7 @@
                             <router-link :to="''" class="client-base-navigation-link page-link">
                                 <button class="btn btn-active">Опубликовать товары</button>
                             </router-link>
-                            <button class="btn btn-light client-base-navigation-link page-link">Экспорт базы</button>
+                            <!-- <button class="btn btn-light client-base-navigation-link page-link">Экспорт базы</button> -->
                         </div>
                         <!-- <div class="remark">
                             * Вся предоставленная информация конфиденциальна и не будет передана третьим лицам.

@@ -8,77 +8,114 @@
             <!-- auth form -->
             <div class="form-content step--1">
                 <form action="">
-                    <div class="upload-file__wrapper ">
-                        <draggable v-model="images" class="upload-file__wrapper">
+                <ValidationObserver v-slot="{ invalid }" tag="form">
+ 
+ 
+                <ValidationProvider class="input" :rules="{ required: true }"
+                >
+                    <!-- uploading files -->
+                    <FileUpload v-model="images" @onfileupload="$event => images = $event" />
+                    <!-- end uploading files -->
 
+                </ValidationProvider>
+                
 
-                            <div class="upload-file__item bg-white" v-for="(item, index) in images" :key="index">
-                                <div class="upload-file__del-icon" @click="deleteImage(item,index)">
-                                    <img :src="require('../../public/svg/times-circle-solid.svg')" alt="Удалить изображение">
-                                </div>
-                                <!-- {{item.baseData}} -->
-                                <img class="upload-file__uploaded" :src="item.base" alt="Изображение">
-                                <!-- <div class="upload_icon__wrapper" v-if="image.length<1" @click="initFileUpload">
-                                    <img  
-                                        class="upload_icon" 
-                                        src="../../public/svg/plus-circle-solid.svg" alt="">
-                                </div> -->
-                            </div>
-                        </draggable>
-                        
-                        <div class="upload-file__item bg-white"  v-if="images.length<=4" @click="initFileUpload">
-                            <!-- <img class="upload-file__uploaded" :src="item.baseData" alt=""> -->
-                            <div class="upload_icon__wrapper">
-                                <img  
-                                    class="upload_icon" 
-                                    src="../../public/svg/plus-circle-solid.svg" alt="">
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="upload-file__actions">
-
-                        <input ref="inputField" style="display:none" type="file" accept=".png" @change="handleImage" multiple>
-                        <button @click.prevent="initFileUpload" class="btn btn-active btn-upload">Загрузить изображения ( {{ this.images.length }} / 5 )</button>
-                        <div class="remark">
-                            * Максимальный размер фото - 500 kb. Формат .png
-                        </div>
-                    </div>
 
                     <div class="form-group">
                         <div class="form-grop-blocks">
                             
-                            <div class="form-group-block" v-for="(item, index) in fields" :key="index">
-                                <masked-input
-                                    :isRequired="item.isRequired"
-                                    :label="item.label"
-                                    :name="item.name"
-                                    :type="item.type"
-                                    :placeholder="item.placeholder"
-                                ></masked-input>
-                                
+                            <div class="form-group-block" >
+                                <label for="item_name">Название <span>*</span> </label>
+                                <ValidationProvider class="input" :rules="{ regex:/^.{1,100}$/, required: true }"
+                                     v-slot="{classes}"
+                                >
+                                    <input
+                                        placeholder="Название товара"
+                                        v-model="form.name"
+                                        id="item_name"
+                                        :class="classes"
+                                        type="text"
+                                    >
+
+                                </ValidationProvider>
                             </div>
-                            <!-- <div class="form-group-block agreement">
-                                <input type="checkbox" name="step-1_agree" id="step-1_agree">
-                                <label class="label-checkbox" for="step-1_agree">
-                                    Я согласен(на) с условиями <span>договора на оказание услуг.</span>
-                                </label>
-                            </div> -->
+                            <div class="form-group-block" >
+                                <label for="item_subcat">Категория <span>*</span> </label>
+                                 <v-select label="name" 
+                                 :options="categoriesData" 
+                                 v-model="currentCats.cat" 
+                                 placeholder="Категория товара"></v-select>
+                            </div>
+
+                            <div class="form-group-block" >
+                                <label for="item_subcat">Подкатегория <span>*</span> </label>
+                                 <v-select label="name" :options="subCatList ? subCatList : []" 
+                                 :disabled="!currentCats.cat"
+                                 :resetOnOptionsChange="true"
+                                 v-model="currentCats.subcat" placeholder="Подкатегория товара"></v-select>
+                            </div>
+
+                            <div class="form-group-block" 
+                                v-for="(field, index) in productSpecs.data" :key="index"
+                            >
+                                <label >{{field.name}} <span v-if="field.is_required">*</span> </label>
+
+                                
+                            
+                                 <ValidationProvider  :rules="{ required: field.is_required,
+                                 min_value: field.validators[0].min ? +field.validators[0].min : false }"
+                                     v-slot="{classes}"
+                                >
+                                    <v-select :options="field.validators[0].data" 
+                                    v-if="field.validators[0].type == 'inclusion_validator'"
+                                    v-model="form.attrs.data[field.name]" 
+                                    :placeholder="field.name">
+                                    </v-select>
+                                    
+                                    
+                                    <input
+                                         v-else
+                                        :placeholder="field.name"
+                                         v-model="form.attrs.data[field.name]"
+                                        :class="classes"
+                                        type="text"
+                                    >
+
+                                </ValidationProvider>
+                            </div>
+                            
+                            <div class="form-group-block" >
+                                <label for="item_price">Цена <span>*</span> </label>
+                                <ValidationProvider class="input" :rules="{ min_value: 0.01, required: true, regex:/^\d+$/ }"
+                                     v-slot="{classes}"
+                                >
+                                    <input
+                                        placeholder="Цена товара"
+                                        v-model="form.price"
+                                        id="item_price"
+                                        :class="classes"
+                                        type="text"
+                                    >
+
+                                </ValidationProvider>
+                            </div>
+                            
                         </div>
                         
                         <div class="btn-group">
                             <button
+                            :disabled="invalid"
+                            @click.prevent="sendData"
                              class="btn btn-active">Сохранить</button>
-                            <!-- <router-link :to="{name:'home'}">
-                                <button class="btn btn-light">Назад</button>
-                            </router-link> -->
+                            
+                            <button @click.prevent="$router.go(-1)" class="btn btn-light">Назад</button>
+                            
                         </div>
-                        <!-- <div class="remark">
-                            * Вся предоставленная информация конфиденциальна <span>и не будет передана третьим лицам.</span>
-                        </div> -->
+                        
                     </div>
+                 </ValidationObserver>
                 </form>
+
             </div>
             <!-- end auth form -->
         </div>
@@ -87,15 +124,22 @@
 </template>
 
 <script>
-import MaskedInput from './MaskedInput'
-import draggable from 'vuedraggable'
+import FileUpload from './fileUpload'
+
 export default {
     data() {
         return {
-            maxFileSize: 5000000,
-            image: '',
             images: [],
-            files: [],
+            categoriesData: [],
+            currentCats: {
+                cat:null,
+                subcat: null
+            },
+            form: {
+                attrs:{
+                    data: {}
+                }
+            },
             fields:[
                 {
                     isRequired:true,
@@ -158,50 +202,44 @@ export default {
         }
     },
     components: {
-        MaskedInput,
-        draggable
+        FileUpload
+    },
+    mounted(){
+        this.$http.get('/api/shops/product_categories')
+            .then(
+                res=>{
+                    this.categoriesData = res.data;
+                    
+                }
+            )
+    },
+    computed: {
+        subCatList(){
+            return this.currentCats.cat ? this.currentCats.cat.subcategories : [];
+        },
+        productSpecs(){
+            return this.currentCats.subcat ? this.currentCats.subcat.product_specs : [];
+        },
     },
     methods: {
-        // handleImage(e){
-        //     const selectedImage = e.target.files[0];
-        //     this.createBaseImage(selectedImage);
-            
+        // uploadHandler(e){
+        //     console.log(e)
         // },
-        createBaseImage(fileObj, i){
-            
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                this.images.push({ base: e.target.result, el: i});
-                console.log(e.target.result)
-            }
-            reader.readAsDataURL(fileObj);
-            
-        },
-        handleImage(e){
-            let uploadedFiles = this.$refs.inputField.files;
-
-            Object.keys(uploadedFiles).forEach(el=>{
-
-                if(+el < 5 && uploadedFiles[el].size <= this.maxFileSize ) {
-
-                    this.files.push(uploadedFiles[el])
-                    this.createBaseImage(uploadedFiles[el], el)
-
-                }
+        sendData(){
+            let imgArray = this.images.map(item=>{
+                return item.base
             })
-            
-        },
-        initFileUpload(){
-            this.$refs.inputField.click()
-        },
-        deleteImage(image, i) {
-            console.log(this.files)
-            this.images.splice(i,1);
-            delete this.files[image.el]
-            console.log(this.files)
-
-
+            this.form.images = imgArray;
+            this.form.attrs.specs_name = this.productSpecs.type
+            this.$http.post('/api/shops/products', this.form)
+                .then(
+                    res=>{
+                        console.log(res)
+                    }
+                )
         }
+
     }
+    
 }
 </script>
