@@ -63,11 +63,12 @@
                                 
                             
                                  <ValidationProvider  :rules="{ required: field.is_required,
-                                 min_value: field.validators[0].min ? +field.validators[0].min : false }"
+                                 min_value: field.validator.min ? +field.validator.min : false }"
                                      v-slot="{classes}"
                                 >
-                                    <v-select :options="field.validators[0].data" 
-                                    v-if="field.validators[0].type == 'inclusion_validator'"
+                                    <v-select :options="field.validator.data" 
+                                    v-if="field.validator.type == 'inclusion_validator'"
+                                    :resetOnOptionsChange="true"
                                     v-model="form.attrs.data[field.name]" 
                                     :placeholder="field.name">
                                     </v-select>
@@ -209,7 +210,7 @@ export default {
             .then(
                 res=>{
                     this.categoriesData = res.data;
-                    
+                    console.log(this.categoriesData)
                 }
             )
     },
@@ -230,7 +231,7 @@ export default {
                 return item.base
             })
             this.form.images = imgArray;
-            this.form.attrs.specs_name = this.productSpecs.type
+            this.form.attrs.specs_name = this.productSpecs.name
             this.$http.post('/api/shops/products', this.form)
                 .then(
                     res=>{
