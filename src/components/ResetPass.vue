@@ -70,7 +70,6 @@ export default {
                 .catch(
                     err=>{
                         this.notification(err.response.data.type)
-
                     }
                 );
         },

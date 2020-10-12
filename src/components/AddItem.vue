@@ -10,15 +10,21 @@
                 <form action="">
                 <ValidationObserver v-slot="{ invalid }" tag="form">
  
- 
-                <ValidationProvider class="input" :rules="{ required: true }"
-                >
-                    <!-- uploading files -->
-                    <FileUpload v-model="images" @onfileupload="$event => images = $event" />
-                    <!-- end uploading files -->
+                <!-- uploading files -->
+                    <ValidationProvider class="input" :rules="{ required: true }"
+                    >
+                        <label>Изображение для приложения <span>*</span> </label>
+                        <FileUpload v-model="pngImg" :isMultiple="false" fileFormat=".png" @onfileupload="$event => pngImg = $event" />
+                        
+                    </ValidationProvider>
 
-                </ValidationProvider>
-                
+                    <ValidationProvider class="input" :rules="{ required: true }"
+                    >
+                        <label>Изображения для каталога товаров <span>*</span> </label>
+                        <FileUpload v-model="images" :isMultiple="true" fileFormat=".jpeg, .jpg" @onfileupload="$event => images = $event" />
+
+                    </ValidationProvider>
+                <!-- end uploading files -->
 
 
                     <div class="form-group">
@@ -131,6 +137,7 @@ export default {
     data() {
         return {
             images: [],
+            pngImg: '',
             categoriesData: [],
             currentCats: {
                 cat:null,
@@ -228,14 +235,19 @@ export default {
         // },
         sendData(){
             let imgArray = this.images.map(item=>{
-                return item.base
+                return item.base.replace('data:image/jpeg;base64,','')
             })
             this.form.images = imgArray;
+            console.log(imgArray)
             this.form.attrs.specs_name = this.productSpecs.name
             this.$http.post('/api/shops/products', this.form)
                 .then(
                     res=>{
-                        console.log(res)
+                        this.$notify({
+                            'title': 'Готово',
+                            'message': 'Товар добавлен в Ваш список товаров',
+                            type: 'success'
+                        })
                     }
                 )
         }

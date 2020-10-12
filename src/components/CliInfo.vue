@@ -1,262 +1,200 @@
 <template>
-    <main class="main-content" >
-            <div class="client-base-outer">
-                <!-- main header -->
-                <header>
-                    <h1 class="page-header">Карточка товара</h1>
-                </header>
+  <main class="main-content">
+        <div class="step--1-outer">
+            <!-- main header -->
+            <header>
+                <h1 class="page-header">Добавить товар</h1>
+            </header>
+            <!-- auth form -->
+            <div class="form-content step--1">
+                <form action="">
+                <ValidationObserver v-slot="{ invalid }" tag="form">
+ 
+                <!-- uploading files -->
+                    <ValidationProvider class="input" :rules="{ required: true }"
+                    >
+                        <label>Изображение для приложения <span>*</span> </label>
+                        <FileUpload v-model="pngImg" :isMultiple="false" fileFormat=".png" @onfileupload="$event => pngImg = $event" />
+                        
+                    </ValidationProvider>
 
-                <div class="form-content client-base client-base-block">
-                    <form action="" @submit="event.preventDefault()">
-                        <div class="form-group">
-                            <div class="form-group-section-outer">
-                                <h3 class="form-subheader">Данные клиента</h3>
-                                <div class="form-group-section">
-                                    <div class="form-group-block">
-                                        <label for="cb_surname">Фамилия</label>
-                                        <div class="input-required">
-                                            <input class="required" v-model="data.surname" type="text" name="cb_surname" placeholder="Введите фамилию">
-                                            <div class="pseudo-mark">*</div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group-block">
-                                        <label for="cb_birth">Дата рождения</label>
-                                        <div class="input-required">
-                                            <masked-input type="text" v-model="data.birth" name="cb_birth" mask="11.11.1111" placeholder="__.__.____г." />
-                                            <div class="pseudo-mark">*</div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group-block">
-                                        <label for="cb_name">Имя</label>
-                                        <div class="input-required">
-                                            <input class="required" v-model="data.name" type="text" name="cb_name" placeholder="Введите имя">
-                                            <div class="pseudo-mark">*</div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group-block">
-                                        <label for="cb_phone">Телефон</label>
-                                        <div class="input-required">
-                                            <masked-input type="text" v-model="data.phone" name="cb_phone" mask="\+\7(111)111-11-11" placeholder="+7(___)___-__-__" />
-                                            <div class="pseudo-mark">*</div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group-block">
-                                        <label for="cb_father">Отчество</label>
-                                        <div class="input-required">
-                                            <input class="required" v-model="data.fname" type="text" name="cb_father" placeholder="Введите отчество">
-                                            <div class="pseudo-mark">*</div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group-block">
-                                        <label for="cb_insta">Instagram</label>
-                                            <masked-input type="text" v-model="data.ig" name="cb_insta"  mask="\@aaaaaaaaaaaaaaaaaa*" placeholder="@" />
+                    <ValidationProvider class="input" :rules="{ required: true }"
+                    >
+                        <label>Изображения для каталога товаров <span>*</span> </label>
+                        <FileUpload v-model="images" :isMultiple="true" fileFormat=".jpeg, .jpg" @onfileupload="$event => images = $event" />
 
-                                        <!-- <input type="text" value="@ivanovvv" name="cb_insta" placeholder="@"> -->
-                                    </div>
-                                    <div class="form-group-block">
-                                        <label for="cb_insta">Дата регистрации</label>
-                                        <input disabled type="text" value="10.01.2020" name="cb_insta" placeholder="@">
-                                    </div>
-                                </div>
+                    </ValidationProvider>
+                <!-- end uploading files -->
 
+
+                    <div class="form-group">
+                        <div class="form-grop-blocks">
+                            
+                            <div class="form-group-block" >
+                                <label for="item_name">Название <span>*</span> </label>
+                                <ValidationProvider class="input" :rules="{ regex:/^.{1,100}$/, required: true }"
+                                     v-slot="{classes}"
+                                >
+                                    <input
+                                        placeholder="Название товара"
+                                        v-model="form.name"
+                                        id="item_name"
+                                        :class="classes"
+                                        type="text"
+                                    >
+
+                                </ValidationProvider>
+                            </div>
+                            <div class="form-group-block" >
+                                <label for="item_subcat">Категория <span>*</span> </label>
+                                 <v-select label="name" 
+                                 :options="categoriesData" 
+                                 v-model="currentCats.cat" 
+                                 placeholder="Категория товара"></v-select>
+                            </div>
+
+                            <div class="form-group-block" >
+                                <label for="item_subcat">Подкатегория <span>*</span> </label>
+                                 <v-select label="name" :options="subCatList ? subCatList : []" 
+                                 :disabled="!currentCats.cat"
+                                 :resetOnOptionsChange="true"
+                                 v-model="currentCats.subcat" placeholder="Подкатегория товара"></v-select>
+                            </div>
+
+                            <div class="form-group-block" 
+                                v-for="(field, index) in productSpecs.data" :key="index"
+                            >
+                                <label >{{field.name}} <span v-if="field.is_required">*</span> </label>
+
+                                
+                            
+                                 <ValidationProvider  :rules="{ required: field.is_required,
+                                 min_value: field.validator.min ? +field.validator.min : false }"
+                                     v-slot="{classes}"
+                                >
+                                    <v-select :options="field.validator.data" 
+                                    v-if="field.validator.type == 'inclusion_validator'"
+                                    :resetOnOptionsChange="true"
+                                    v-model="form.attrs.data[field.name]" 
+                                    :placeholder="field.name">
+                                    </v-select>
+                                    
+                                    
+                                    <input
+                                         v-else
+                                        :placeholder="field.name"
+                                         v-model="form.attrs.data[field.name]"
+                                        :class="classes"
+                                        type="text"
+                                    >
+
+                                </ValidationProvider>
                             </div>
                             
+                            <div class="form-group-block" >
+                                <label for="item_price">Цена <span>*</span> </label>
+                                <ValidationProvider class="input" :rules="{ min_value: 0.01, required: true, regex:/^\d+$/ }"
+                                     v-slot="{classes}"
+                                >
+                                    <input
+                                        placeholder="Цена товара"
+                                        v-model="form.price"
+                                        id="item_price"
+                                        :class="classes"
+                                        type="text"
+                                    >
 
-                            <div class="btn-group">
-                                <button class="btn btn-active save-edit"
-                                    @click="$emit('closedata')"
-                                >Сохранить</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                
-                <div class="form-content client-base client-base-block">
-                    <form action="" @submit="event.preventDefault()">
-                        <div class="form-group">
-                            <div class="form-group-section-outer">
-                                <h3 class="form-subheader">Адрес прописки</h3>
-                                <div class="form-group-section">
-                                    <div class="form-group-block">
-                                        <label for="cb_sity">Город</label>
-                                        <div class="input-required">
-                                            <input class="required" value="Москва" type="text" name="cb_sity"
-                                                placeholder="Введите город">
-                                            <div class="pseudo-mark">*</div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group-block">
-                                        <label for="cb_str">Строение</label>
-                                        <input class="required" type="text" value="12" name="cb_str"
-                                            placeholder="Введите номер строения">
-
-                                    </div>
-                                    <div class="form-group-block">
-                                        <label for="cb_street">Улица</label>
-                                        <div class="input-required">
-                                            <input class="required" type="text" value="Строителей" name="cb_street"
-                                                placeholder="Введите улицу">
-                                            <div class="pseudo-mark">*</div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group-block">
-                                        <label for="cb_apt">Квартира</label>
-                                        <div class="input-required">
-                                            <input class="required" type="text" value="388" name="cb_apt"
-                                                placeholder="Введите номер квартиры">
-                                            <div class="pseudo-mark">*</div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group-block">
-                                        <label for="cb_build">Дом</label>
-                                        <div class="input-required">
-                                            <input class="required" type="text" value="176" name="cb_build"
-                                                placeholder="Введите дом">
-                                            <div class="pseudo-mark">*</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="btn-group">
-                                <button class="btn btn-active save-edit"
-                                    @click="$emit('closedata')"
-                                >Сохранить</button>
+                                </ValidationProvider>
                             </div>
                             
                         </div>
-                    </form>
-                </div>
-
-                <div class="form-content client-base client-base-block">
-                    <form action="" @submit="event.preventDefault()">
-                        <div class="form-group">
-                            <div class="form-group-section-outer">
-                                <h3 class="form-subheader">Паспортные данные</h3>
-                                <div class="form-group-section">
-                                    <div class="form-group-block">
-                                        <label for="cb_sity">Серия</label>
-                                        <div class="input-required">
-                                            <masked-input type="text" v-model="data.passS" name="cb_sity" mask="1111" placeholder="Введите серию" />
-                                            
-                                            <div class="pseudo-mark">*</div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group-block">
-                                        <label for="cb_str">Кем выдан</label>
-                                        <div class="input-required">
-                                            <input class="required" type="text" value="ОУФМС РФ по Самарской области" name="cb_street"
-                                                placeholder="Наименование органа">
-                                            <div class="pseudo-mark">*</div>
-                                        </div>
-
-                                    </div>
-                                    <div class="form-group-block">
-                                        <label for="cb_num">Номер</label>
-                                        <div class="input-required">
-                                            <masked-input type="text" v-model="data.passN" name="cb_num" mask="111 111" placeholder="Введите номер" />
-                                            
-                                            <div class="pseudo-mark">*</div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group-block">
-                                        <label for="cb_apt">Дата выдачи</label>
-                                        <div class="input-required">
-                                            <masked-input type="text" v-model="data.passD" name="cb_apt" mask="11.11.1111" placeholder="__.__.____г." />
-                                            <div class="pseudo-mark">*</div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group-block">
-                                        <label for="cb_build">Код подразделения</label>
-                                        <div class="input-required">
-                                            <masked-input type="text" v-model="data.passC" name="cb_build" mask="111-111" placeholder="___ - ___" />
-                                            <!-- <input class="required"  value="630-003" type="text" name="cb_build"
-                                                placeholder="___ - ___"> -->
-                                            <div class="pseudo-mark">*</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="btn-group">
-                                <button class="btn btn-active save-edit"
-                                    @click="$emit('closedata')"
-                                >Сохранить</button>
-                            </div>
+                        
+                        <div class="btn-group">
+                            <button
+                            :disabled="invalid"
+                            @click.prevent="sendData"
+                             class="btn btn-active">Сохранить</button>
+                            
+                            <button @click.prevent="$router.go(-1)" class="btn btn-light">Назад</button>
                             
                         </div>
-                    </form>
-                </div>
-
-                <div class="form-content client-base client-base-block">
-                    <form action="" @submit="event.preventDefault()">
-                        <div class="form-group">
-                            <h3 class="form-subheader form-subheader-cb">Данные анкеты</h3>
-
-                            <div class="btn-group">
-                                <button class="btn btn-light cli-base-sub">Перейти</button>
-                            </div>
-                            
-                        </div>
-                    </form>
-                </div>
-
-                <div class="form-content client-base client-base-block">
-                    <form action="" @submit="event.preventDefault()">
-                        <div class="form-group">
-                            <h3 class="form-subheader form-subheader-cb">Документы на печать</h3>
-
-                            <div class="btn-group btn-group-flex">
-                                <button class="btn btn-light btn-flex">Договор на оказание услуг</button>
-                                <button class="btn btn-light btn-flex">Медицинская анкета</button>
-                            </div>
-                            
-                        </div>
-                    </form>
-                </div>
-                
-                <div class="client-base-ending">
-                    <div class="btn-group">
-                        <!-- <router-link to="../base" class="page-link"> -->
-                            <button @click="$emit('closedata')" class="btn btn-active go-back">Назад</button>
-                        <!-- </router-link> -->
-                        <router-link to="/" class="page-link">
-                            <button class="btn btn-light cli-base-sub">На главную</button>
-                        </router-link>
+                        
                     </div>
-                    <div class="remark">
-                        * Вся предоставленная информация конфиденциальна <span>и не будет передана третьим лицам.</span>
-                    </div>
-                </div>
+                 </ValidationObserver>
+                </form>
+
             </div>
-
-        </main>
+            <!-- end auth form -->
+        </div>
+        
+    </main>
 </template>
 
 <script>
-import MaskedInput from 'vue-masked-input'
+import FileUpload from './fileUpload'
 
 export default {
-    components: {
-        MaskedInput
-    },
     data() {
         return {
-            data:{
-                name:'Константин',
-                surname:'Константинопольский',
-                fname:'Константинович',
-                birth:'17.02.1990',
-                phone:'9255266765',
-                ig:'ivanovvv',
-                passS:'3611',
-                passN:'291738',
-                passD:'24.06.2011',
-                passC:'630003'
+            images: [],
+            pngImg: '',
+            categoriesData: [],
+            currentCats: {
+                cat:null,
+                subcat: null
+            },
+            form: {
+                attrs:{
+                    data: {}
                 }
+            },
+            
         }
     },
+    components: {
+        FileUpload
+    },
+    mounted(){
+        this.$http.get('/api/shops/product_categories')
+            .then(
+                res=>{
+                    this.categoriesData = res.data;
+                    console.log(this.categoriesData)
+                }
+            )
+    },
+    computed: {
+        subCatList(){
+            return this.currentCats.cat ? this.currentCats.cat.subcategories : [];
+        },
+        productSpecs(){
+            return this.currentCats.subcat ? this.currentCats.subcat.product_specs : [];
+        },
+    },
+    methods: {
+        // uploadHandler(e){
+        //     console.log(e)
+        // },
+        sendData(){
+            let imgArray = this.images.map(item=>{
+                return item.base.replace('data:image/jpeg;base64,','')
+            })
+            this.form.images = imgArray;
+            console.log(imgArray)
+            this.form.attrs.specs_name = this.productSpecs.name
+            this.$http.post('/api/shops/products', this.form)
+                .then(
+                    res=>{
+                        this.$notify({
+                            'title': 'Готово',
+                            'message': 'Товар добавлен в Ваш список товаров',
+                            type: 'success'
+                        })
+                    }
+                )
+        }
+
+    }
+    
 }
 </script>

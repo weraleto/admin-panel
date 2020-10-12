@@ -14,7 +14,7 @@
                 </div>
             </draggable>
             
-            <div class="upload-file__item bg-white"  v-if="images.length<=4" @click="initFileUpload">
+            <div class="upload-file__item bg-white"  v-if="images.length <= maxFileAmount" @click="initFileUpload">
                 
                 <div class="upload_icon__wrapper">
                     <img  
@@ -27,10 +27,11 @@
 
         <div class="upload-file__actions">
 
-            <input ref="inputField" style="display:none" type="file" accept=".png" @change="handleImage" multiple>
-            <button @click.prevent="initFileUpload" class="btn btn-active btn-upload">Загрузить изображения ( {{ this.images.length }} / 5 )</button>
+            <input ref="inputField" style="display:none" type="file" :accept="fileFormat" @change="handleImage" :multiple="isMultiple">
+            <button v-if="isMultiple" :disabled="images.length >= 5" @click.prevent="initFileUpload" class="btn btn-active btn-upload">Загрузить изображения ( {{ this.images.length }} / 5 )</button>
+            <button v-else :disabled="images.length >= 1" @click.prevent="initFileUpload" class="btn btn-active btn-upload">Загрузить изображение </button>
             <div class="remark">
-                * Максимальный размер фото - 500 kb. Формат .png
+                * Максимальный размер фото - 500 kb. Формат {{fileFormat}}
             </div>
         </div>
     </div>
@@ -39,6 +40,10 @@
 <script>
 import draggable from 'vuedraggable'
 export default {
+    props: {
+        isMultiple: Boolean,
+        fileFormat: String
+    },
     components: {
         draggable
     },
@@ -48,6 +53,11 @@ export default {
             image: '',
             images: [],
             files: [],
+        }
+    },
+    computed: {
+        maxFileAmount(){
+            return this.isMultiple ? 4 : 0;
         }
     },
     methods: { 
@@ -79,10 +89,8 @@ export default {
             this.$refs.inputField.click()
         },
         deleteImage(image, i) {
-            console.log(this.files)
             this.images.splice(i,1);
             delete this.files[image.el]
-            console.log(this.files)
 
 
         }
