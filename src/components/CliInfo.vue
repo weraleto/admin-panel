@@ -3,7 +3,11 @@
         <div class="step--1-outer">
             <!-- main header -->
             <header>
-                <h1 class="page-header">Добавить товар</h1>
+                <h1 class="page-header">Название товара</h1> 
+                
+                <el-tooltip effect="light" content="Товар опубликован" placement="bottom">
+                    <el-tag type="success" effect="dark"> Опубликовано  <i class="el-icon-question"></i></el-tag>
+                </el-tooltip>
             </header>
             <!-- auth form -->
             <div class="form-content step--1">

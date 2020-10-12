@@ -59,16 +59,10 @@
 </template>
 
 <script>
-import Auth from './components/Auth'
-import Welcome from './components/Welcome'
-import Quiz from './components/Quiz'
-import CliBase from './components/CliBase'
+
 export default {
   components:{
-    Auth,
-    Welcome,
-    Quiz,
-    CliBase
+
   },
   name: 'app',
   data () {
