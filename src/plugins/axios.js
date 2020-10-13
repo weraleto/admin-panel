@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import axiosVue from 'axios-vue'
+import {store} from './../store'
 
 
 Vue.use(axiosVue, {
     globalDefaults: {
-      baseURL: 'http://89.208.87.121:4000/',
+      baseURL: 'https://dizi.foresco.site/',
       // headers: {
       //   common: {
       //     Authorization: ''

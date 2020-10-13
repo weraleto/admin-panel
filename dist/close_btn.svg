@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
+  <g id="close_btn" data-name="close btn" transform="translate(-900 -58)">
+    <path id="Union_1" data-name="Union 1" d="M21375.271,23064.434l-9.268-9.27-9.268,9.27a.819.819,0,0,1-1.158-1.158l9.268-9.27-9.268-9.27a.819.819,0,0,1,1.158-1.158l9.268,9.27,9.268-9.27a.822.822,0,0,1,1.158,0,.811.811,0,0,1,0,1.158l-9.268,9.27,9.268,9.27a.817.817,0,0,1-.578,1.4A.821.821,0,0,1,21375.271,23064.434Z" transform="translate(-20436.75 -22966.996)" fill="#fff"/>
+    <g id="Rectangle_6" data-name="Rectangle 6" transform="translate(900 58)" fill="none" stroke="#fff" stroke-width="1" opacity="0.3">
+      <rect width="58" height="58" rx="2" stroke="none"/>
+      <rect x="0.5" y="0.5" width="57" height="57" rx="1.5" fill="none"/>
+    </g>
+  </g>
+</svg>

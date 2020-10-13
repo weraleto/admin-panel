@@ -97,7 +97,8 @@ export default {
     },
     watch: {
         images(){
-            this.$emit('onfileupload', this.images)
+            let imagesPayload = this.isMultiple ? this.images : this.images[0].base;
+            this.$emit('onfileupload', imagesPayload)
         }
     }
 }

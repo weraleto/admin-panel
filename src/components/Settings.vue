@@ -151,7 +151,7 @@ export default {
     },
     methods: {
         async sendForm(){
-            let url = this.isReg ? '/api/register' : '/';
+            let url = this.isReg ? '/' : '/api/register';
             await this.$http.post(url, this.form)
                 .then(response => {
                     this.$router.push('welcome');
