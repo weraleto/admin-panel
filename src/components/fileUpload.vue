@@ -1,39 +1,64 @@
 <template>
     <div>
-        <div class="upload-file__wrapper ">
-            <draggable v-model="images" class="upload-file__wrapper">
+        <template v-if="makeChanges">
+            <div class="upload-file__wrapper ">
+                <draggable v-model="images" class="upload-file__wrapper">
 
 
-                <div class="upload-file__item bg-white" v-for="(item, index) in images" :key="index">
-                    <div class="upload-file__del-icon" @click="deleteImage(item,index)">
-                        <img :src="require('../../public/svg/times-circle-solid.svg')" alt="Удалить изображение">
+                    <div class="upload-file__item bg-white" v-for="(item, index) in images" :key="index">
+                        <div class="upload-file__del-icon" @click="deleteImage(item,index)">
+                            <img :src="require('../../public/svg/times-circle-solid.svg')" alt="Удалить изображение">
+                        </div>
+                        
+                        <img class="upload-file__uploaded" :src="item.base" alt="Изображение">
+                        
                     </div>
-                    
-                    <img class="upload-file__uploaded" :src="item.base" alt="Изображение">
-                    
-                </div>
-            </draggable>
-            
-            <div class="upload-file__item bg-white"  v-if="images.length <= maxFileAmount" @click="initFileUpload">
+                </draggable>
                 
-                <div class="upload_icon__wrapper">
-                    <img  
-                        class="upload_icon" 
-                        src="../../public/svg/plus-circle-solid.svg" alt="">
+                <div class="upload-file__item bg-white"  v-if="images.length <= maxFileAmount" @click="initFileUpload">
+                    
+                    <div class="upload_icon__wrapper">
+                        <img  
+                            class="upload_icon" 
+                            src="../../public/svg/plus-circle-solid.svg" alt="">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="upload-file__actions">
+
+                <input ref="inputField" style="display:none" type="file" :accept="fileFormat" @change="handleImage" :multiple="isMultiple">
+                <button v-if="isMultiple" :disabled="images.length >= 5" @click.prevent="initFileUpload" class="btn btn-active btn-upload">Загрузить изображения ( {{ this.images.length }} / 5 )</button>
+                <button v-else :disabled="images.length >= 1" @click.prevent="initFileUpload" class="btn btn-active btn-upload">Загрузить изображение </button>
+                <div class="remark">
+                    * Максимальный размер фото - 500 kb. Формат {{fileFormat}}
                 </div>
             </div>
+        </template>
 
-        </div>
+        <template v-else>
+             <div class="upload-file__wrapper ">
 
-        <div class="upload-file__actions">
 
-            <input ref="inputField" style="display:none" type="file" :accept="fileFormat" @change="handleImage" :multiple="isMultiple">
-            <button v-if="isMultiple" :disabled="images.length >= 5" @click.prevent="initFileUpload" class="btn btn-active btn-upload">Загрузить изображения ( {{ this.images.length }} / 5 )</button>
-            <button v-else :disabled="images.length >= 1" @click.prevent="initFileUpload" class="btn btn-active btn-upload">Загрузить изображение </button>
-            <div class="remark">
-                * Максимальный размер фото - 500 kb. Формат {{fileFormat}}
+                    <div class="upload-file__item bg-white" v-for="(item, index) in imgs" :key="index">
+                            <img :src="require('../../public/svg/times-circle-solid.svg')" alt="Удалить изображение">
+                        
+                        <img class="upload-file__uploaded" :src="item" alt="Изображение">
+                        
+                    </div>
+
             </div>
-        </div>
+
+            <div class="upload-file__actions">
+
+                <input ref="inputField" style="display:none" type="file" :accept="fileFormat" @change="handleImage" :multiple="isMultiple">
+                <button @click.prevent="$emit('filechange')" class="btn btn-active btn-upload">Заменить изображения</button>
+                <div class="remark">
+                    * Максимальный размер фото - 500 kb. Формат {{fileFormat}}
+                </div>
+            </div>
+        </template>
     </div>
 </template>
 
@@ -42,7 +67,13 @@ import draggable from 'vuedraggable'
 export default {
     props: {
         isMultiple: Boolean,
-        fileFormat: String
+        makeChanges: {
+            type:Boolean,
+            default: true
+        },
+        fileFormat: String,
+        imgs: Array,
+
     },
     components: {
         draggable

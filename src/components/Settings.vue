@@ -13,18 +13,7 @@
                     <div class="form-group">
                         <div class="form-grop-blocks">
 
-                            <!-- <div class="form-group-block" > -->
-                            <ValidationProvider tag="div" class="form-group-block" :rules="{ regex: /^([a-z][a-z0-9]{5,9})$/, required: true }" v-slot="{classes}">
-                                <label for="auth_login">Логин <span>*</span> </label>
-                                    <input
-                                        placeholder="Введите логин"
-                                        v-model="form.username"
-                                        id="auth_login"
-                                        :class="classes"
-                                        type="text"
-                                    >
-                            </ValidationProvider>
-                            <!-- </div> -->
+                            
                             <div class="form-group-block" >
                                 <label for="auth_email">Email <span>*</span> </label>
                                 <ValidationProvider class="input" :rules="{ regex: /^.+@.+\.+./, required: true }"

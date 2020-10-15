@@ -163,20 +163,6 @@ export default {
             },
         }
     },
-    created() {
-        // create fake data
-        // for(var i=0;i<35;i++){
-        //     this.cliList.push(
-        //       {
-        //             id:i+1,
-        //             photo:this.testPhoto,
-        //             date:'Диван угловой',
-        //             phone:'опубликовано',
-        //             reg:'до 15.10.2020'
-        //         }  
-        //     )
-        // }
-    },
     mounted(){
         this.getCatalog()
     },

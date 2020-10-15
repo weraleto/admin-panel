@@ -81,7 +81,7 @@ export default {
   },
   beforeMount(){
     if(!this.isAuth&&this.$route.name!='auth'){
-      this.$router.push('auth')
+      this.$router.push('/auth')
     }
   },
   methods: {

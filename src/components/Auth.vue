@@ -11,16 +11,21 @@
 
                     <div class="form-group">
                         <div class="form-grop-blocks">
-                            <ValidationProvider tag="div" class="form-group-block" :rules="{ regex: /^([a-z][a-z0-9]{5,9})$/, required: true }" v-slot="{classes}">
-                                <label for="auth_login">Логин </label>
+                            <div class="form-group-block" >
+                                <label for="auth_email">Email  </label>
+                                <ValidationProvider class="input" :rules="{ regex: /^.+@.+\.+./, required: true }"
+                                     v-slot="{classes}"
+                                >
                                     <input
-                                        placeholder="Введите логин"
-                                        v-model="form.username"
-                                        id="auth_login"
+                                        placeholder="Введите Email"
+                                        v-model="form.email_address"
+                                        id="auth_email"
                                         :class="classes"
-                                        type="text"
+                                        type="email"
                                     >
-                            </ValidationProvider>
+
+                                </ValidationProvider>
+                            </div>
                             
                             <div class="form-group-block" >
                                 <label for="auth_pass">Пароль </label>
@@ -70,8 +75,7 @@ export default {
     data() {
         return {
             form: {
-                method_type: 'via_username',
-                username: '',
+                email_address: '',
                 password: ''
             },
         }

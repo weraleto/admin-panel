@@ -3,11 +3,11 @@
         <div class="step--1-outer">
             <!-- main header -->
             <header>
-                <h1 class="page-header">Название товара</h1> 
+                <h1 class="page-header">{{form.name}}</h1> 
                 
-                <el-tooltip effect="light" content="Товар опубликован" placement="bottom">
-                    <el-tag type="success" effect="dark"> Опубликовано  <i class="el-icon-question"></i></el-tag>
-                </el-tooltip>
+                <!-- <el-tooltip effect="light" content="Товар опубликован" placement="bottom"> -->
+                    <el-tag :type="statuses[form.state.type].type" effect="dark"> {{statuses[form.state.type].name}}  <i class="el-icon-question"></i></el-tag>
+                <!-- </el-tooltip> -->
             </header>
             <!-- auth form -->
             <div class="form-content step--1">
@@ -18,14 +18,14 @@
                     <ValidationProvider class="input" :rules="{ required: true }"
                     >
                         <label>Изображение для приложения <span>*</span> </label>
-                        <FileUpload v-model="pngImg" :isMultiple="false" fileFormat=".png" @onfileupload="$event => pngImg = $event" />
+                        <FileUpload v-model="pngImg" :makeChanges="makeChanges1" :imgs="[pngImg]" :isMultiple="false" fileFormat=".png" @onfileupload="$event => pngImg = $event" @filechange="makeChanges1=true" />
                         
                     </ValidationProvider>
 
                     <ValidationProvider class="input" :rules="{ required: true }"
                     >
                         <label>Изображения для каталога товаров <span>*</span> </label>
-                        <FileUpload v-model="images" :isMultiple="true" fileFormat=".jpeg, .jpg" @onfileupload="$event => images = $event" />
+                        <FileUpload v-model="images" :makeChanges="makeChanges2" :imgs="images" :isMultiple="true" fileFormat=".jpeg, .jpg" @onfileupload="$event => images = $event" @filechange="makeChanges2=true" />
 
                     </ValidationProvider>
                 <!-- end uploading files -->
@@ -122,6 +122,20 @@
                             <button @click.prevent="$router.go(-1)" class="btn btn-light">Назад</button>
                             
                         </div>
+                        <div class="btn-group">
+                            <button v-if="form.state.type === 'published'"
+                            @click.prevent="stopProduct"
+                             class="btn btn-active">Приостановить размещение</button>
+
+                            <button v-if="form.state.type === 'draft'"
+                            @click.prevent="sendProduct"
+                             class="btn btn-active">Отправить на проверку</button>
+
+                            <button
+                            @click.prevent="deleteProduct"
+                             class="btn btn-active">Удалить товар</button>
+                            
+                        </div>
                         
                     </div>
                  </ValidationObserver>
@@ -140,6 +154,8 @@ import FileUpload from './fileUpload'
 export default {
     data() {
         return {
+            makeChanges1: false,
+            makeChanges2: false,
             images: [],
             pngImg: '',
             categoriesData: [],
@@ -152,6 +168,11 @@ export default {
                     data: {}
                 }
             },
+            statuses: {
+                'published':{name:'Опубликован',type:'success'},
+                'under_review':{name:'На модерации',type:'warning'},
+                'draft':{name:'Черновик',type:'info'},
+            },
             
         }
     },
@@ -159,12 +180,8 @@ export default {
         FileUpload
     },
     mounted(){
-        this.$http.get(`/api/shops/products/${this.$store.state.currItemId}/for_edit`)
-            .then(
-                res=>{
-                    console.log(res.data)
-                }
-            )
+        
+        this.getProduct()
 
         this.$http.get('/api/shops/product_categories')
             .then(
@@ -181,11 +198,71 @@ export default {
         productSpecs(){
             return this.currentCats.subcat ? this.currentCats.subcat.product_specs : [];
         },
+        productId(){
+            return this.$store.state.currItemId
+        }
     },
     methods: {
-        // uploadHandler(e){
-        //     console.log(e)
-        // },
+        async getProduct(){
+            await this.$http.get(`/api/shops/products/${this.productId}/for_edit`)
+            .then(
+                res=>{
+                    // console.log(res.data)
+                    this.form = res.data
+                    this.pngImg = `https://dizi.foresco.site/api/shops/products/editor_images/${res.data.editor_image_id}`
+                    this.images = res.data.catalog_images.map(it=>{
+                        return `https://dizi.foresco.site/api/shops/products/catalog_images/${it}`
+                    })
+                }
+            )
+        },
+        stopProduct(){
+            this.$http.post(`/api/shops/products/${this.productId}/pause_placement`)
+                .then(
+                    res=>{
+                        this.$notify({
+                           'title': 'Готово',
+                            'message': 'Размещение товара приостановлено',
+                            type: 'success' 
+                        })
+                    }
+                )
+                .then(
+                    res=>{
+                        this.getProduct()
+                    }
+                )
+        },
+        sendProduct(){
+            this.$http.post(`/api/shops/products/${this.productId}/send_to_review`)
+                .then(
+                    res=>{
+                        this.$notify({
+                           'title': 'Готово',
+                            'message': 'Товар отправлен на проверку',
+                            type: 'success' 
+                        })
+                    }
+                )
+                .then(
+                    res=>{
+                        this.getProduct()
+                    }
+                )
+        },
+        deleteProduct(){
+            this.$http.delete(`/api/shops/products/${this.productId}`)
+                .then(
+                    res=>{
+                        this.$notify({
+                           'title': 'Готово',
+                            'message': 'Товар удален',
+                            type: 'success' 
+                        })
+                        this.$router.push('/base')
+                    }
+                )
+        },
         sendData(){
             let imgArray = this.images.map(item=>{
                 return item.base.replace('data:image/jpeg;base64,','')
@@ -203,7 +280,7 @@ export default {
                         })
                     }
                 )
-        }
+        },
 
     }
     
