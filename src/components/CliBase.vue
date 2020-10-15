@@ -52,9 +52,7 @@
                                 >
                                     <td class="client-base-table-cell cli-number"></td>
                                     <td class="client-base-table-cell cli-fio"><div>
-                                        <!-- {{client.photo}} -->
-                                        <img :src="tmp[item.editor_image_id]" :alt="item.name" >
-                                        <!-- {{getCatalogPic(item.editor_image_id)}} -->
+                                        <img :src="`https://dizi.foresco.site/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
                                     </div></td>
                                     <td class="client-base-table-cell cli-birth">{{item.name}}</td>
                                     <td class="client-base-table-cell cli-phone">{{statuses[item.state.type]}}</td>
@@ -165,7 +163,6 @@ export default {
                 'under_review':'На модерации',
                 'draft':'Черновик',
             },
-            tmp: {}
         }
     },
     created() {
@@ -206,27 +203,9 @@ export default {
             .then(
                 res=>{
                     this.itemsData = res.data
-                    this.itemsData.products.forEach(it=>{
-                        this.getCatalogPic(it.editor_image_id)
-                    })
                 }
             )
         },
-        async getCatalogPic(id){
-            await this.$http.get(`/api/shops/products/editor_images/${id}`,{responseType: 'blob'})
-                .then(
-                    res=>{
-                        let reader = new FileReader();
-                        let that = this;
-                        reader.onload = function (e) {
-                           that.tmp[id] = e.currentTarget.result
-                            // console.log(Vue.data)
-                            // document.querySelector(`img[data-id="img-${id}"]`).src = e.currentTarget.result
-                        };
-                        reader.readAsDataURL(res.data);
-                    }
-                )
-        }
         
     },
     computed: {
