@@ -6,7 +6,7 @@
                 <h1 class="page-header">{{form.name}}</h1> 
                 
                 <!-- <el-tooltip effect="light" content="Товар опубликован" placement="bottom"> -->
-                    <el-tag :type="statuses[form.state.type].type" effect="dark"> {{statuses[form.state.type].name}}  <i class="el-icon-question"></i></el-tag>
+                    <el-tag  :type="statuses[form.state.type].t" > {{statuses[form.state.type].name}}  <i class="el-icon-question"></i></el-tag>
                 <!-- </el-tooltip> -->
             </header>
             <!-- auth form -->
@@ -53,20 +53,21 @@
                                 <label for="item_subcat">Категория <span>*</span> </label>
                                  <v-select label="name" 
                                  :options="categoriesData" 
-                                 v-model="currentCats.cat" 
+                                 disabled
+                                 :value="form.category_name"
                                  placeholder="Категория товара"></v-select>
                             </div>
 
                             <div class="form-group-block" >
                                 <label for="item_subcat">Подкатегория <span>*</span> </label>
                                  <v-select label="name" :options="subCatList ? subCatList : []" 
-                                 :disabled="!currentCats.cat"
-                                 :resetOnOptionsChange="true"
-                                 v-model="currentCats.subcat" placeholder="Подкатегория товара"></v-select>
+                                 disabled
+                                 :value="form.subcategory_name"
+                                 placeholder="Подкатегория товара"></v-select>
                             </div>
 
                             <div class="form-group-block" 
-                                v-for="(field, index) in productSpecs.data" :key="index"
+                                v-for="(field, index) in form.specs" :key="index"
                             >
                                 <label >{{field.name}} <span v-if="field.is_required">*</span> </label>
 
@@ -169,9 +170,9 @@ export default {
                 }
             },
             statuses: {
-                'published':{name:'Опубликован',type:'success'},
-                'under_review':{name:'На модерации',type:'warning'},
-                'draft':{name:'Черновик',type:'info'},
+                'published':{name:'Опубликован',t:'success'},
+                'under_review':{name:'На модерации',t:'warning'},
+                'draft':{name:'Черновик',t:'info'},
             },
             
         }
@@ -210,9 +211,11 @@ export default {
                     // console.log(res.data)
                     this.form = res.data
                     this.pngImg = `https://dizi.foresco.site/api/shops/products/editor_images/${res.data.editor_image_id}`
-                    this.images = res.data.catalog_images.map(it=>{
+                    this.images = res.data.catalog_images_ids.map(it=>{
                         return `https://dizi.foresco.site/api/shops/products/catalog_images/${it}`
                     })
+                    this.imagesCataTms = res.data.catalog_images_ids
+                    this.pngtmp = res.data.editor_image_id
                 }
             )
         },
@@ -264,20 +267,32 @@ export default {
                 )
         },
         sendData(){
-            let imgArray = this.images.map(item=>{
-                return item.base.replace('data:image/jpeg;base64,','')
-            })
-            this.form.images = imgArray;
-            console.log(imgArray)
-            this.form.attrs.specs_name = this.productSpecs.name
-            this.$http.post('/api/shops/products', this.form)
+            let reqData = {};
+            reqData.attrs = this.form.attrs;
+
+            // console.log(this.form)
+            let imgArray = this.makeChanges2 ? 
+                this.images.map(item=>{
+                    return {data: item.base.replace('data:image/jpeg;base64,',''), type: 'new'}
+                }) : 
+                this.form.catalog_images_ids.map(item=>{
+                    return {id: item, type: 'existing'}
+                })
+            reqData.catalog_images = imgArray;
+            reqData.editor_image = this.makeChanges1 ? this.pngImg.replace('data:image/jpeg;base64,','') : {id: this.form.editor_image_id, type: 'existing'};
+            reqData.name = this.form.name;
+            reqData.price = this.form.price;
+
+            // this.form.attrs.specs_name = this.productSpecs.name
+            this.$http.post(`/api/shops/products/${this.productId}/edit`, reqData)
                 .then(
                     res=>{
                         this.$notify({
                             'title': 'Готово',
-                            'message': 'Товар добавлен в Ваш список товаров',
+                            'message': 'Товар отредактирован',
                             type: 'success'
                         })
+                        this.getProduct()
                     }
                 )
         },
