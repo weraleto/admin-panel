@@ -64,26 +64,25 @@
 
                         <div class="client-base-table-mobile mobile-only">
                             <div class="client-base-table-item" 
-                                v-for="(client, index) in searchFilter" :key="index"
-                                @click="showItemCard(client.id)"
+                                v-for="(item, index) in itemsData.products" :key="index"
+                                @click="showItemCard(item.id); $store.state.currItemId = item.id"
                             >
-                                <div class="client-base-table-num">{{client.id}}</div>
+                                <div class="client-base-table-num"></div>
                                 <div class="client-base-table-el">
                                     <div class="client-base-table-label">Фото</div>
-                                    <!-- <div class="client-base-table-content">{{client.photo}}</div> -->
-                                    <img :src="client.photo" :alt="client.date" >
+                                    <img :src="`https://dizi.foresco.site/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
                                 </div>
                                 <div class="client-base-table-el">
                                     <div class="client-base-table-label">Название</div>
-                                    <div class="client-base-table-content">{{client.date}}</div>
+                                    <div class="client-base-table-content">{{item.name}}</div>
                                 </div>
                                 <div class="client-base-table-el">
                                     <div class="client-base-table-label">Статус публикации</div>
-                                    <div class="client-base-table-content">{{client.phone}}</div>
+                                    <div class="client-base-table-content">{{statuses[item.state.type]}}</div>
                                 </div>
                                 <div class="client-base-table-el">
                                     <div class="client-base-table-label">Срок публикации</div>
-                                    <div class="client-base-table-content">{{client.reg}}</div>
+                                    <div class="client-base-table-content">{{item.state.type === 'placed' ? '' : '-'}}</div>
                                 </div>
                             </div>
                         </div>
@@ -91,7 +90,7 @@
                     </div>
 
                     <div class="client-base-pagination">
-                        <pagination :current="currentPage" :total="searchFilter.length" :per-page="(+sortNum)" @page-changed="changePageNum($event)" ></pagination>
+                        <pagination :current="currentPage" :total="totalPages" :per-page="(+sortNum)" @page-changed="changePageNum($event)" ></pagination>
                         
                         <div class="client-base-pagination-sort">
                             <div class="label">
@@ -148,9 +147,8 @@ export default {
             searchIn:'',
             currentPage:1,
             sortNum:10,
+            totalPages: 1,
             moveRight:[],
-            cliList:[],
-            testPhoto:``,
             filtrationName: 'draft',
             filtrationCategories: [
                 {label:'Опубликованные товары', name: 'placed'},
@@ -167,17 +165,17 @@ export default {
     },
     created() {
         // create fake data
-        for(var i=0;i<35;i++){
-            this.cliList.push(
-              {
-                    id:i+1,
-                    photo:this.testPhoto,
-                    date:'Диван угловой',
-                    phone:'опубликовано',
-                    reg:'до 15.10.2020'
-                }  
-            )
-        }
+        // for(var i=0;i<35;i++){
+        //     this.cliList.push(
+        //       {
+        //             id:i+1,
+        //             photo:this.testPhoto,
+        //             date:'Диван угловой',
+        //             phone:'опубликовано',
+        //             reg:'до 15.10.2020'
+        //         }  
+        //     )
+        // }
     },
     mounted(){
         this.getCatalog()
@@ -188,6 +186,7 @@ export default {
             optgroup.classList.toggle('hide')
             optgroup.classList.toggle('show')
             if(event.target==event.target.closest('.sort-type-option')){
+                this.getCatalog()
                 this.sortNum=event.target.closest('.sort-type-option').textContent;
             }
         },
@@ -202,7 +201,8 @@ export default {
             this.$http.get(`/api/shops/products?page=${this.currentPage}&limit=${this.sortNum}&filter=${this.filtrationName}`)
             .then(
                 res=>{
-                    this.itemsData = res.data
+                    this.itemsData = res.data;
+                    this.totalPages = res.data.total_pages
                 }
             )
         },
@@ -222,6 +222,11 @@ export default {
             return this.searchFilter.slice(start,end);
         }
     },
+    watch: {
+        currentPage(){
+            this.getCatalog()
+        }
+    }
     
 }
 

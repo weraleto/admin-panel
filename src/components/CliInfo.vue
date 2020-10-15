@@ -159,11 +159,18 @@ export default {
         FileUpload
     },
     mounted(){
+        this.$http.get(`/api/shops/products/${this.$store.state.currItemId}/for_edit`)
+            .then(
+                res=>{
+                    console.log(res.data)
+                }
+            )
+
         this.$http.get('/api/shops/product_categories')
             .then(
                 res=>{
                     this.categoriesData = res.data;
-                    console.log(this.categoriesData)
+                    // console.log(this.categoriesData)
                 }
             )
     },
