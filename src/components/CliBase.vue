@@ -21,7 +21,7 @@
                         <div class="btn-group">
                             <button class="client-base-filtration-link btn"
                             :class="item.name===filtrationName?'btn-active':'btn-light'"
-                            @click="filtrationName=item.name"
+                            @click="filtrationName=item.name; getCatalog()"
                             v-for="(item, index) in filtrationCategories" :key="index"
                             >{{item.label}}</button>
                         </div>
@@ -46,18 +46,19 @@
                             </thead>
                             <tbody>
                                 <tr
-                                    v-for="(client, index) in paginatedData" :key="index"
-                                    @click="showItemCard(client.id)"
+                                    v-for="(item, index) in itemsData.products" :key="index"
+                                    @click="showItemCard(item.id); $store.state.currItemId = item.id"
                                     
                                 >
-                                    <td class="client-base-table-cell cli-number">{{client.id}}.</td>
+                                    <td class="client-base-table-cell cli-number"></td>
                                     <td class="client-base-table-cell cli-fio"><div>
                                         <!-- {{client.photo}} -->
-                                        <img :src="client.photo" :alt="client.date" >
+                                        <img :src="tmp[item.editor_image_id]" :alt="item.name" >
+                                        <!-- {{getCatalogPic(item.editor_image_id)}} -->
                                     </div></td>
-                                    <td class="client-base-table-cell cli-birth">{{client.date}}</td>
-                                    <td class="client-base-table-cell cli-phone">{{client.phone}}</td>
-                                    <td class="client-base-table-cell cli-date">{{client.reg}}</td>
+                                    <td class="client-base-table-cell cli-birth">{{item.name}}</td>
+                                    <td class="client-base-table-cell cli-phone">{{statuses[item.state.type]}}</td>
+                                    <td class="client-base-table-cell cli-date">{{item.state.type === 'placed' ? '' : '-'}}</td>
                                     <td class="client-base-table-cell aside"> </td>
                                 </tr>
                             </tbody>
@@ -152,12 +153,19 @@ export default {
             moveRight:[],
             cliList:[],
             testPhoto:``,
-            filtrationName: 'published',
+            filtrationName: 'draft',
             filtrationCategories: [
-                {label:'Опубликованные товары', name: 'published'},
-                {label:'Товары на модерации', name: 'moderation'},
-                {label:'Черновики', name: 'drafts'},
-            ]
+                {label:'Опубликованные товары', name: 'placed'},
+                {label:'Товары на модерации', name: 'under_review'},
+                {label:'Черновики', name: 'draft'},
+            ],
+            itemsData: [],
+            statuses: {
+                'published':'Опубликован',
+                'under_review':'На модерации',
+                'draft':'Черновик',
+            },
+            tmp: {}
         }
     },
     created() {
@@ -174,6 +182,9 @@ export default {
             )
         }
     },
+    mounted(){
+        this.getCatalog()
+    },
     methods: {
         sortType(){
             var optgroup=event.target.closest('.sort-type').querySelector('.sort-type-optgroup');
@@ -189,13 +200,39 @@ export default {
         showItemCard(id){
             this.showInfo = true;
             this.$router.push(`/item/${id}`)
-        }   
+        },
+        getCatalog(){
+            this.$http.get(`/api/shops/products?page=${this.currentPage}&limit=${this.sortNum}&filter=${this.filtrationName}`)
+            .then(
+                res=>{
+                    this.itemsData = res.data
+                    this.itemsData.products.forEach(it=>{
+                        this.getCatalogPic(it.editor_image_id)
+                    })
+                }
+            )
+        },
+        async getCatalogPic(id){
+            await this.$http.get(`/api/shops/products/editor_images/${id}`,{responseType: 'blob'})
+                .then(
+                    res=>{
+                        let reader = new FileReader();
+                        let that = this;
+                        reader.onload = function (e) {
+                           that.tmp[id] = e.currentTarget.result
+                            // console.log(Vue.data)
+                            // document.querySelector(`img[data-id="img-${id}"]`).src = e.currentTarget.result
+                        };
+                        reader.readAsDataURL(res.data);
+                    }
+                )
+        }
         
     },
     computed: {
         searchFilter(){
             if(this.searchIn!=''){
-                return this.cliList.filter(item => item.name.toLowerCase().indexOf(this.searchIn.toLowerCase()) !== -1)
+                return this.cliList.filter(item => item.date.toLowerCase().indexOf(this.searchIn.toLowerCase()) !== -1)
             }else{
                 return this.cliList
             }
