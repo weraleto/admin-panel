@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import {store} from './store'
 
 Vue.use(VueRouter)
 
@@ -34,4 +35,12 @@ export const router = new VueRouter({
   scrollBehavior (to, from, savedPosition) {
     return { x: 0, y: 0 }
   }
+})
+
+let noAuthRoutes = ['auth', 'reg', 'email', 'respass', 'changepass'];
+
+router.beforeEach((to, from, next) => {
+  if ( noAuthRoutes.indexOf(to.name) == -1 && !store.state.isAuth) next({ name: 'auth' })
+  // если пользователь не авторизован, то `next` будет вызываться дважды
+  next()
 })

@@ -79,11 +79,6 @@ export default {
       ]
     }
   },
-  // beforeMount(){
-  //   if(!this.isAuth&&this.$route.name!='auth'){
-  //     this.$router.push('/auth')
-  //   }
-  // },
   methods: {
     beforeLeave(){
       this.showNav=false;
