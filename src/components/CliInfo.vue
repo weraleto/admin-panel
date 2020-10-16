@@ -6,7 +6,9 @@
                 <h1 class="page-header">{{form.name}}</h1> 
                 
                 <!-- <el-tooltip effect="light" content="Товар опубликован" placement="bottom"> -->
-                    <el-tag  :type="statuses[form.state.type].t" > {{statuses[form.state.type].name}}  <i class="el-icon-question"></i></el-tag>
+                    <el-tag  :type="statuses[form.state.type].t" > {{statuses[form.state.type].name}}  
+                        <!-- <i class="el-icon-question"></i> -->
+                    </el-tag>
                 <!-- </el-tooltip> -->
             </header>
             <!-- auth form -->
@@ -267,10 +269,6 @@ export default {
                 )
         },
         sendData(){
-            let reqData = {};
-            reqData.attrs = this.form.attrs;
-
-            // console.log(this.form)
             let imgArray = this.makeChanges2 ? 
                 this.images.map(item=>{
                     return {data: item.base.replace('data:image/jpeg;base64,',''), type: 'new'}
@@ -278,13 +276,14 @@ export default {
                 this.form.catalog_images_ids.map(item=>{
                     return {id: item, type: 'existing'}
                 })
-            reqData.catalog_images = imgArray;
-            reqData.editor_image = this.makeChanges1 ? this.pngImg.replace('data:image/jpeg;base64,','') : null;
-            reqData.name = this.form.name;
-            reqData.price = this.form.price;
-
-            // this.form.attrs.specs_name = this.productSpecs.name
-            this.$http.post(`/api/shops/products/${this.productId}/edit`, reqData)
+                
+            this.$http.post(`/api/shops/products/${this.productId}/edit`, {
+                attrs: this.form.attrs,
+                catalog_images: imgArray,
+                editor_image: this.makeChanges1 ? this.pngImg.replace('data:image/jpeg;base64,','') : null,
+                name: this.form.name,
+                price: this.form.price
+            })
                 .then(
                     res=>{
                         this.$notify({
