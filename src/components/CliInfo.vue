@@ -279,7 +279,7 @@ export default {
                     return {id: item, type: 'existing'}
                 })
             reqData.catalog_images = imgArray;
-            reqData.editor_image = this.makeChanges1 ? this.pngImg.replace('data:image/jpeg;base64,','') : {id: this.form.editor_image_id, type: 'existing'};
+            reqData.editor_image = this.makeChanges1 ? this.pngImg.replace('data:image/jpeg;base64,','') : null;
             reqData.name = this.form.name;
             reqData.price = this.form.price;
 
