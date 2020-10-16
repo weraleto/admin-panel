@@ -16,6 +16,9 @@
                             
                             <div class="form-group-block" >
                                 <label for="auth_email">Email <span>*</span> </label>
+                                
+
+                                
                                 <ValidationProvider class="input" :rules="{ regex: /^.+@.+\.+./, required: true }"
                                      v-slot="{classes}"
                                 >
@@ -31,19 +34,24 @@
                             </div>
                             <div class="form-group-block" >
                                 <label for="auth_pass">Пароль <span>*</span> </label>
+                                <div class="tooltip-wrapper">
                                 <ValidationProvider name="password" class="input" :rules="{ regex: /^(?=.*?[A-Z])[a-zA-Z0-9]{6,}$/, required: true}"
                                      v-slot="{classes}"
                                 >
                                     <input
                                         placeholder="Введите пароль"
                                         id="auth_pass"
-                                        type="text"
+                                        type="password"
                                         autocomplete="off"
                                         :class="classes"
                                         v-model="form.password"
                                     >
-
+                                    <el-tooltip effect="light" content="Пароль должен быть не короче 6 символов и иметь одну заглавную букву" placement="bottom">
+                                            <i class="el-icon-question input-tooltip"></i>
+                                    </el-tooltip>        
                                 </ValidationProvider>
+                                </div>
+                                
                             </div>
                             <div class="form-group-block" >
                                 <label for="auth_pass_2">Подтверждение пароля <span>*</span> </label>
@@ -55,7 +63,7 @@
                                         id="auth_pass_2"
                                         :class="classes"
                                         autocomplete="off"
-                                        type="text"
+                                        type="password"
                                         v-model="confirmPassword"
                                     >
 
@@ -164,3 +172,18 @@ export default {
     }
 }
 </script>
+
+<style>
+
+    .input-tooltip {
+        position: absolute;
+        top: 50%;
+        right: 5px;
+        transform: translateY(-50%);
+    }
+
+    .tooltip-wrapper {
+        position: relative;
+    }
+
+</style>

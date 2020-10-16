@@ -186,10 +186,11 @@ export default {
                 .then(
                     res=>{
                         this.$notify({
-                            'title': 'Готово',
-                            'message': 'Товар добавлен в Ваш список товаров',
+                            'title': 'Товар добавлен',
+                            'message': 'Теперь вы можете его отправить на модерацию',
                             type: 'success'
                         })
+                        this.$router.push('/base')
                     }
                 )
         }
