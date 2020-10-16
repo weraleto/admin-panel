@@ -6,22 +6,39 @@
             </header>
             <!-- form -->
             <div class="form-content auth-form">
-                <h3 class="form-subheader">Введите <span>свой email</span></h3>
+                <h3 class="form-subheader">Введите <span>новый пароль</span></h3>
                 <ValidationObserver v-slot="{ invalid }" tag="form">
 
                     <div class="form-group">
                         <div class="form-grop-blocks">
                             <div class="form-group-block" >
-                                <label for="auth_email">Email <span>*</span> </label>
-                                <ValidationProvider class="input" :rules="{ regex: /^.+@.+\.+./, required: true }"
+                                <label for="auth_pass">Пароль <span>*</span> </label>
+                                <ValidationProvider name="password" class="input" :rules="{ regex: /^(?=.*?[A-Z])[a-zA-Z0-9]{6,}$/, required: true}"
                                      v-slot="{classes}"
                                 >
                                     <input
-                                        placeholder="Введите Email"
-                                        v-model="form.email_address"
-                                        id="auth_email"
+                                        placeholder="Введите пароль"
+                                        id="auth_pass"
+                                        type="text"
+                                        autocomplete="off"
                                         :class="classes"
-                                        type="email"
+                                        v-model="form.new_password"
+                                    >
+
+                                </ValidationProvider>
+                            </div>
+                            <div class="form-group-block" >
+                                <label for="auth_pass_2">Подтверждение пароля <span>*</span> </label>
+                                <ValidationProvider class="input" :rules="{required: true, password: '@password'  }"
+                                     v-slot="{classes}"
+                                >
+                                    <input
+                                        placeholder="Введите пароль"
+                                        id="auth_pass_2"
+                                        :class="classes"
+                                        autocomplete="off"
+                                        type="text"
+                                        v-model="confirmPassword"
                                     >
 
                                 </ValidationProvider>
@@ -32,7 +49,7 @@
                         <div class="btn-group">
                                 
                                 <button @click.prevent="clear" :disabled="invalid" class="btn btn-active"
-                                >Сбросить пароль</button>
+                                >Сменить пароль</button>
                                 
                                 <button @click.prevent="$router.go(-1)" class="btn btn-light"
                                 >Отмена</button>
@@ -51,9 +68,9 @@ export default {
     data() {
         return {
             form: {
-                email_address: '',
-                method_type: 'via_email_address'
-            }
+                new_password: '',
+            },
+            confirmPassword:''
         }
     },
     methods: {

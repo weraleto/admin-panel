@@ -10,7 +10,8 @@ import Settings from './components/Settings'
 import CliBase from './components/CliBase'
 import CliInfo from './components/CliInfo'
 import Welcome from './components/Welcome'
-import Forgot from './components/ResetPass'
+import Forgot from './components/ResetPassReq'
+import ChangePass from './components/ResetPassRes'
 
 
 export const router = new VueRouter({
@@ -24,7 +25,9 @@ export const router = new VueRouter({
     {path:'/settings', name:'settings', component: Settings},
     {path:'/base', name:'client-base', component: CliBase},
     {path:'/welcome', name:'welcome', component: Welcome},
-    {path:'/forgot-pass', name:'respass', component: Forgot},
+    {path:'/email-success', name:'email', component: Welcome},
+    {path:'/forgot-pass/reset', name:'respass', component: Forgot},
+    {path:'/forgot-pass/change', name:'changepass', component: ChangePass},
 
     {path:'/item/:id', name:'client-info', component: CliInfo},
   ],
