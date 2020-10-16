@@ -31,7 +31,9 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th class="client-base-table-cell cli-number">№</th>
+                                    <th class="client-base-table-cell cli-number">
+                                        
+                                    </th>
                                     <th class="client-base-table-cell cli-fio">Фото</th>
                                     <th class="client-base-table-cell cli-birth">
                                         Название
@@ -47,11 +49,18 @@
                             <tbody>
                                 <tr
                                     v-for="(item, index) in itemsData.products" :key="index"
-                                    @click="showItemCard(item.id); $store.state.currItemId = item.id"
+                                    
                                     
                                 >
-                                    <td class="client-base-table-cell cli-number"></td>
-                                    <td class="client-base-table-cell cli-fio"><div>
+                                    <td class="client-base-table-cell cli-number">
+                                        <template v-if="item.state.type==='approved'">
+                                            <input type="checkbox" v-model="itemsForConfirm[item.id]" :name="`base-${index}`" :id="`base-${index}`" >
+                                            <label class="label-checkbox" :for="`base-${index}`"
+                                            >                                               
+                                            </label>
+                                        </template>
+                                    </td>
+                                    <td class="client-base-table-cell cli-fio" @click="showItemCard(item.id); $store.state.currItemId = item.id"><div>
                                         <img :src="`https://dizi.foresco.site/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
                                     </div></td>
                                     <td class="client-base-table-cell cli-birth">{{item.name}}</td>
@@ -65,10 +74,16 @@
                         <div class="client-base-table-mobile mobile-only">
                             <div class="client-base-table-item" 
                                 v-for="(item, index) in itemsData.products" :key="index"
-                                @click="showItemCard(item.id); $store.state.currItemId = item.id"
+                                
                             >
-                                <div class="client-base-table-num"></div>
-                                <div class="client-base-table-el">
+                                <div class="client-base-table-num">
+                                    <template v-if="item.state.type==='approved'">
+                                            <input type="checkbox" :name="`base-${index}`" :id="`base-${index}`" >
+                                            <label class="label-checkbox" :for="`base-${index}`">                                               
+                                            </label>
+                                        </template>
+                                </div>
+                                <div class="client-base-table-el" @click="showItemCard(item.id); $store.state.currItemId = item.id">
                                     <div class="client-base-table-label">Фото</div>
                                     <img :src="`https://dizi.foresco.site/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
                                 </div>
@@ -113,7 +128,7 @@
                                 <button class="btn btn-active">Добавить товар</button>
                             </router-link>
                             <router-link :to="''" class="client-base-navigation-link page-link">
-                                <button class="btn btn-active">Опубликовать товары</button>
+                                <button :disabled="itemsForConfirm ? Object.keys(itemsForConfirm).length  < 1 : true" @click.prevent="publishItems" class="btn btn-active">Опубликовать товары</button>
                             </router-link>
                             <!-- <button class="btn btn-light client-base-navigation-link page-link">Экспорт базы</button> -->
                         </div>
@@ -161,6 +176,7 @@ export default {
                 'under_review':'На модерации',
                 'draft':'Черновик',
             },
+            itemsForConfirm: {}
         }
     },
     mounted(){
@@ -192,6 +208,24 @@ export default {
                 }
             )
         },
+        publishItems(){
+            let ids = [];
+            
+            for (let key in this.itemsForConfirm) {
+                if(this.itemsForConfirm[key]==true){
+                    ids.push(key)
+                }
+            }
+            this.$http.post('/api/shops/products/place', ids)
+                .then(
+                    res=>{
+                        this.$notify({
+                            type: 'success',
+                            title: 'Товары размещены'
+                        })
+                    }
+                )
+        }
         
     },
     computed: {
