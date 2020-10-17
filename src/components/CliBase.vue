@@ -47,59 +47,76 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr
-                                    v-for="(item, index) in itemsData.products" :key="index"
-                                    
-                                    
-                                >
-                                    <td class="client-base-table-cell cli-number">
-                                        <template v-if="item.state.type==='approved'">
-                                            <input type="checkbox" v-model="itemsForConfirm[item.id]" :name="`base-${index}`" :id="`base-${index}`" >
-                                            <label class="label-checkbox" :for="`base-${index}`"
-                                            >                                               
-                                            </label>
-                                        </template>
-                                    </td>
-                                    <td class="client-base-table-cell cli-fio" @click="showItemCard(item.id); $store.state.currItemId = item.id"><div>
-                                        <img :src="`https://dizi.foresco.site/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
-                                    </div></td>
-                                    <td class="client-base-table-cell cli-birth">{{item.name}}</td>
-                                    <td class="client-base-table-cell cli-phone">{{statuses[item.state.type]}}</td>
-                                    <td class="client-base-table-cell cli-date">{{item.state.type === 'placed' ? '' : '-'}}</td>
-                                    <td class="client-base-table-cell aside"> </td>
-                                </tr>
+                                <template v-if="itemsData.products">
+                                    <tr
+                                        v-for="(item, index) in itemsData.products" :key="index"
+                                        
+                                    >
+                                        <td class="client-base-table-cell cli-number">
+                                            <template v-if="item.state.type==='approved'">
+                                                <input type="checkbox" v-model="itemsForConfirm[item.id]" :name="`base-${index}`" :id="`base-${index}`" >
+                                                <label class="label-checkbox" :for="`base-${index}`"
+                                                >                                               
+                                                </label>
+                                            </template>
+                                        </td>
+                                        <td class="client-base-table-cell cli-fio" @click="showItemCard(item.id); $store.state.currItemId = item.id"><div>
+                                            <img :src="`https://dizi.foresco.site/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
+                                        </div></td>
+                                        <td class="client-base-table-cell cli-birth">{{item.name}}</td>
+                                        <td class="client-base-table-cell cli-phone">{{statuses[item.state.type]}}</td>
+                                        <td class="client-base-table-cell cli-date">{{item.state.type === 'placed' ? '' : '-'}}</td>
+                                        <td class="client-base-table-cell aside"> </td>
+                                    </tr>
+                                </template>
+                                <template v-else>
+                                    <tr>
+                                        <td colspan="6" style="text-align: center">
+                                             В данной категории нет товаров
+                                        </td>
+                                    </tr>
+                                </template>
                             </tbody>
                         </table>
 
                         <div class="client-base-table-mobile mobile-only">
-                            <div class="client-base-table-item" 
-                                v-for="(item, index) in itemsData.products" :key="index"
-                                
-                            >
-                                <div class="client-base-table-num">
-                                    <template v-if="item.state.type==='approved'">
-                                            <input type="checkbox" :name="`base-${index}`" :id="`base-${index}`" >
-                                            <label class="label-checkbox" :for="`base-${index}`">                                               
-                                            </label>
-                                        </template>
+                            <template v-if="itemsData.products">
+                                <div class="client-base-table-item" 
+                                    v-for="(item, index) in itemsData.products" :key="index"
+                                    
+                                >
+                                    <div class="client-base-table-num">
+                                        <template v-if="item.state.type==='approved'">
+                                                <input type="checkbox" :name="`base-${index}`" :id="`base-${index}`" >
+                                                <label class="label-checkbox" :for="`base-${index}`">                                               
+                                                </label>
+                                            </template>
+                                    </div>
+                                    <div class="client-base-table-el" @click="showItemCard(item.id); $store.state.currItemId = item.id">
+                                        <div class="client-base-table-label">Фото</div>
+                                        <img :src="`https://dizi.foresco.site/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
+                                    </div>
+                                    <div class="client-base-table-el">
+                                        <div class="client-base-table-label">Название</div>
+                                        <div class="client-base-table-content">{{item.name}}</div>
+                                    </div>
+                                    <div class="client-base-table-el">
+                                        <div class="client-base-table-label">Статус публикации</div>
+                                        <div class="client-base-table-content">{{statuses[item.state.type]}}</div>
+                                    </div>
+                                    <div class="client-base-table-el">
+                                        <div class="client-base-table-label">Срок публикации</div>
+                                        <div class="client-base-table-content">{{item.state.type === 'placed' ? '' : '-'}}</div>
+                                    </div>
                                 </div>
-                                <div class="client-base-table-el" @click="showItemCard(item.id); $store.state.currItemId = item.id">
-                                    <div class="client-base-table-label">Фото</div>
-                                    <img :src="`https://dizi.foresco.site/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
+                            </template>
+                            <template v-else>
+                                <div class="client-base-table-item">
+                                    <div class="client-base-table-el">
+                                        <div class="client-base-table-label">В данной категории нет товаров</div>
+                                    </div>
                                 </div>
-                                <div class="client-base-table-el">
-                                    <div class="client-base-table-label">Название</div>
-                                    <div class="client-base-table-content">{{item.name}}</div>
-                                </div>
-                                <div class="client-base-table-el">
-                                    <div class="client-base-table-label">Статус публикации</div>
-                                    <div class="client-base-table-content">{{statuses[item.state.type]}}</div>
-                                </div>
-                                <div class="client-base-table-el">
-                                    <div class="client-base-table-label">Срок публикации</div>
-                                    <div class="client-base-table-content">{{item.state.type === 'placed' ? '' : '-'}}</div>
-                                </div>
-                            </div>
+                            </template>
                         </div>
 
                     </div>

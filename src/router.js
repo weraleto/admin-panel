@@ -19,20 +19,24 @@ export const router = new VueRouter({
   mode: 'history',
   base: __dirname,
   routes: [
-    {path:'/auth', name:'auth', component: Auth},
-    {path:'/add', name:'add', component: AddItem},
-    {path:'/reg', name:'reg', component: Settings},
-    {path:'/balance', name:'balance', component: Balance},
-    {path:'/settings', name:'settings', component: Settings},
-    {path:'/base', name:'client-base', component: CliBase},
-
-    {path:'/welcome', name:'welcome', component: Welcome},
-    {path:'/email-success', name:'email', component: Welcome},
+    {path:'/auth', name:'auth', component: Auth}, //авторизация
+    {path:'/reg', name:'reg', component: Settings}, // регистрация 
     
-    {path:'/forgot-pass/reset', name:'respass', component: Forgot},
-    {path:'/forgot-pass/change', name:'changepass', component: ChangePass},
 
-    {path:'/item/:id', name:'client-info', component: CliInfo},
+    {path:'/welcome', name:'welcome', component: Welcome}, // регистрация завершена
+    {path:'/email-success', name:'email', component: Welcome}, // почта подтверждена
+    
+    {path:'/forgot-pass/reset', name:'respass', component: Forgot}, //запрос на сброс пароля
+    {path:'/forgot-pass/change', name:'changepass', component: ChangePass}, //изменить забытый пароль 
+    
+    // руты доступные только с авторизацией
+    {path:'/add', name:'add', component: AddItem}, // добавить элемент
+    {path:'/balance', name:'balance', component: Balance}, // баланс
+    {path:'/settings', name:'settings', component: Settings}, // изменить данные 
+    {path:'/base', name:'client-base', component: CliBase}, // список товаров
+
+
+    {path:'/item/:id', name:'client-info', component: CliInfo}, // товар
   ],
   scrollBehavior (to, from, savedPosition) {
     return { x: 0, y: 0 }
