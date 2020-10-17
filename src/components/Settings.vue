@@ -14,7 +14,7 @@
                         <div class="form-grop-blocks">
 
                             
-                            <div class="form-group-block" >
+                            <div class="form-group-block">
                                 <label for="auth_email">Email <span>*</span> </label>
                                 
 
@@ -28,6 +28,7 @@
                                         id="auth_email"
                                         :class="classes"
                                         type="email"
+                                        :disabled="isSetting"
                                     >
 
                                 </ValidationProvider>
@@ -94,8 +95,8 @@
                                         v-model="form.shop.website_url"
                                     >
                             </div>
-                            <!-- <div v-if="!isReg" class="form-group-block agreement"> -->
-                                <ValidationProvider v-if="!isReg" class="form-group-block agreement" :rules="{required:{ allowFalse: false }}">
+                            <!-- <div v-if="!isSetting" class="form-group-block agreement"> -->
+                                <ValidationProvider v-if="!isSetting" class="form-group-block agreement" :rules="{required:{ allowFalse: false }}">
                                 <input v-model="confirmPolicy" type="checkbox" name="step-1_agree" id="step-1_agree" >
                                 <label class="label-checkbox" for="step-1_agree">
                                     Я согласен(на) с условиями <span> Политики конфиденциальности. </span>
@@ -148,7 +149,7 @@ export default {
     },
     methods: {
         async sendForm(){
-            let url = this.isReg ? '/' : '/api/register';
+            let url = this.isSetting ? '/' : '/api/register';
             await this.$http.post(url, this.form)
                 .then(response => {
                     this.$router.push('welcome');
@@ -166,7 +167,7 @@ export default {
         submitName(){
             return this.$route.name == 'settings' ? 'Сохранить' : 'Регистрация'
         },
-        isReg(){
+        isSetting(){
             return this.$route.name == 'settings';
         }
     }
