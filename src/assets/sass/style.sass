@@ -144,7 +144,7 @@ a
         grid-column: 1/2
         position: relative
         &:not(:last-of-type)
-            margin-bottom: 16px
+            margin-bottom: 20px
     .btn
         min-width: 179px
         &-active
@@ -155,6 +155,7 @@ label
     @include FontBlack14
     margin-bottom: 10px
     line-height: 20px
+    font-weight: bold
 
 
 
@@ -172,8 +173,9 @@ input, textarea, .app-wrapper, .v-select
     &:focus
         outline: none
     &:disabled
-        background-color: $disabled
-        color: $black
+        background-color: $accentDis
+        &::placeholder
+            color: $white
     &.required
         position: relative
     &.passed, &.is-valid 
@@ -267,12 +269,18 @@ input[type=checkbox]:checked + .label-checkbox::after
         bottom: 0
         width: auto
         height: 100%
+        border: 1px solid 
+        border-radius: 10px
+        
+        
     &__actions
         // max-width: 50%
         // padding-right: calc(7.45%/2)
         display: flex
         flex-direction: column
-        margin-bottom: 30px
+        // margin-bottom: 30px
+        .remark 
+            margin-top: 15px !important
     
 .upload_icon 
     position: absolute
@@ -288,6 +296,8 @@ input[type=checkbox]:checked + .label-checkbox::after
         height: 100%
         left: 0
         right: 0
+        border: 1px solid 
+        border-radius: 10px
     
 
 .bg-white 
@@ -307,7 +317,7 @@ input[type=checkbox]:checked + .label-checkbox::after
     &-active,
         background-color: $accent
     &-light
-        background-color: $accentDis
+        background-color: $accentLight
         &.active
             background-color: $accent
         &.hide
@@ -360,11 +370,11 @@ th,td
         font-size: 16px
         padding-left: 6.97%
     &.cli-fio
-        width: 31.97%
+        width: 15.97%
         div 
             max-width: 90%
     &.cli-birth
-        width: 18.51%
+        width: 25.51%
     &.cli-phone
         width: 16.95%
     &.cli-date
@@ -390,7 +400,8 @@ tbody
 
     tr
         &:nth-child(2n-1)
-            background-color: $beige
+            border-bottom: 1px solid rgba(0,0,0,.3)
+    //         background-color: $accentDis
 
 
 // styles per pages

@@ -33,43 +33,45 @@
 
                                 </ValidationProvider>
                             </div>
-                            <div class="form-group-block" >
-                                <label for="auth_pass">Пароль <span>*</span> </label>
-                                <div class="tooltip-wrapper">
-                                <ValidationProvider name="password" class="input" :rules="{ regex: /^(?=.*?[A-Z])[a-zA-Z0-9]{6,}$/, required: true}"
-                                     v-slot="{classes}"
-                                >
-                                    <input
-                                        placeholder="Введите пароль"
-                                        id="auth_pass"
-                                        type="password"
-                                        autocomplete="off"
-                                        :class="classes"
-                                        v-model="form.password"
+                            <template v-if="!isSetting">
+                                <div class="form-group-block" >
+                                    <label for="auth_pass">Пароль <span>*</span> </label>
+                                    <div class="tooltip-wrapper">
+                                    <ValidationProvider name="password" class="input" :rules="{ regex: /^(?=.*?[A-Z])[a-zA-Z0-9]{6,}$/, required: true}"
+                                        v-slot="{classes}"
                                     >
-                                    <el-tooltip effect="light" content="Пароль должен быть не короче 6 символов и иметь одну заглавную букву" placement="bottom">
-                                            <i class="el-icon-question input-tooltip"></i>
-                                    </el-tooltip>        
-                                </ValidationProvider>
+                                        <input
+                                            placeholder="Введите пароль"
+                                            id="auth_pass"
+                                            type="password"
+                                            autocomplete="off"
+                                            :class="classes"
+                                            v-model="form.password"
+                                        >
+                                        <el-tooltip effect="light" content="Пароль должен быть не короче 6 символов и иметь одну заглавную букву" placement="bottom">
+                                                <i class="el-icon-question input-tooltip"></i>
+                                        </el-tooltip>        
+                                    </ValidationProvider>
+                                    </div>
+                                    
                                 </div>
-                                
-                            </div>
-                            <div class="form-group-block" >
-                                <label for="auth_pass_2">Подтверждение пароля <span>*</span> </label>
-                                <ValidationProvider class="input" :rules="{required: true, password: '@password'  }"
-                                     v-slot="{classes}"
-                                >
-                                    <input
-                                        placeholder="Введите пароль"
-                                        id="auth_pass_2"
-                                        :class="classes"
-                                        autocomplete="off"
-                                        type="password"
-                                        v-model="confirmPassword"
+                                <div class="form-group-block" >
+                                    <label for="auth_pass_2">Подтверждение пароля <span>*</span> </label>
+                                    <ValidationProvider class="input" :rules="{required: true, password: '@password'  }"
+                                        v-slot="{classes}"
                                     >
+                                        <input
+                                            placeholder="Введите пароль"
+                                            id="auth_pass_2"
+                                            :class="classes"
+                                            autocomplete="off"
+                                            type="password"
+                                            v-model="confirmPassword"
+                                        >
 
-                                </ValidationProvider>
-                            </div>
+                                    </ValidationProvider>
+                                </div>
+                            </template>
                             <div class="form-group-block" >
                                 <label for="auth_shop">Название магазина <span>*</span> </label>
                                 <ValidationProvider class="input" :rules="{ regex: /^.{1,20}$/, required: true}"
@@ -104,17 +106,27 @@
                                 </ValidationProvider>
                             <!-- </div> -->
                         </div>
-                        
+                        <!-- <div class="btn-group">
+                            
+
+                        </div> -->
                         <div class="btn-group">
                             <button
                             @click.prevent="sendForm"
                             :disabled="invalid"
                              class="btn btn-active">{{submitName}}</button>
+
+                                <button
+                            @click.prevent
+
+                             class="btn btn-active">Изменить пароль</button>
+
                             <button
                             @click.prevent="$router.go(-1)"
                              class="btn btn-light">Назад</button>
 
                         </div>
+                        
                         <div class="remark">
                             * Вся предоставленная информация конфиденциальна <span>и не будет передана третьим лицам.</span>
                         </div>
@@ -122,6 +134,8 @@
                 <!-- </form> -->
                 </ValidationObserver>
             </div>
+
+
             <!-- end auth form -->
         </div>
         

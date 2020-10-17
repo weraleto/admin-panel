@@ -11,19 +11,9 @@
                 <ValidationObserver v-slot="{ invalid }" tag="form">
  
                 <!-- uploading files -->
-                    <ValidationProvider class="input" :rules="{ required: true }"
-                    >
-                        <label>Изображение для приложения <span>*</span> </label>
-                        <FileUpload v-model="pngImg" :isMultiple="false" fileFormat=".png" @onfileupload="$event => pngImg = $event" />
-                        
-                    </ValidationProvider>
+                    
 
-                    <ValidationProvider class="input" :rules="{ required: true }"
-                    >
-                        <label>Изображения для каталога товаров <span>*</span> </label>
-                        <FileUpload v-model="images" :isMultiple="true" fileFormat=".jpeg, .jpg" @onfileupload="$event => images = $event" />
-
-                    </ValidationProvider>
+                    
                 <!-- end uploading files -->
 
 
@@ -45,6 +35,17 @@
 
                                 </ValidationProvider>
                             </div>
+
+                        <div class="form-group-block" >
+                        <ValidationProvider class="input" :rules="{ required: true }"
+                        >
+                            <label>Изображение для приложения <span>*</span> </label>
+                            <FileUpload v-model="pngImg" :isMultiple="false" fileFormat=".png" @onfileupload="$event => pngImg = $event" />
+                            
+                        </ValidationProvider>
+                        </div>
+
+
                             <div class="form-group-block" >
                                 <label for="item_subcat">Категория <span>*</span> </label>
                                  <v-select label="name" 
@@ -105,6 +106,15 @@
                                     >
 
                                 </ValidationProvider>
+                            </div>
+
+                            <div class="form-group-block">
+                                <ValidationProvider class="input" :rules="{ required: true }"
+                    >
+                        <label>Изображения для каталога товаров <span>*</span> </label>
+                        <FileUpload v-model="images" :isMultiple="true" fileFormat=".jpeg, .jpg" @onfileupload="$event => images = $event" />
+
+                    </ValidationProvider>
                             </div>
                             
                         </div>

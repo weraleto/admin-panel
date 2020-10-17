@@ -42,7 +42,7 @@
               </router-link>
             </div>
             <footer class="sidebar-footer">
-                <!-- FACE FIT <span>© 2020</span> -->
+                DIZI - EASY DESIGN <span>© 2020</span>
             </footer>
         </aside>
         <div class="mobile-content">
@@ -50,7 +50,7 @@
               <router-view></router-view>
           </transition>
         <footer class="footer-mobile">
-          <!-- FACE FIT © 2020 -->
+          DIZI - EASY DESIGN © 2020
         </footer>
 
         </div>

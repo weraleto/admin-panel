@@ -2,7 +2,7 @@
   <main class="main-content" >
             <!-- main header -->
             <header>
-                <h1 class="page-header">Авторизация</h1>
+                <h1 class="page-header">DIZI - EASY DESIGN</h1>
             </header>
             <!-- auth form -->
             <div class="form-content auth-form">
