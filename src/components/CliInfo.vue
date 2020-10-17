@@ -6,7 +6,7 @@
                 <h1 class="page-header">{{form.name}}</h1> 
                 
                 <!-- <el-tooltip effect="light" content="Товар опубликован" placement="bottom"> -->
-                    <el-tag  :type="statuses[form.state.type].t" > {{statuses[form.state.type].name}}  
+                    <el-tag effect="dark"  :type="statuses[form.state.type].t" > {{statuses[form.state.type].name}}  
                         <!-- <i class="el-icon-question"></i> -->
                     </el-tag>
                 <!-- </el-tooltip> -->

@@ -4,13 +4,13 @@
             <div class="quiz-welcome-outer">
                  <!-- main header -->
                 <header>
-                    <h1 class="page-header desktop-only">Добро пожаловать!</h1>
+                    <h1 class="page-header desktop-only">Готово!</h1>
                 </header>
                 <!-- auth form -->
                 <div class="form-content quiz-welcome">
-                    <h3 class="form-subheader">Регистрация прошла успешно.</h3>
+                    <h3 class="form-subheader">{{subheaders[$route.name]}}</h3>
                     <div class="quiz-welcome-text">
-                        <p>Теперь вы можете активировать ваш профиль по ссылке, отправленной на указанный вами электронный адрес</p>
+                        <p>{{message[$route.name]}}</p>
                     </div>
                     <div class="btn-group">
                         <router-link :to="'auth'" class="page-link">
@@ -29,6 +29,17 @@
 
 <script>
 export default {
-
+    data(){
+        return {
+            subheaders: {
+                email: 'Email успешно подтвержден.',
+                welcome: 'Регистрация прошла успешно.'
+            },
+            message: {
+                email: 'Теперь вы можете войти в свой аккаунт',
+                welcome: 'Теперь вы можете активировать ваш профиль по ссылке, отправленной на указанный вами электронный адрес'
+            },
+        }
+    }
 }
 </script>

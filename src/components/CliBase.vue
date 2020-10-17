@@ -127,9 +127,12 @@
                             <router-link :to="{name:'add'}" class="client-base-navigation-link page-link">
                                 <button class="btn btn-active">Добавить товар</button>
                             </router-link>
+            
+                            <el-tooltip effect="light" content="У вас нет подтвержденных товаров" :disabled="!itemsForConfirm" placement="bottom">
                             <router-link :to="''" class="client-base-navigation-link page-link">
                                 <button :disabled="itemsForConfirm ? Object.keys(itemsForConfirm).length  < 1 : true" @click.prevent="publishItems" class="btn btn-active">Опубликовать товары</button>
                             </router-link>
+                            </el-tooltip>
                             <!-- <button class="btn btn-light client-base-navigation-link page-link">Экспорт базы</button> -->
                         </div>
                         <!-- <div class="remark">

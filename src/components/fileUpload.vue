@@ -42,7 +42,6 @@
 
 
                     <div class="upload-file__item bg-white" v-for="(item, index) in imgs" :key="index">
-                            <img :src="require('../../public/svg/times-circle-solid.svg')" alt="Удалить изображение">
                         
                         <img class="upload-file__uploaded" :src="item" alt="Изображение">
                         

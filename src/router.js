@@ -25,8 +25,10 @@ export const router = new VueRouter({
     {path:'/balance', name:'balance', component: Balance},
     {path:'/settings', name:'settings', component: Settings},
     {path:'/base', name:'client-base', component: CliBase},
+
     {path:'/welcome', name:'welcome', component: Welcome},
     {path:'/email-success', name:'email', component: Welcome},
+    
     {path:'/forgot-pass/reset', name:'respass', component: Forgot},
     {path:'/forgot-pass/change', name:'changepass', component: ChangePass},
 
@@ -37,7 +39,7 @@ export const router = new VueRouter({
   }
 })
 
-let noAuthRoutes = ['auth', 'reg', 'email', 'respass', 'changepass'];
+let noAuthRoutes = ['auth', 'reg', 'email', 'respass', 'changepass', 'welcome'];
 
 router.beforeEach((to, from, next) => {
   if ( noAuthRoutes.indexOf(to.name) == -1 && !store.state.isAuth) next({ name: 'auth' })
