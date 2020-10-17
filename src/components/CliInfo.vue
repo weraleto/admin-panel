@@ -275,18 +275,33 @@ export default {
                 )
         },
         sendData(){
+            let t = new RegExp('data:image/jpeg;base64,')
             let imgArray = this.makeChanges2 ? 
                 this.images.map(item=>{
-                    return {data: item.base.replace('data:image/jpeg;base64,',''), type: 'new'}
+                    
+                    let data = {}
+                    if (t.test(item.base) ) {
+                       data.data =  item.base.replace('data:image/jpeg;base64,','')
+                       data.type = 'new'
+                    }else{
+                        let idArr = item.base.split('/')
+                        data.id = idArr[idArr.length-1]
+                        data.type = 'existing'
+                    }
+                    return data
+
                 }) : 
                 this.form.catalog_images_ids.map(item=>{
                     return {id: item, type: 'existing'}
                 })
-                
+
+
+            t = new RegExp('data:image/png;base64,')
+    
             this.$http.post(`/api/shops/products/${this.productId}/edit`, {
                 attrs: this.form.attrs,
                 catalog_images: imgArray,
-                editor_image: this.makeChanges1 ? this.pngImg.replace('data:image/jpeg;base64,','') : null,
+                editor_image: t.test(this.pngImg) ? this.pngImg.replace('data:image/png;base64,','') : null,
                 name: this.form.name,
                 price: this.form.price
             })

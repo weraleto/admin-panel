@@ -52,7 +52,7 @@
             <div class="upload-file__actions">
 
                 <input ref="inputField" style="display:none" type="file" :accept="fileFormat" @change="handleImage" :multiple="isMultiple">
-                <button @click.prevent="$emit('filechange')" class="btn btn-active btn-upload">Заменить изображения</button>
+                <button @click.prevent="replaceImages" class="btn btn-active btn-upload">Заменить изображения</button>
                 <div class="remark">
                     * Максимальный размер фото - 500 kb. Формат {{fileFormat}}
                 </div>
@@ -123,12 +123,21 @@ export default {
             delete this.files[image.el]
 
 
+        },
+        replaceImages(){
+            this.$emit('filechange')
+            this.imgs.forEach((it,index)=>{
+                this.images.push({base:it, el:index})
+            })
         }
     },
     watch: {
         images(){
-            let imagesPayload = this.isMultiple ? this.images : this.images[0].base;
-            this.$emit('onfileupload', imagesPayload)
+            // console.log(this.images)
+            if(this.images.length > 0) {
+                let imagesPayload = this.isMultiple ? this.images : this.images[0].base;
+                this.$emit('onfileupload', imagesPayload)
+            }
         }
     }
 }

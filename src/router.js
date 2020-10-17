@@ -33,6 +33,7 @@ export const router = new VueRouter({
     {path:'/add', name:'add', component: AddItem}, // добавить элемент
     {path:'/balance', name:'balance', component: Balance}, // баланс
     {path:'/settings', name:'settings', component: Settings}, // изменить данные 
+    {path:'/settings/pass', name:'authpass', component: ChangePass}, // изменить данные 
     {path:'/base', name:'client-base', component: CliBase}, // список товаров
 
 

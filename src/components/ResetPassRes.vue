@@ -2,7 +2,7 @@
   <main class="main-content" >
             <!-- main header -->
             <header>
-                <h1 class="page-header">Сбросить пароль</h1>
+                <h1 class="page-header">{{isAuth ? 'Изменить' : 'Сбросить'}} пароль</h1>
             </header>
             <!-- form -->
             <div class="form-content auth-form">
@@ -53,7 +53,7 @@
                         
                         <div class="btn-group">
                                 
-                                <button @click.prevent="clear" :disabled="invalid" class="btn btn-active"
+                                <button @click.prevent="isAuth ? change() : clear()" :disabled="invalid" class="btn btn-active"
                                 >Сменить пароль</button>
                                 
                                 <button @click.prevent="$router.go(-1)" class="btn btn-light"
@@ -85,6 +85,17 @@ export default {
             this.hrefArgs[tmp[0]] = tmp[1]
         })
     },
+    computed: {
+        isAuth: {
+            get: function() {
+                return this.$store.state.isAuth;
+            },
+            set: function(newValue) {
+                return this.$store.state.isAuth = newValue;
+            }
+        
+        },
+    },
     methods: {
         async clear(){
             await this.$http.post(`/api/accounts/${this.hrefArgs.account_id}/reset_password?reset_token=${this.hrefArgs.token}`, this.form)
@@ -92,12 +103,25 @@ export default {
                     res=>{
                        this.$notify({
                            title: 'Пароль изменен',
-                           message: 'Теперь вы можете войти в свой аккаунт'
+                           message: 'Теперь вы можете войти в свой аккаунт',
+                           type: 'success'
                        })
                     }
                 )
                 this.$router.push('/auth')
         },
+        async change(){
+            await this.$http.post(`/api/accounts/change_password`, this.form)
+                .then(
+                    res=>{
+                       this.$notify({
+                           title: 'Пароль изменен',
+                           type: 'success'
+                       })
+                        this.$router.push('/settings')
+                    }
+                )
+        }
     }
 }
 </script>

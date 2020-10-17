@@ -115,10 +115,10 @@
                             @click.prevent="sendForm"
                             :disabled="invalid"
                              class="btn btn-active">{{submitName}}</button>
-
+                            
                                 <button
                                 v-if="isSetting"
-                            @click.prevent
+                            @click.prevent="$router.push({name:'authpass'})"
 
                              class="btn btn-active">Изменить пароль</button>
 
