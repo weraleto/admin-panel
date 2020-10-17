@@ -269,8 +269,7 @@ input[type=checkbox]:checked + .label-checkbox::after
         bottom: 0
         width: auto
         height: 100%
-        border: 1px solid 
-        border-radius: 10px
+        
         
         
     &__actions
@@ -360,16 +359,23 @@ thead,tbody
     max-width: 694px
 thead 
     @include BookGray14
-th 
+    tr 
+        background-color: $accentDis
+th
+    padding: 15px 0
     font-weight: normal
     text-align: left
+    color: $white
+    border-right: 1px solid $white
 th,td
     vertical-align: top
+    padding-left: 15px
     &.cli-number
         width: 12.98%
         font-size: 16px
         padding-left: 6.97%
     &.cli-fio
+        
         width: 15.97%
         div 
             max-width: 90%
@@ -429,38 +435,7 @@ tbody
     .btn:not(:last-child)
         margin-right: 24px        
 
-.quiz-welcome, .quiz-finish
-    margin-top: 124px
-    .btn-group
-        margin-top: 50px
-    .btn
-        min-width: 217px
-        &.add-cli
-            min-width: 243px
-    .form-subheader
-        margin-bottom: 19px
-        
-    &-outer
-        display: grid
-        grid-template-rows: 53px auto
-        height: 100%
-        .remark 
-            align-self: end
-        
-    &-text 
-        max-width: 314px
-        min-height: 130px
-        p 
-            @include FontBlack14
-            font-size: 16px
-            &:not(:last-of-type)
-                margin-bottom: 25px
-    
-.quiz-finish
-    margin-bottom: 76px
-    .btn-group
-        margin-top: 64px
-        margin-bottom: 24px
+
 
 .step--1,.step--2
     margin-top: 70px
@@ -483,53 +458,14 @@ tbody
         grid-column-gap: 7.45%
         margin-bottom: 64px
     .form-group-block.agreement
-        margin-top: 12px
+        margin-top: 20px
         grid-column: 1/3
-        max-width: 300px
         @include FontGray14
         span
             text-decoration: underline
-.step--3
-    margin-top: 89px    
-    .client-base-table td
-        padding-top: 43px
-    .if-remark
-        display: block
-        @include FontBlackReg16
-        color: $gray
-    .text-comment
-        min-width: 150.72%
-        transform: translateX(0)
-        transition: all 0.2s ease
-        position: relative
-        input 
-            min-height: 54px
-        input[type=text]:disabled
-            background-color: rgba($white,.5)
-        &-full
-            min-width: 122.66%
-        &.slide-in
-            transform: translateX(-62%)
-            min-width: 168.9%
-            .close-comm
-                display: block
-        .close-comm
-            width: 18px
-            height: 18px
-            position: absolute
-            right: 16px
-            top: 50%
-            transform: translate(0,-50%)
-            display: none
 
 
-    
-.btn-group-table
-    display: flex
-    .btn
-        flex-basis: 50%
-    .btn:first-child
-        margin-right: 16px
+
 .client-base
     margin-top: 63px
     &-block
@@ -554,6 +490,7 @@ tbody
         &-link 
             flex-basis: auto
             flex-grow: 1
+            // max-width: 50%
             .btn 
                 width: 100% 
     &-filtration
@@ -640,37 +577,22 @@ tbody
                         z-index: 1
                         opacity: 1
 
-    &-sign
-        margin-top: 50px
-        p, ul, li 
-            @include FontBlackReg16
-        p, ul, li, textarea, .app-wrapper
-            max-width: 82.92%
-        p 
-            margin-bottom: 30px
 
         
         
             
     &-table
-        grid-column: 1/4
+        grid-column: 2/3
         // tr 
         //     cursor: pointer
-        th
-            padding-bottom: 15px
+       
         td
             padding-top: 24px
             padding-bottom: 24px
-        &.step--3 
-            tr 
-                cursor: unset
-            td 
-                padding-top: 43px
+
         img 
             max-width: 150px
             max-height: 150px
-        .cli-fio
-            cursor: pointer
 
 
 .form-group-section

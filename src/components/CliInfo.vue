@@ -15,25 +15,29 @@
             <div class="form-content step--1">
                 <form action="">
                 <ValidationObserver v-slot="{ invalid }" tag="form">
- 
-                <!-- uploading files -->
-                    <ValidationProvider class="input" :rules="{ required: true }"
-                    >
-                        <label>Изображение для приложения <span>*</span> </label>
-                        <FileUpload v-model="pngImg" :makeChanges="makeChanges1" :imgs="[pngImg]" :isMultiple="false" fileFormat=".png" @onfileupload="$event => pngImg = $event" @filechange="makeChanges1=true" />
-                        
-                    </ValidationProvider>
 
-                    <ValidationProvider class="input" :rules="{ required: true }"
-                    >
-                        <label>Изображения для каталога товаров <span>*</span> </label>
-                        <FileUpload v-model="images" :makeChanges="makeChanges2" :imgs="images" :isMultiple="true" fileFormat=".jpeg, .jpg" @onfileupload="$event => images = $event" @filechange="makeChanges2=true" />
-
-                    </ValidationProvider>
-                <!-- end uploading files -->
 
 
                     <div class="form-group">
+                        <div class="btn-group">
+                            <button v-if="productStatus === 'published'"
+                            @click.prevent="stopProduct"
+                             class="btn btn-active">Приостановить размещение</button>
+
+                            <button v-if="productStatus === 'approved'"
+                            @click.prevent="stopProduct"
+                             class="btn btn-active">Приостановить размещение</button>
+
+                            <button v-if="productStatus === 'draft'"
+                            @click.prevent="sendProduct"
+                             class="btn btn-active">Отправить на проверку</button>
+
+                            <button
+                            @click.prevent="deleteProduct"
+                             class="btn btn-active">Удалить товар</button>
+                            
+                        </div>
+
                         <div class="form-grop-blocks">
                             
                             <div class="form-group-block" >
@@ -49,6 +53,14 @@
                                         type="text"
                                     >
 
+                                </ValidationProvider>
+                            </div>
+                            <div class="form-group-block" >
+                                <ValidationProvider class="input" :rules="{ required: true }"
+                                >
+                                    <label>Изображение для приложения <span>*</span> </label>
+                                    <FileUpload v-model="pngImg" :makeChanges="makeChanges1" :imgs="[pngImg]" :isMultiple="false" fileFormat=".png" @onfileupload="$event => pngImg = $event" @filechange="makeChanges1=true" />
+                                    
                                 </ValidationProvider>
                             </div>
                             <div class="form-group-block" >
@@ -113,6 +125,14 @@
 
                                 </ValidationProvider>
                             </div>
+                            <div class="form-group-block" >
+                                    <ValidationProvider class="input" :rules="{ required: true }"
+                                >
+                                    <label>Изображения для каталога товаров <span>*</span> </label>
+                                    <FileUpload v-model="images" :makeChanges="makeChanges2" :imgs="images" :isMultiple="true" fileFormat=".jpeg, .jpg" @onfileupload="$event => images = $event" @filechange="makeChanges2=true" />
+
+                                </ValidationProvider>
+                            </div>
                             
                         </div>
                         
@@ -125,20 +145,7 @@
                             <button @click.prevent="$router.go(-1)" class="btn btn-light">Назад</button>
                             
                         </div>
-                        <div class="btn-group">
-                            <button v-if="productStatus === 'published'"
-                            @click.prevent="stopProduct"
-                             class="btn btn-active">Приостановить размещение</button>
-
-                            <button v-if="productStatus === 'draft'"
-                            @click.prevent="sendProduct"
-                             class="btn btn-active">Отправить на проверку</button>
-
-                            <button
-                            @click.prevent="deleteProduct"
-                             class="btn btn-active">Удалить товар</button>
-                            
-                        </div>
+                        
                         
                     </div>
                  </ValidationObserver>
@@ -294,6 +301,17 @@ export default {
                     }
                 )
         },
+        publishItem(){
+            this.$http.post('/api/shops/products/place', [this.productId])
+                .then(
+                    res=>{
+                        this.$notify({
+                            type: 'success',
+                            title: 'Товар опубликован'
+                        })
+                    }
+                )
+        }
 
     }
     

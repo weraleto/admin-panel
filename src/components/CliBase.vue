@@ -31,9 +31,9 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th class="client-base-table-cell cli-number">
+                                    <!-- <th class="client-base-table-cell cli-number">
                                         
-                                    </th>
+                                    </th> -->
                                     <th class="client-base-table-cell cli-fio">Фото</th>
                                     <th class="client-base-table-cell cli-birth">
                                         Название
@@ -43,7 +43,7 @@
                                         Статус публикации
                                     </th>
                                     <th class="client-base-table-cell cli-date">Срок публикации</th>
-                                    <th class="client-base-table-cell aside"></th>
+                                    <!-- <th class="client-base-table-cell aside"></th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,26 +52,26 @@
                                         v-for="(item, index) in itemsData.products" :key="index"
                                         
                                     >
-                                        <td class="client-base-table-cell cli-number">
+                                        <!-- <td class="client-base-table-cell cli-number">
                                             <template v-if="item.state.type==='approved'">
                                                 <input type="checkbox" v-model="itemsForConfirm[item.id]" :name="`base-${index}`" :id="`base-${index}`" >
                                                 <label class="label-checkbox" :for="`base-${index}`"
                                                 >                                               
                                                 </label>
                                             </template>
-                                        </td>
-                                        <td class="client-base-table-cell cli-fio" @click="showItemCard(item.id); productId = item.id"><div>
+                                        </td> -->
+                                        <td class="client-base-table-cell cli-fio" ><div>
                                             <img :src="`https://dizi.foresco.site/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
                                         </div></td>
-                                        <td class="client-base-table-cell cli-birth">{{item.name}}</td>
+                                        <td class="client-base-table-cell cli-birth"><a :href="`/item/${item.id}`" @click.prevent="showItemCard(item.id); productId = item.id">{{item.name}}</a></td>
                                         <td class="client-base-table-cell cli-phone">{{statuses[item.state.type].name}}</td>
                                         <td class="client-base-table-cell cli-date">{{item.state.type === 'placed' ? '' : '-'}}</td>
-                                        <td class="client-base-table-cell aside"> </td>
+                                        <!-- <td class="client-base-table-cell aside"> </td> -->
                                     </tr>
                                 </template>
                                 <template v-else>
                                     <tr>
-                                        <td colspan="6" style="text-align: center">
+                                        <td colspan="4" style="text-align: center">
                                              В данной категории нет товаров
                                         </td>
                                     </tr>
@@ -145,11 +145,11 @@
                                 <button class="btn btn-active">Добавить товар</button>
                             </router-link>
             
-                            <el-tooltip effect="light" content="У вас нет подтвержденных товаров" :disabled="!itemsForConfirm" placement="bottom">
+                            <!-- <el-tooltip effect="light" content="У вас нет подтвержденных товаров" :disabled="!itemsForConfirm" placement="bottom">
                             <router-link :to="''" class="client-base-navigation-link page-link">
                                 <button :disabled="itemsForConfirm ? Object.keys(itemsForConfirm).length  < 1 : true" @click.prevent="publishItems" class="btn btn-active">Опубликовать товары</button>
                             </router-link>
-                            </el-tooltip>
+                            </el-tooltip> -->
                             <!-- <button class="btn btn-light client-base-navigation-link page-link">Экспорт базы</button> -->
                         </div>
                     </div>
@@ -181,7 +181,6 @@ export default {
                 {label:'Черновики', name: 'draft'},
             ],
             itemsData: [],
-            itemsForConfirm: {}
         }
     },
     mounted(){
@@ -225,24 +224,7 @@ export default {
                 }
             )
         },
-        publishItems(){
-            let ids = [];
-            
-            for (let key in this.itemsForConfirm) {
-                if(this.itemsForConfirm[key]==true){
-                    ids.push(key)
-                }
-            }
-            this.$http.post('/api/shops/products/place', ids)
-                .then(
-                    res=>{
-                        this.$notify({
-                            type: 'success',
-                            title: 'Товары размещены'
-                        })
-                    }
-                )
-        }
+        
         
     },
     watch: {

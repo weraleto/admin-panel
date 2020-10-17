@@ -117,6 +117,7 @@
                              class="btn btn-active">{{submitName}}</button>
 
                                 <button
+                                v-if="isSetting"
                             @click.prevent
 
                              class="btn btn-active">Изменить пароль</button>
