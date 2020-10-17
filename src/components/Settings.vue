@@ -175,15 +175,6 @@ export default {
 
 <style>
 
-    .input-tooltip {
-        position: absolute;
-        top: 50%;
-        right: 5px;
-        transform: translateY(-50%);
-    }
-
-    .tooltip-wrapper {
-        position: relative;
-    }
+    
 
 </style>

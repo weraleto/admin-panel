@@ -7,31 +7,36 @@
             <!-- auth form -->
             <div class="form-content auth-form">
                 <!-- <h3 class="form-subheader">Войдите <span>в свой кабинет</span></h3> -->
-                <form action="">
-                    <div class="form-group">
-                        <div class="form-grop-blocks">
-                            <!-- <masked-input
-                                :isRequired="false"
-                                label="Способ оплаты"
-                                name="balance_type"
-                                type="select"
-                                placeholder="Выберите способ оплаты"
-                            ></masked-input>
-                             <masked-input
-                                :isRequired="true"
-                                label="Сумма пополнения"
-                                name="balance_sum"
-                                placeholder="Укажите сумму"
-                                mask="balance_sum"
-                            ></masked-input> -->
+                <ValidationObserver v-slot="{ invalid }" tag="form">
+                    <form action="">
+                        <div class="form-group">
+                            <div class="form-grop-blocks">
+                                <div class="form-group-block" >
+                                    <label for="item_name">Сумма пополнения (руб.) <span>*</span> </label>
+                                    <ValidationProvider class="input" :rules="{ regex:/^\d+$/, required: true, min_value: 10 }"
+                                        v-slot="{classes}"
+                                    >
+                                        <input
+                                            placeholder="Укажите сумму в рублях"
+                                            v-model="num"
+                                            id="item_name"
+                                            :class="classes"
+                                            type="text"
+                                        >
+
+                                    </ValidationProvider>
+                                </div>
+                            </div>
+                            <!-- <router-link :to="'welcome'"> -->
+                                
+                                <button class="btn btn-active"
+                                    :disabled="invalid"
+                                    @click="proceedPayment"
+                                >Продолжить</button>
+                            <!-- </router-link> -->
                         </div>
-                        <!-- <router-link :to="'welcome'"> -->
-                            
-                            <button class="btn btn-active"
-                            >Продолжить</button>
-                        <!-- </router-link> -->
-                    </div>
-                </form>
+                    </form>
+                </ValidationObserver>
             </div>
             <!-- end auth form -->
         </main>
@@ -42,7 +47,13 @@
 export default {
     data() {
         return {
+            num: null
         }
     },
+    methods: {
+        proceedPayment(){
+            this.$http.post('/api/payments', {amount: num.toString()})
+        }
+    }
 }
 </script>

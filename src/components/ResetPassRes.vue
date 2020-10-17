@@ -13,19 +13,24 @@
                         <div class="form-grop-blocks">
                             <div class="form-group-block" >
                                 <label for="auth_pass">Пароль <span>*</span> </label>
+                                <div class="tooltip-wrapper">
                                 <ValidationProvider name="password" class="input" :rules="{ regex: /^(?=.*?[A-Z])[a-zA-Z0-9]{6,}$/, required: true}"
                                      v-slot="{classes}"
                                 >
                                     <input
                                         placeholder="Введите пароль"
                                         id="auth_pass"
-                                        type="text"
+                                        type="password"
                                         autocomplete="off"
                                         :class="classes"
                                         v-model="form.new_password"
                                     >
-
+                                    <el-tooltip effect="light" content="Пароль должен быть не короче 6 символов и иметь одну заглавную букву" placement="bottom">
+                                            <i class="el-icon-question input-tooltip"></i>
+                                    </el-tooltip>        
                                 </ValidationProvider>
+                                </div>
+                                
                             </div>
                             <div class="form-group-block" >
                                 <label for="auth_pass_2">Подтверждение пароля <span>*</span> </label>
@@ -37,7 +42,7 @@
                                         id="auth_pass_2"
                                         :class="classes"
                                         autocomplete="off"
-                                        type="text"
+                                        type="password"
                                         v-model="confirmPassword"
                                     >
 
@@ -70,32 +75,29 @@ export default {
             form: {
                 new_password: '',
             },
-            confirmPassword:''
+            confirmPassword:'',
+            hrefArgs: {}
         }
+    },
+    mounted(){
+        window.location.search.replace('?','').split('&').forEach(arg=>{
+            let tmp = arg.split('=');
+            this.hrefArgs[tmp[0]] = tmp[1]
+        })
     },
     methods: {
         async clear(){
-            await this.$http.post('/api/accounts/request_password_reset', this.form)
+            await this.$http.post(`/api/accounts/${this.hrefArgs.account_id}/reset_password?reset_token=${this.hrefArgs.token}`, this.form)
                 .then(
                     res=>{
                        this.$notify({
-                           title: 'Проверьте почту',
-                           message: 'На вашу почту отправлено письмо для смены пароля'
+                           title: 'Пароль изменен',
+                           message: 'Теперь вы можете войти в свой аккаунт'
                        })
                     }
                 )
-                .catch(
-                    err=>{
-                        this.notification(err.response.data.type)
-                    }
-                );
+                this.$router.push('/auth')
         },
-        notification(msg){
-            this.$notify.error({
-                title: 'Ошибка',
-                message: msg
-            })
-        }
     }
 }
 </script>
