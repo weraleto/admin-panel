@@ -123,8 +123,19 @@ a
         @include FontSemiheader
         color: $white
         text-decoration: none
-        &:not(:last-child)
+        &.link:not(:last-child)
             margin-bottom: 23px
+    &-stats 
+        position: absolute
+        bottom: 0
+        right: 0
+        left: 0
+        height: auto
+        display: flex
+        justify-content: space-between
+        align-items: center
+        padding: 15px
+        border-top: 1px solid $white
             
 
 

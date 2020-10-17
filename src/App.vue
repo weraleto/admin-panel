@@ -28,8 +28,17 @@
               <div class="nav-panel-inner">
                 <router-link v-for="(link, index) in navLinks" 
                       :key="index"
-                      class="nav-panel-item" :to="{name:link.alias}">{{link.name}}</router-link>
+                      class="nav-panel-item link" :to="{name:link.alias}">{{link.name}}</router-link>
                 <a href="/logout" @click.prevent="logout" class="nav-panel-item" >Выйти</a>
+              </div>
+
+              <div class="nav-panel-stats">
+                <div class="nav-panel-item">
+                  Shop Name
+                </div>
+                <div class="nav-panel-item">
+                  Баланс: <span>300 руб.</span>
+                </div>
               </div>
             </nav>
           </div>
