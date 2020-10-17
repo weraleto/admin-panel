@@ -29,7 +29,7 @@
                 <router-link v-for="(link, index) in navLinks" 
                       :key="index"
                       class="nav-panel-item" :to="{name:link.alias}">{{link.name}}</router-link>
-                <a href="#" @click.prevent="logout" class="nav-panel-item" >Выйти</a>
+                <a href="/logout" @click.prevent="logout" class="nav-panel-item" >Выйти</a>
               </div>
             </nav>
           </div>

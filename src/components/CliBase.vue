@@ -2,7 +2,7 @@
     <div>
 
     <transition name="fade" mode="out-in" >
-            <!-- v-if="!showInfo" -->
+
         <main
             key="base"
         class="main-content table-content">
@@ -152,38 +152,28 @@
                             </el-tooltip>
                             <!-- <button class="btn btn-light client-base-navigation-link page-link">Экспорт базы</button> -->
                         </div>
-                        <!-- <div class="remark">
-                            * Вся предоставленная информация конфиденциальна и не будет передана третьим лицам.
-                        </div> -->
                     </div>
                 </div>
             
             </main>
-        <!-- <cli-info v-else 
-            @closedata="showInfo=!showInfo"
-            key="info"
-        ></cli-info> -->
+
     </transition>
     </div>
     
 </template>
 
 <script>
-import CliInfo from './CliInfo'
 import Pagination from './Pagination'
 export default {
     components:{
-        CliInfo,
         Pagination
     },
     data() {
         return {
-            showInfo:false,
             searchIn:'',
             currentPage:1,
             sortNum:10,
             totalPages: 1,
-            moveRight:[],
             filtrationName: 'draft',
             filtrationCategories: [
                 {label:'Опубликованные товары', name: 'placed'},
@@ -216,11 +206,10 @@ export default {
             this.currentPage=num;
         },
         showItemCard(id){
-            this.showInfo = true;
             this.$router.push(`/item/${id}`)
         },
-        getCatalog(){
-            this.$http.get(`/api/shops/products?page=${this.currentPage}&limit=${this.sortNum}&filter=${this.filtrationName}`)
+        getCatalog(name=null){
+            this.$http.get(`/api/shops/products?page=${this.currentPage}&limit=${this.sortNum}&filter=${this.filtrationName}${name ? '&name_like='+name : ''}`)
             .then(
                 res=>{
                     this.itemsData = res.data;
@@ -248,23 +237,12 @@ export default {
         }
         
     },
-    computed: {
-        searchFilter(){
-            if(this.searchIn!=''){
-                return this.cliList.filter(item => item.date.toLowerCase().indexOf(this.searchIn.toLowerCase()) !== -1)
-            }else{
-                return this.cliList
-            }
-        },
-        paginatedData(){
-            var start=(+this.sortNum)*(this.currentPage-1),
-                end=start+(+this.sortNum);
-            return this.searchFilter.slice(start,end);
-        }
-    },
     watch: {
         currentPage(){
             this.getCatalog()
+        },
+        searchIn(){
+            this.getCatalog(this.searchIn)
         }
     }
     
