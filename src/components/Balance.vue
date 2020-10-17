@@ -10,7 +10,7 @@
                 <form action="">
                     <div class="form-group">
                         <div class="form-grop-blocks">
-                            <masked-input
+                            <!-- <masked-input
                                 :isRequired="false"
                                 label="Способ оплаты"
                                 name="balance_type"
@@ -23,7 +23,7 @@
                                 name="balance_sum"
                                 placeholder="Укажите сумму"
                                 mask="balance_sum"
-                            ></masked-input>
+                            ></masked-input> -->
                         </div>
                         <!-- <router-link :to="'welcome'"> -->
                             
@@ -38,9 +38,8 @@
 </template>
 
 <script>
-import MaskedInput from './MaskedInput'
+
 export default {
-    components: {MaskedInput},
     data() {
         return {
         }

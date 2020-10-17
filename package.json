@@ -14,9 +14,7 @@
     "element-ui": "^2.13.2",
     "vee-validate": "^3.4.0",
     "vue": "^2.5.11",
-    "vue-masked-input": "^0.5.2",
     "vue-router": "^3.1.5",
-    "vue-the-mask": "^0.11.1",
     "vuedraggable": "^2.24.1",
     "vuex": "^3.5.1"
   },

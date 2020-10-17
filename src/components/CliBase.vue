@@ -64,7 +64,7 @@
                                             <img :src="`https://dizi.foresco.site/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
                                         </div></td>
                                         <td class="client-base-table-cell cli-birth">{{item.name}}</td>
-                                        <td class="client-base-table-cell cli-phone">{{statuses[item.state.type]}}</td>
+                                        <td class="client-base-table-cell cli-phone">{{statuses[item.state.type].name}}</td>
                                         <td class="client-base-table-cell cli-date">{{item.state.type === 'placed' ? '' : '-'}}</td>
                                         <td class="client-base-table-cell aside"> </td>
                                     </tr>
@@ -102,7 +102,7 @@
                                     </div>
                                     <div class="client-base-table-el">
                                         <div class="client-base-table-label">Статус публикации</div>
-                                        <div class="client-base-table-content">{{statuses[item.state.type]}}</div>
+                                        <div class="client-base-table-content">{{statuses[item.state.type].name}}</div>
                                     </div>
                                     <div class="client-base-table-el">
                                         <div class="client-base-table-label">Срок публикации</div>
@@ -181,16 +181,16 @@ export default {
                 {label:'Черновики', name: 'draft'},
             ],
             itemsData: [],
-            statuses: {
-                'published':'Опубликован',
-                'under_review':'На модерации',
-                'draft':'Черновик',
-            },
             itemsForConfirm: {}
         }
     },
     mounted(){
         this.getCatalog()
+    },
+    computed: {
+        statuses(){
+            return this.$store.state.productStatuses
+        }
     },
     methods: {
         sortType(){

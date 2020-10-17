@@ -6,7 +6,7 @@
                 <h1 class="page-header">{{form.name}}</h1> 
                 
                 <!-- <el-tooltip effect="light" content="Товар опубликован" placement="bottom"> -->
-                    <el-tag effect="dark"  :type="statuses[form.state.type].t" > {{statuses[form.state.type].name}}  
+                    <el-tag effect="dark" v-if="productStatus"  :type="statuses[productStatus].t" > {{statuses[productStatus].name}}  
                         <!-- <i class="el-icon-question"></i> -->
                     </el-tag>
                 <!-- </el-tooltip> -->
@@ -126,11 +126,11 @@
                             
                         </div>
                         <div class="btn-group">
-                            <button v-if="form.state.type === 'published'"
+                            <button v-if="productStatus === 'published'"
                             @click.prevent="stopProduct"
                              class="btn btn-active">Приостановить размещение</button>
 
-                            <button v-if="form.state.type === 'draft'"
+                            <button v-if="productStatus === 'draft'"
                             @click.prevent="sendProduct"
                              class="btn btn-active">Отправить на проверку</button>
 
@@ -171,11 +171,6 @@ export default {
                     data: {}
                 }
             },
-            statuses: {
-                'published':{name:'Опубликован',t:'success'},
-                'under_review':{name:'На модерации',t:'warning'},
-                'draft':{name:'Черновик',t:'info'},
-            },
             
         }
     },
@@ -190,7 +185,6 @@ export default {
             .then(
                 res=>{
                     this.categoriesData = res.data;
-                    // console.log(this.categoriesData)
                 }
             )
     },
@@ -203,6 +197,12 @@ export default {
         },
         productId(){
             return this.$store.state.currItemId
+        },
+        statuses(){
+            return this.$store.state.productStatuses
+        },
+        productStatus(){
+            return this.form.state ? this.form.state.type : '';
         }
     },
     methods: {
@@ -210,7 +210,6 @@ export default {
             await this.$http.get(`/api/shops/products/${this.productId}/for_edit`)
             .then(
                 res=>{
-                    // console.log(res.data)
                     this.form = res.data
                     this.pngImg = `https://dizi.foresco.site/api/shops/products/editor_images/${res.data.editor_image_id}`
                     this.images = res.data.catalog_images_ids.map(it=>{
