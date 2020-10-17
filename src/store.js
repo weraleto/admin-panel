@@ -12,11 +12,12 @@ export const store = new Vuex.Store({
       'published':{name:'Опубликован',t:'success'},
       'under_review':{name:'На модерации',t:'warning'},
       'draft':{name:'Черновик',t:'info'},
-    }
+    },
+    loading: false
   },
   mutations: {
-    // increment (state) {
-    //   state.count++
-    // }
+    setLoading (state, val) {
+      state.loading = val
+    }
   }
 })

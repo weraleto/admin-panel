@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="main-wrapper">
+    <div class="main-wrapper" v-loading="loading">
       <!-- navigation -->
         <div class="hamburger-icon"
           @click="showNav=true"
@@ -114,6 +114,9 @@ export default {
 				return this.$store.state.isAuth = newValue;
 			}
       
+    },
+    loading(){
+      return this.$store.state.loading
     }
   }
 }

@@ -13,6 +13,14 @@ Vue.use(axiosVue, {
       // }
     },
     interceptors: {
+      request(config) {
+        store.commit('setLoading', true)
+        return config
+      },
+      response(response) {
+        store.commit('setLoading', false)
+        return response
+      },
       responseError(error) {
         if(error.response.status!== 401) {
           let respTxt = error.response.data ? error.response.data.type : 'Что-то пошло не так. Попробуйте еще раз'

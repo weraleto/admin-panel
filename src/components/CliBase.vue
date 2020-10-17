@@ -60,7 +60,7 @@
                                                 </label>
                                             </template>
                                         </td>
-                                        <td class="client-base-table-cell cli-fio" @click="showItemCard(item.id); $store.state.currItemId = item.id"><div>
+                                        <td class="client-base-table-cell cli-fio" @click="showItemCard(item.id); productId = item.id"><div>
                                             <img :src="`https://dizi.foresco.site/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
                                         </div></td>
                                         <td class="client-base-table-cell cli-birth">{{item.name}}</td>
@@ -92,7 +92,7 @@
                                                 </label>
                                             </template>
                                     </div>
-                                    <div class="client-base-table-el" @click="showItemCard(item.id); $store.state.currItemId = item.id">
+                                    <div class="client-base-table-el" @click="showItemCard(item.id); productId = item.id">
                                         <div class="client-base-table-label">Фото</div>
                                         <img :src="`https://dizi.foresco.site/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
                                     </div>
@@ -190,6 +190,14 @@ export default {
     computed: {
         statuses(){
             return this.$store.state.productStatuses
+        }, 
+        productId:{
+            get: function() {
+				return this.$store.state.currItemId;
+			},
+			set: function(newValue) {
+				return this.$store.state.currItemId = newValue;
+			}
         }
     },
     methods: {
