@@ -370,32 +370,22 @@ th
 th,td
     vertical-align: top
     padding-left: 15px
+    width: 25%
     &.cli-number
-        width: 12.98%
+        // width: 12.98%
         font-size: 16px
         padding-left: 6.97%
-    &.cli-fio
+    // &.cli-fio
         
-        width: 15.97%
-        div 
-            max-width: 90%
-    &.cli-birth
-        width: 25.51%
-    &.cli-phone
-        width: 16.95%
-    &.cli-date
-        width: 9.98%
-    &.cli-quest
-        width: 39.66%
-        div 
-            max-width: 95%
-    &.cli-answ
-        width: 30.77%
-        padding-right: 5.77%
-    &.cli-comm
-        width: 16.59%
-        &-full
-            width: 47.36%
+    //     width: 15.97%
+    //     div 
+    //         max-width: 90%
+    // &.cli-birth
+    //     width: 25.51%
+    // &.cli-phone
+    //     width: 16.95%
+    // &.cli-date
+    //     width: 9.98%
 tbody
     td 
         @include FontBlack14
@@ -405,7 +395,7 @@ tbody
         font-size: 16px
 
     tr
-        &:nth-child(2n-1)
+        &:not(:last-child)
             border-bottom: 1px solid rgba(0,0,0,.3)
     //         background-color: $accentDis
 

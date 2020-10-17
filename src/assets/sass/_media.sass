@@ -184,8 +184,8 @@
             text-align: left
             padding: 34px 4.69%
             position: relative
-            &:nth-child(2n-1)
-                background-color: $beige
+            &:not(:last-child)
+                border-bottom: 1px solid rgba(0,0,0,.3)
         &-num
             position: absolute
             top: 34px
