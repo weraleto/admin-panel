@@ -27,7 +27,7 @@ export const router = new VueRouter({
     {path:'/email-success', name:'email', component: Welcome}, // почта подтверждена
     
     {path:'/forgot-pass/reset', name:'respass', component: Forgot}, //запрос на сброс пароля
-    {path:'/forgot-pass', name:'changepass', component: ChangePass}, //изменить забытый пароль 
+    {path:'/forgot-pass/change', name:'changepass', component: ChangePass}, //изменить забытый пароль 
     
     // руты доступные только с авторизацией
     {path:'/add', name:'add', component: AddItem}, // добавить элемент
