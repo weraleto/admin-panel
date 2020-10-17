@@ -43,6 +43,5 @@ let noAuthRoutes = ['auth', 'reg', 'email', 'respass', 'changepass', 'welcome'];
 
 router.beforeEach((to, from, next) => {
   if ( noAuthRoutes.indexOf(to.name) == -1 && !store.state.isAuth) next({ name: 'auth' })
-  // если пользователь не авторизован, то `next` будет вызываться дважды
-  next()
+  else next()
 })
