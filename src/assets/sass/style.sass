@@ -138,6 +138,33 @@ a
         padding: 15px
         border-top: 1px solid #3b3b3b
         border-bottom: 1px solid #3b3b3b
+
+.quiz-welcome, .quiz-finish
+    margin-top: 124px
+    .btn-group
+        margin-top: 50px
+    .btn
+        min-width: 217px
+        &.add-cli
+            min-width: 243px
+    .form-subheader
+        margin-bottom: 19px
+        
+    &-outer
+        display: grid
+        grid-template-rows: 53px auto
+        height: 100%
+        .remark 
+            align-self: end
+        
+    &-text 
+        max-width: 314px
+        min-height: 130px
+        p 
+            @include FontBlack14
+            font-size: 16px
+            &:not(:last-of-type)
+                margin-bottom: 25px
             
 
 
