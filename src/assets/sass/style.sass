@@ -213,7 +213,8 @@ input, textarea, .app-wrapper, .v-select
     &:focus
         outline: none
     &:disabled
-        background-color: $accentDis
+        background-color: #f8f8f8
+        cursor: not-allowed
         &::placeholder
             color: $white
     &.required
@@ -615,6 +616,11 @@ tbody
         grid-column: 2/3
         // tr 
         //     cursor: pointer
+
+        &.admin
+            margin-top: 50px
+            td, th 
+                width: 50%
        
         td
             padding-top: 24px

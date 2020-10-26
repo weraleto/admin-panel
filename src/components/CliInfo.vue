@@ -81,18 +81,18 @@
                             </div>
 
                             <div class="form-group-block" 
-                                v-for="(field, index) in form.specs" :key="index"
+                                v-for="(field, index) in form.specs_data" :key="index"
                             >
-                                <label >{{field.name}} <span v-if="field.is_required">*</span> </label>
+                                <label >{{field.name}} <span >*</span> </label>
 
                                 
                             
-                                 <ValidationProvider  :rules="{ required: field.is_required,
-                                 min_value: field.validator.min ? +field.validator.min : false }"
+                                 <ValidationProvider  :rules="{ required: true,
+                                 min_value: field.type == 'decimal_spec' ? +field.validation_opts.min : false }"
                                      v-slot="{classes}"
                                 >
-                                    <v-select :options="field.validator.data" 
-                                    v-if="field.validator.type == 'inclusion_validator'"
+                                    <v-select :options="field.allowed_values" 
+                                    v-if="field.type == 'default_spec'"
                                     :resetOnOptionsChange="true"
                                     v-model="form.attrs.data[field.name]" 
                                     :placeholder="field.name">
@@ -219,11 +219,10 @@ export default {
                 res=>{
                     this.form = res.data
                     this.pngImg = `https://dizi.foresco.site/api/shops/products/editor_images/${res.data.editor_image_id}`
-                    this.images = res.data.catalog_images_ids.map(it=>{
+                    this.images = res.data.catalog_image_ids.map(it=>{
                         return `https://dizi.foresco.site/api/shops/products/catalog_images/${it}`
                     })
-                    this.imagesCataTms = res.data.catalog_images_ids
-                    this.pngtmp = res.data.editor_image_id
+                    console.log(this.currentCats)
                 }
             )
         },

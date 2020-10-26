@@ -22,6 +22,7 @@ Vue.use(axiosVue, {
         return response
       },
       responseError(error) {
+        store.commit('setLoading', false)
         if(error.response.status=== 500) store.commit('setLoading', false)
         if(error.response.status!== 401) {
           let respTxt = error.response.data ? error.response.data.type : 'Что-то пошло не так. Попробуйте еще раз'

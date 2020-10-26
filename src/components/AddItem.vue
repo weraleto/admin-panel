@@ -65,16 +65,16 @@
                             <div class="form-group-block" 
                                 v-for="(field, index) in productSpecs.data" :key="index"
                             >
-                                <label >{{field.name}} <span v-if="field.is_required">*</span> </label>
+                                <label >{{field.name}} <span >*</span> </label>
 
                                 
                             
-                                 <ValidationProvider  :rules="{ required: field.is_required,
-                                 min_value: field.validator.min ? +field.validator.min : false }"
+                                 <ValidationProvider  :rules="{ required: true,
+                                 min_value: field.type == 'decimal_spec' ? +field.validation_opts.min : false }"
                                      v-slot="{classes}"
                                 >
-                                    <v-select :options="field.validator.data" 
-                                    v-if="field.validator.type == 'inclusion_validator'"
+                                    <v-select :options="field.allowed_values" 
+                                    v-if="field.type == 'default_spec'"
                                     :resetOnOptionsChange="true"
                                     v-model="form.attrs.data[field.name]" 
                                     :placeholder="field.name">

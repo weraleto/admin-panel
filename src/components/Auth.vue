@@ -91,6 +91,7 @@ export default {
                         this.$store.state.isAuth = true;
                         // this.$store.state.access_token = token;
                         this.$store.state.refresh_token = res.data.refresh_token
+                        this.$store.state.userRole = res.data.role
                         this.$router.push('base')
                     }
                 )

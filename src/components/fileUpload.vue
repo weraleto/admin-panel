@@ -52,8 +52,8 @@
             <div class="upload-file__actions">
 
                 <input ref="inputField" style="display:none" type="file" :accept="fileFormat" @change="handleImage" :multiple="isMultiple">
-                <button @click.prevent="replaceImages" class="btn btn-active btn-upload">Заменить изображения</button>
-                <div class="remark">
+                <button @click.prevent="replaceImages" v-if="changeAllowed" class="btn btn-active btn-upload">Заменить изображения</button>
+                <div class="remark" v-if="changeAllowed">
                     * Максимальный размер фото - 500 kb. Формат {{fileFormat}}
                 </div>
             </div>
@@ -72,6 +72,10 @@ export default {
         },
         fileFormat: String,
         imgs: Array,
+        changeAllowed: {
+            type: Boolean,
+            default: true
+        }
 
     },
     components: {

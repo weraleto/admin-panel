@@ -97,6 +97,15 @@
                                         v-model="form.shop.website_url"
                                     >
                             </div>
+                            <div class="form-group-block" >
+                                <label for="auth_whatsapp">Номер телефона WhatsApp </label>
+                                    <input
+                                        placeholder="Номер телефона WhatsApp"
+                                        id="auth_whatsapp"
+                                        type="text"
+                                        v-model="form.shop.whats_app_phone_number"
+                                    >
+                            </div>
                             <!-- <div v-if="!isSetting" class="form-group-block agreement"> -->
                                 <ValidationProvider v-if="!isSetting" class="form-group-block agreement" :rules="{required:{ allowFalse: false }}">
                                 <input v-model="confirmPolicy" type="checkbox" name="step-1_agree" id="step-1_agree" >
@@ -155,7 +164,8 @@ export default {
                 password: '',
                 shop: {
                     name: '',
-                    website_url: null
+                    website_url: null,
+                    whats_app_phone_number: null
                 },
                 username: ''
             },

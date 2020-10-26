@@ -8,8 +8,9 @@ import Auth from './components/Auth'
 import AddItem from './components/AddItem'
 import Balance from './components/Balance'
 import Settings from './components/Settings'
-import CliBase from './components/CliBase'
+import CliBase from './components/itemList'
 import CliInfo from './components/CliInfo'
+import AdminItem from './components/adminSingleItem.vue'
 import Welcome from './components/Welcome'
 import Forgot from './components/ResetPassReq'
 import ChangePass from './components/ResetPassRes'
@@ -37,7 +38,8 @@ export const router = new VueRouter({
     {path:'/base', name:'client-base', component: CliBase}, // список товаров
 
 
-    {path:'/item/:id', name:'client-info', component: CliInfo}, // товар
+    {path:'/item/:id', name:'item-user-info', component: CliInfo}, // товар
+    {path:'/item-moderation/:id', name:'item-admin-info', component: AdminItem}, // товар для модерации
   ],
   scrollBehavior (to, from, savedPosition) {
     return { x: 0, y: 0 }
