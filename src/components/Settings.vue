@@ -190,9 +190,6 @@ export default {
                     this.$router.push('welcome');
                 })
         },
-        handle(){
-            console.log(formValid)
-        }
     },
     computed: {
         pageName(){

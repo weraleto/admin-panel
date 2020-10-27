@@ -64,8 +64,12 @@
                                             <img :src="`https://dizi.foresco.site/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
                                         </div></td>
                                         <td class="client-base-table-cell cli-birth"><a :href="`/item/${item.id}`" @click.prevent="showItemCard(item.id); productId = item.id">{{item.name}}</a></td>
-                                        <td class="client-base-table-cell cli-phone">{{statuses[item.state.type].name}}</td>
-                                        <td class="client-base-table-cell cli-date">{{item.state.type === 'placed' ? '' : '-'}}</td>
+                                        <td class="client-base-table-cell cli-phone">
+                                            {{currentStat}}
+                                        </td>
+                                        <td class="client-base-table-cell cli-date">
+                                            {{productStatus === 'placed' ? '' : '-'}}
+                                            </td>
                                         <!-- <td class="client-base-table-cell aside"> </td> -->
                                     </tr>
                                 </template>
@@ -102,7 +106,9 @@
                                     </div>
                                     <div class="client-base-table-el">
                                         <div class="client-base-table-label">Статус публикации</div>
-                                        <div class="client-base-table-content">{{statuses[item.state.type].name}}</div>
+                                        <div class="client-base-table-content">
+                                            {{currentStat}}
+                                        </div>
                                     </div>
                                     <div class="client-base-table-el">
                                         <div class="client-base-table-label">Срок публикации</div>
@@ -197,6 +203,12 @@ export default {
 			set: function(newValue) {
 				return this.$store.state.currItemId = newValue;
 			}
+        },
+        productStatus(){
+            return this.form && this.form.state ? this.form.state.type : '';
+        },
+        currentStat(){
+            return this.statuses[this.productStatus] ? this.statuses[this.productStatus].name : this.productStatus
         }
     },
     methods: {
@@ -221,6 +233,7 @@ export default {
                 res=>{
                     this.itemsData = res.data;
                     this.totalPages = res.data.total_pages
+
                 }
             )
         },
