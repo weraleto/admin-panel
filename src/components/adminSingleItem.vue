@@ -90,6 +90,15 @@
                                     v-model="form.attrs_data[field.name]" 
                                     :placeholder="field.name">
                                     </v-select>
+
+                                    <el-color-picker
+                                    v-model="form.attrs_data[field.name]" 
+                                    disabled
+                                    v-else-if="field.type == 'color_spec'"
+                                    color-format="hex"
+                                    :class="classes"
+                                    :predefine="field.allowed_values">
+                                    </el-color-picker>
                                     
                                     
                                     <input

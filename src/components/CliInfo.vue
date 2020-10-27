@@ -25,8 +25,8 @@
                              class="btn btn-active">Приостановить размещение</button>
 
                             <button v-if="productStatus === 'approved'"
-                            @click.prevent="stopProduct"
-                             class="btn btn-active">Приостановить размещение</button>
+                            @click.prevent="publishItem"
+                             class="btn btn-active">Опубликовать</button>
 
                             <button v-if="productStatus === 'draft'"
                             @click.prevent="sendProduct"
@@ -83,11 +83,11 @@
                             <div class="form-group-block" 
                                 v-for="(field, index) in form.specs_data" :key="index"
                             >
-                                <label >{{field.name}} <span >*</span> </label>
+                                <label >{{field.name}}  </label>
 
                                 
                             
-                                 <ValidationProvider  :rules="{ required: true,
+                                 <ValidationProvider  :rules="{
                                  min_value: field.type == 'decimal_spec' ? +field.validation_opts.min : false }"
                                      v-slot="{classes}"
                                 >
@@ -97,6 +97,14 @@
                                     v-model="form.attrs.data[field.name]" 
                                     :placeholder="field.name">
                                     </v-select>
+
+                                    <el-color-picker
+                                    v-model="form.attrs.data[field.name]" 
+                                    v-else-if="field.type == 'color_spec'"
+                                    color-format="hex"
+                                    :class="classes"
+                                    :predefine="field.allowed_values">
+                                    </el-color-picker>
                                     
                                     
                                     <input
@@ -222,7 +230,7 @@ export default {
                     this.images = res.data.catalog_image_ids.map(it=>{
                         return `https://dizi.foresco.site/api/shops/products/catalog_images/${it}`
                     })
-                    console.log(this.currentCats)
+                    console.log(res.data)
                 }
             )
         },
@@ -290,9 +298,11 @@ export default {
                     return data
 
                 }) : 
-                this.form.catalog_images_ids.map(item=>{
+                this.form.catalog_image_ids.map(item=>{
                     return {id: item, type: 'existing'}
                 })
+
+                this.form.attrs.data['Цвет'] = this.form.attrs.data['Цвет'].toLowerCase()
 
 
             t = new RegExp('data:image/png;base64,')

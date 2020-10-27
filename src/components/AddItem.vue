@@ -65,11 +65,11 @@
                             <div class="form-group-block" 
                                 v-for="(field, index) in productSpecs.data" :key="index"
                             >
-                                <label >{{field.name}} <span >*</span> </label>
+                                <label >{{field.name}}  </label>
 
                                 
                             
-                                 <ValidationProvider  :rules="{ required: true,
+                                 <ValidationProvider  :rules="{
                                  min_value: field.type == 'decimal_spec' ? +field.validation_opts.min : false }"
                                      v-slot="{classes}"
                                 >
@@ -79,6 +79,14 @@
                                     v-model="form.attrs.data[field.name]" 
                                     :placeholder="field.name">
                                     </v-select>
+
+                                    <el-color-picker
+                                    v-model="form.attrs.data[field.name]" 
+                                    v-else-if="field.type == 'color_spec'"
+                                    color-format="hex"
+                                    :class="classes"
+                                    :predefine="field.allowed_values">
+                                    </el-color-picker>
                                     
                                     
                                     <input
@@ -112,7 +120,7 @@
                                 <ValidationProvider class="input" :rules="{ required: true }"
                     >
                         <label>Изображения для каталога товаров <span>*</span> </label>
-                        <FileUpload v-model="images" :isMultiple="true" fileFormat=".jpeg, .jpg" @onfileupload="$event => images = $event" />
+                        <FileUpload v-model="images" :isMultiple="true" fileFormat=".jpeg, .jpg, .png" @onfileupload="$event => images = $event" />
 
                     </ValidationProvider>
                             </div>
@@ -192,6 +200,7 @@ export default {
             this.form.catalog_images = imgArray;
             this.form.editor_image = this.replaceBase(this.pngImg, 'png');
             this.form.attrs.specs_name = this.productSpecs.name
+            this.form.attrs.data['Цвет'] = this.form.attrs.data['Цвет'].toLowerCase()
             this.$http.post('/api/shops/products', this.form)
                 .then(
                     res=>{

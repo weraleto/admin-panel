@@ -98,7 +98,7 @@ export default {
                 .catch(
                     err=>{
                         if (err.response.status == 422 && err.response.data.type === 'unverified_email_address') {
-                            this.$confirm('Аккаунт не активирован. Подтвердите регистрацию пройдя по ссылке отправленной на Ваш email', 'Warning', {
+                            this.$confirm('Аккаунт не активирован. Подтвердите регистрацию пройдя по ссылке отправленной на Ваш email', 'Ошибка', {
                                 confirmButtonText: 'Отправить повторно',
                                 cancelButtonText: 'Закрыть',
                                 type: 'warning'

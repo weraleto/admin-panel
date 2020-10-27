@@ -99,14 +99,12 @@
                             </div>
                             <div class="form-group-block" >
                                 <label for="auth_whatsapp">Номер телефона WhatsApp </label>
-                                <ValidationProvider class="input" :rules="{ regex: /^\+?[0-9]+$/, required: true}"
-                                     v-slot="{classes}"
+                                <ValidationProvider class="input" 
                                 >
 
                                     <input
                                         placeholder="Номер телефона WhatsApp"
                                         id="auth_whatsapp"
-                                        :class="classes"
                                         type="text"
                                         v-mask="'+79999999999'"
                                         v-model="form.shop.whats_app_phone_number"

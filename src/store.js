@@ -12,6 +12,8 @@ export const store = new Vuex.Store({
       'published':{name:'Опубликован',t:'success'},
       'under_review':{name:'На модерации',t:'warning'},
       'draft':{name:'Черновик',t:'info'},
+      'approved':{name:'Подтвержден модератором',t:'success'},
+      'disapproved':{name:'Отклонен модератором',t:'danger'},
     },
     loading: false
   },
