@@ -99,12 +99,21 @@
                             </div>
                             <div class="form-group-block" >
                                 <label for="auth_whatsapp">Номер телефона WhatsApp </label>
+                                <ValidationProvider class="input" :rules="{ regex: /^\+?[0-9]+$/, required: true}"
+                                     v-slot="{classes}"
+                                >
+
                                     <input
                                         placeholder="Номер телефона WhatsApp"
                                         id="auth_whatsapp"
+                                        :class="classes"
                                         type="text"
+                                        v-mask="'+79999999999'"
                                         v-model="form.shop.whats_app_phone_number"
                                     >
+
+                                </ValidationProvider>
+                                    
                             </div>
                             <!-- <div v-if="!isSetting" class="form-group-block agreement"> -->
                                 <ValidationProvider v-if="!isSetting" class="form-group-block agreement" :rules="{required:{ allowFalse: false }}">
@@ -175,6 +184,7 @@ export default {
     methods: {
         async sendForm(){
             let url = this.isSetting ? '/' : '/api/register';
+           this.form.shop.whats_app_phone_number = this.form.shop.whats_app_phone_number.replace('+','')
             await this.$http.post(url, this.form)
                 .then(response => {
                     this.$router.push('welcome');

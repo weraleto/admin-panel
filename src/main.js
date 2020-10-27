@@ -7,6 +7,9 @@ import {router} from './router'
 import './plugins/axios.js'
 import './plugins/vee-validate.js'
 import './plugins/element-ui.js'
+const VueInputMask = require('vue-inputmask').default
+
+Vue.use(VueInputMask)
 
 // styles
 import './assets/sass/style.sass'
