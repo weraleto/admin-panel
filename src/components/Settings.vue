@@ -23,6 +23,16 @@
                                      v-slot="{classes}"
                                 >
                                     <input
+                                    v-if="isSetting"
+                                        placeholder="Введите Email"
+                                        v-model="form.account_email_address"
+                                        id="auth_email"
+                                        :class="classes"
+                                        type="email"
+                                        :disabled="isSetting"
+                                    >
+                                    <input
+                                    v-else
                                         placeholder="Введите Email"
                                         v-model="form.email_address"
                                         id="auth_email"
@@ -181,13 +191,34 @@ export default {
     },
     methods: {
         async sendForm(){
-            let url = this.isSetting ? '/' : '/api/register';
-           this.form.shop.whats_app_phone_number = this.form.shop.whats_app_phone_number.replace('+','')
-            await this.$http.post(url, this.form)
+            let url = this.isSetting ? '/api/edit_shop' : '/api/register';
+           this.form.shop.whats_app_phone_number =  this.form.shop.whats_app_phone_number ? this.form.shop.whats_app_phone_number.replace('+','') : null
+           let formRequest = this.isSetting ? this.form.shop : this.form
+            await this.$http.post(url, formRequest)
                 .then(response => {
-                    this.$router.push('welcome');
+                    if(this.isSetting){
+                        this.$notify({
+                            title: 'Готово',
+                            type: 'success',
+                            message: 'Профиль успешно изменен'
+                        })
+                    }else{
+                        this.$router.push('welcome');
+                    }
+                })
+                .then(()=>{
+                    this.getUserSettings()
                 })
         },
+        getUserSettings(){
+
+            if (this.isSetting) {
+                this.$http.get('/api/get_settings')
+                .then(res=>{
+                    this.form = res.data
+                })
+            }
+        }
     },
     computed: {
         pageName(){
@@ -200,6 +231,9 @@ export default {
         isSetting(){
             return this.$route.name == 'settings';
         }
+    },
+    mounted(){
+        this.getUserSettings()
     }
 }
 </script>

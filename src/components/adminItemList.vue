@@ -172,7 +172,6 @@ export default {
                 res=>{
                     this.itemsData = res.data;
                     this.totalPages = res.data.total_pages
-                    console.log(res.data)
                 }
             )
         },

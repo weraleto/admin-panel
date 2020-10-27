@@ -173,7 +173,6 @@ export default {
         FileUpload
     },
     mounted(){
-        // console.log(this.replaceBase(this.test,'png'))
         this.$http.get('/api/shops/product_categories')
             .then(
                 res=>{
@@ -195,12 +194,12 @@ export default {
         },
         sendData(){
             let imgArray = this.images.map(item=>{
-                return this.replaceBase(item.base, 'jpeg')
+                return this.replaceBase(item.base, 'jpeg').replaceBase(item.base, 'png')
             })
             this.form.catalog_images = imgArray;
             this.form.editor_image = this.replaceBase(this.pngImg, 'png');
             this.form.attrs.specs_name = this.productSpecs.name
-            this.form.attrs.data['Цвет'] = this.form.attrs.data['Цвет'].toLowerCase()
+            this.form.attrs.data['Цвет'] = this.form.attrs.data['Цвет'] ? this.form.attrs.data['Цвет'].toLowerCase() : null
             this.$http.post('/api/shops/products', this.form)
                 .then(
                     res=>{

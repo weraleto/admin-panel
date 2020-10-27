@@ -137,7 +137,6 @@ export default {
     },
     watch: {
         images(){
-            // console.log(this.images)
             if(this.images.length > 0) {
                 let imagesPayload = this.isMultiple ? this.images : this.images[0].base;
                 this.$emit('onfileupload', imagesPayload)

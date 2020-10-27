@@ -225,7 +225,6 @@ export default {
             confirmButtonText: 'Отправить',
             cancelButtonText: 'Отмена',
             }) .then((value)=>{
-                console.log(value)
                 this.$http.post(`/api/shops/${this.form.shop_id}/products/${this.productId}/disapprove`,{
                 "data_version": this.form.data_version,
                 "reason": value.value
