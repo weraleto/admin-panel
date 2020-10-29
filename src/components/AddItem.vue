@@ -115,6 +115,21 @@
 
                                 </ValidationProvider>
                             </div>
+                            <div class="form-group-block" >
+                                <label for="item_url">Ссылка на товар  </label>
+                                <ValidationProvider class="input" :rules="{  regex:/^.{1,}$/ }"
+                                     v-slot="{classes}"
+                                >
+                                    <input
+                                        placeholder="Ссылка на товар"
+                                        v-model="form.url"
+                                        id="item_url"
+                                        :class="classes"
+                                        type="text"
+                                    >
+
+                                </ValidationProvider>
+                            </div>
 
                             <div class="form-group-block">
                                 <ValidationProvider class="input" :rules="{ required: true }"
@@ -193,8 +208,15 @@ export default {
           return item.replace(`data:image/${format};base64,`,''); 
         },
         sendData(){
+            let rJPG = new RegExp('data:image/jpeg;base64,')
+            let rPNG = new RegExp('data:image/png;base64,')
+            
             let imgArray = this.images.map(item=>{
-                return this.replaceBase(item.base, 'jpeg').replaceBase(item.base, 'png')
+                if (rJPG.test(item.base)) {
+                    return this.replaceBase(item.base, 'jpeg')
+                } else if (rPNG.test(item.base)) {
+                    return this.replaceBase(item.base, 'png')
+                }
             })
             this.form.catalog_images = imgArray;
             this.form.editor_image = this.replaceBase(this.pngImg, 'png');

@@ -134,6 +134,21 @@
                                 </ValidationProvider>
                             </div>
                             <div class="form-group-block" >
+                                <label for="item_url">Ссылка на товар  </label>
+                                <ValidationProvider class="input" :rules="{  regex:/^.{1,}$/ }"
+                                     v-slot="{classes}"
+                                >
+                                    <input
+                                        placeholder="Ссылка на товар"
+                                        v-model="form.url"
+                                        id="item_url"
+                                        :class="classes"
+                                        type="text"
+                                    >
+
+                                </ValidationProvider>
+                            </div>
+                            <div class="form-group-block" >
                                     <ValidationProvider class="input" :rules="{ required: true }"
                                 >
                                     <label>Изображения для каталога товаров <span>*</span> </label>
@@ -280,6 +295,9 @@ export default {
                     }
                 )
         },
+        replaceBase(item, format){
+          return item.replace(`data:image/${format};base64,`,''); 
+        },
         sendData(){
             let rJPG = new RegExp('data:image/jpeg;base64,')
             let rPNG = new RegExp('data:image/png;base64,')
@@ -288,10 +306,10 @@ export default {
                     
                     let data = {}
                     if (rJPG.test(item.base) ) {
-                       data.data =  item.base.replace('data:image/jpeg;base64,','')
+                       data.data =  this.replaceBase(item.base, 'jpeg')
                        data.type = 'new'
                     }else if (rPNG.test(item.base) ) {
-                       data.data =  item.base.replace('data:image/png;base64,','')
+                       data.data =  this.replaceBase(item.base, 'png')
                        data.type = 'new'
                     
                     }else{
