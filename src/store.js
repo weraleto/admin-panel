@@ -15,11 +15,18 @@ export const store = new Vuex.Store({
       'approved':{name:'Подтвержден модератором',t:'success'},
       'disapproved':{name:'Отклонен модератором',t:'danger'},
     },
-    loading: false
+    loading: false,
+    shopInfo: {
+      "balance": "0",
+      "name": "Shop Name"
+    }
   },
   mutations: {
     setLoading (state, val) {
       state.loading = val
+    },
+    setShopInfo (state, val) {
+      state.shopInfo = val
     }
   }
 })
