@@ -32,12 +32,12 @@
                 <a href="/logout" @click.prevent="logout" class="nav-panel-item" >Выйти</a>
               </div>
 
-              <div class="nav-panel-stats">
+              <div class="nav-panel-stats" v-show="userRole && userRole === 'seller'">
                 <div class="nav-panel-item">
-                  Shop Name
+                  {{shopInfo.name}}
                 </div>
                 <div class="nav-panel-item">
-                  Баланс: <span>300 руб.</span>
+                  Баланс: <span>{{shopInfo.balance}} руб.</span>
                 </div>
               </div>
             </nav>
@@ -78,10 +78,16 @@ export default {
     return {
       auth: false,
       showNav: false,
-      navLinks: [
+      navLinksUser: [
         {name: 'Все товары', alias: 'client-base'},
         {name: 'Добавить товар', alias: 'add'},
         {name: 'Баланс', alias: 'balance'},
+        {name: 'Настройки', alias: 'settings'},
+        // {name: 'Помощь', alias: ''},
+        // {name: 'Выйти', alias: 'auth'},
+      ],
+      navLinksAdmin: [
+        {name: 'Все товары', alias: 'client-base'},
         {name: 'Настройки', alias: 'settings'},
         // {name: 'Помощь', alias: ''},
         // {name: 'Выйти', alias: 'auth'},
@@ -126,6 +132,15 @@ export default {
     },
     loading(){
       return this.$store.state.loading
+    },
+    navLinks(){
+      return this.$store.state === 'admin' ? this.navLinksAdmin : this.navLinksUser
+    },
+    shopInfo(){
+      return this.$store.state.shopInfo
+    },
+    userRole(){
+      return this.$store.state.userRole
     }
   }
 }

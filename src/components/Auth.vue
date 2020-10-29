@@ -95,6 +95,14 @@ export default {
                         this.$router.push('base')
                     }
                 )
+                .then(
+                    ()=>{
+                        return this.$http.get('/api/get_shop_info')
+                    }
+                )
+                .then(
+                    res=>{this.$store.commit('setShopInfo', res.data)}
+                )
                 .catch(
                     err=>{
                         if (err.response.status == 422 && err.response.data.type === 'unverified_email_address') {
