@@ -31,7 +31,7 @@
                                 
                                 <button class="btn btn-active"
                                     :disabled="invalid"
-                                    @click="proceedPayment"
+                                    @click.prevent="proceedPayment"
                                 >Продолжить</button>
                             <!-- </router-link> -->
                         </div>
@@ -52,7 +52,7 @@ export default {
     },
     methods: {
         proceedPayment(){
-            this.$http.post('/api/payments', {amount: num.toString()})
+            this.$http.post('/api/payments', {amount: this.num.toString()})
         }
     }
 }
