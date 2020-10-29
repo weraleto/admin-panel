@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import axiosVue from 'axios-vue'
 import {store} from './../store'
+import {ErrorHandler} from './errHandler'
+
 
 
 Vue.use(axiosVue, {
@@ -25,7 +27,7 @@ Vue.use(axiosVue, {
         store.commit('setLoading', false)
         if(error.response.status=== 500) store.commit('setLoading', false)
         if(error.response.status!== 401) {
-          let respTxt = error.response.data ? error.response.data.type : 'Что-то пошло не так. Попробуйте еще раз'
+          let respTxt = error.response.data ? ErrorHandler[error.response.data.type] : 'Что-то пошло не так. Попробуйте еще раз'
           
           Vue.prototype.$notify.error({
             'title':'Ошибка',
