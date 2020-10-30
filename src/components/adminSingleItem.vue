@@ -75,7 +75,7 @@
                             <div class="form-group-block" 
                                 v-for="(field, index) in form.specs_data" :key="index"
                             >
-                                <label >{{field.name}} <span >*</span> </label>
+                                <label >{{isMetric(field.name)}} <span >*</span> </label>
 
                                 
                             
@@ -224,6 +224,9 @@ export default {
         }
     },
     methods: {
+        isMetric(it){
+            return ['Длина', 'Ширина', 'Высота', 'Глубина'].includes(it)  ? it += ' (мм)' : it
+        },
         async getProduct(){
             await this.$http.get(`/api/get_product_for_review?product_id=${this.productId}`)
             .then(

@@ -65,7 +65,7 @@
                             <div class="form-group-block" 
                                 v-for="(field, index) in productSpecs.data" :key="index"
                             >
-                                <label >{{field.name}}  </label>
+                                <label >{{isMetric(field.name)}}  </label>
 
                                 
                             
@@ -204,6 +204,9 @@ export default {
         },
     },
     methods: {
+        isMetric(it){
+            return ['Длина', 'Ширина', 'Высота', 'Глубина'].includes(it)  ? it += ' (мм)' : it
+        },
         replaceBase(item, format){
           return item.replace(`data:image/${format};base64,`,''); 
         },
