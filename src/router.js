@@ -49,6 +49,6 @@ export const router = new VueRouter({
 let noAuthRoutes = ['auth', 'reg', 'email', 'respass', 'changepass', 'welcome'];
 
 router.beforeEach((to, from, next) => {
-  if ( noAuthRoutes.indexOf(to.name) == -1 && !store.state.isAuth) next({ name: 'auth' })
+  if ( noAuthRoutes.indexOf(to.name) == -1 && !localStorage.getItem('token')) next({ name: 'auth' })
   else next()
 })

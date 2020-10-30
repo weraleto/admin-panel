@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import axiosVue from 'axios-vue'
 import {store} from './../store'
+import {router} from './../router'
 import {ErrorHandler} from './errHandler'
 
 
@@ -25,6 +26,8 @@ Vue.use(axiosVue, {
       },
       responseError(error) {
         store.commit('setLoading', false)
+        let token = localStorage.getItem('token')
+        
         if(error.response.status=== 500) store.commit('setLoading', false)
         if(error.response.status!== 401) {
           let respTxt = error.response.data ? ErrorHandler[error.response.data.type] : 'Что-то пошло не так. Попробуйте еще раз'
@@ -34,28 +37,43 @@ Vue.use(axiosVue, {
             'message': respTxt
           })
           return Promise.reject(error)
-        } else {
+        } else if(error.response.status === 401) {
+
+
+            Vue.$http.post('/api/accounts/refresh_token', {refresh_token: token ? token : store.state.refresh_token})
+              .then(
+                res=>{
+                  store.state.refresh_token = res.data.refresh_token
+                  store.state.userRole = res.data.role
+                  store.state.isAuth = true
+                  Vue.$http.defaults.headers.common['Authorization'] = `Bearer ${res.data.access_token}`
+                  localStorage.setItem('token', res.data.refresh_token)
+                  // console.log(this)
+                  return Vue.$http.request(error.config.url);
+                  // return Promise.reject(err)
+                }
+              )
+              .catch(
+                err=>{
+                  Vue.$http.defaults.headers.common['Authorization'] = ''
+                  router.push('/auth')
+                  Vue.prototype.$notify.error({
+                    'title':'Ошибка',
+                    'message':'Что-то пошло не так. Попробуйте авторизоваться снова.'
+                  })
+                  return Promise.reject(err)
+                }
+              )
+          }else {
+            Vue.$http.defaults.headers.common['Authorization'] = ''
+                  router.push('/auth')
+                  Vue.prototype.$notify.error({
+                    'title':'Ошибка',
+                    'message':'Что-то пошло не так.'
+                  })
+                  return Promise.reject(err)
+          }
   
-          Vue.$http.post('/api/accounts/refresh_token', {refresh_token:store.state.refresh_token})
-            .then(
-              res=>{
-                store.state.refresh_token = res.data.refresh_token
-                Vue.$http.defaults.headers.common['Authorization'] = res.data.auth_token
-                return res
-              }
-            )
-            .catch(
-              err=>{
-                Vue.$http.defaults.headers.common['Authorization'] = ''
-                router.push('/auth')
-                Vue.prototype.$notify.error({
-                  'title':'Ошибка',
-                  'message':'Что-то пошло не так. Попробуйте авторизоваться снова.'
-                })
-                return Promise.reject(err)
-              }
-            )
-        }
       },
     },
   })

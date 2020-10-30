@@ -80,9 +80,11 @@ export default {
             },
         }
     },
+
     methods: {
-        async auth(){
-            await this.$http.post('/api/accounts/log_in', this.form)
+        
+        auth(){
+            this.$http.post('/api/accounts/log_in', this.form)
                 .then(
                     res=>{
                         const token = res.data.access_token;
@@ -93,6 +95,7 @@ export default {
                         this.$store.state.refresh_token = res.data.refresh_token
                         this.$store.state.userRole = res.data.role
                         this.$router.push('base')
+                        localStorage.setItem('token', res.data.refresh_token)
                     }
                 )
                 .then(
