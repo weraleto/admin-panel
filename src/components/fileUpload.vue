@@ -83,7 +83,7 @@ export default {
     },
     data(){
         return {
-            maxFileSize: 5000000,
+            maxFileSize: 500000,
             image: '',
             images: [],
             files: [],
@@ -115,6 +115,12 @@ export default {
                     this.files.push(uploadedFiles[el])
                     this.createBaseImage(uploadedFiles[el], el)
 
+                }else if(uploadedFiles[el].size >= this.maxFileSize){
+                    this.$notify({
+                        title: 'Ошибка',
+                        message: `Размер файла ${uploadedFiles[el].name} больше допустимого`,
+                        type: 'error'
+                    })
                 }
             })
             
