@@ -49,6 +49,35 @@ export const router = new VueRouter({
 let noAuthRoutes = ['auth', 'reg', 'email', 'respass', 'changepass', 'welcome'];
 
 router.beforeEach((to, from, next) => {
-  if ( noAuthRoutes.indexOf(to.name) == -1 && !localStorage.getItem('token')) next({ name: 'auth' })
+  const token = localStorage.getItem('token')
+  if(token && !store.state.isAuth) {
+    Vue.$http.post('/api/accounts/refresh_token', {refresh_token: token })
+             .then(
+               res=>{
+                 store.state.refresh_token = res.data.refresh_token
+                 store.state.userRole = res.data.role
+                 store.state.isAuth = true
+                 Vue.$http.defaults.headers.common['Authorization'] = `Bearer ${res.data.access_token}`
+                 localStorage.setItem('token', res.data.refresh_token)
+                 if(to.path === '/') {
+                   router.push('/base')
+                 }else {
+                   router.push({name: to.name})
+                 }
+               }
+             )
+             .catch(
+               err=>{
+                 Vue.$http.defaults.headers.common['Authorization'] = ''
+                 router.push('/auth')
+                 Vue.prototype.$notify.error({
+                   'title':'Ошибка',
+                   'message':'Что-то пошло не так. Попробуйте авторизоваться снова.'
+                 })
+                 return Promise.reject(err)
+               }
+             )
+  }
+  else if ( noAuthRoutes.indexOf(to.name) == -1 && !store.state.isAuth) next({ name: 'auth' })
   else next()
 })

@@ -87,10 +87,7 @@ export default {
         // {name: 'Выйти', alias: 'auth'},
       ],
       navLinksAdmin: [
-        {name: 'Все товары', alias: 'client-base'},
-        {name: 'Настройки', alias: 'settings'},
-        // {name: 'Помощь', alias: ''},
-        // {name: 'Выйти', alias: 'auth'},
+        {name: 'Все товары', alias: 'client-base'}
       ]
     }
   },
@@ -106,6 +103,7 @@ export default {
              this.$router.push('/auth')
              this.isAuth = !this.isAuth
              this.showNav = !this.showNav
+             localStorage.removeItem('token')
           }
         )
         .catch(
@@ -134,7 +132,7 @@ export default {
       return this.$store.state.loading
     },
     navLinks(){
-      return this.$store.state === 'admin' ? this.navLinksAdmin : this.navLinksUser
+      return this.$store.state.userRole === 'admin' ? this.navLinksAdmin : this.navLinksUser
     },
     shopInfo(){
       return this.$store.state.shopInfo

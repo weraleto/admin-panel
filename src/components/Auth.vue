@@ -96,6 +96,7 @@ export default {
                         this.$store.state.userRole = res.data.role
                         this.$router.push('base')
                         localStorage.setItem('token', res.data.refresh_token)
+                        localStorage.setItem('role', res.data.role)
                     }
                 )
                 .then(
