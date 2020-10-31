@@ -9,11 +9,14 @@ export const store = new Vuex.Store({
     access_token: null,
     refresh_token: null,
     productStatuses: {
-      'published':{name:'Опубликован',t:'success'},
-      'under_review':{name:'На модерации',t:'warning'},
       'draft':{name:'Черновик',t:'info'},
+      'under_review':{name:'На модерации',t:'warning'},
       'approved':{name:'Подтвержден модератором',t:'success'},
       'disapproved':{name:'Отклонен модератором',t:'danger'},
+      'placed':{name:'Опубликован',t:'success'},
+      'placement_paused':{name:'Размещение товара приостановлено вручную',t:'warning'},
+      'placement_paused_due_of_review':{name:'Размещение товара приостановлено ввиду того, что товар находится на проверке',t:'warning'},
+      'placement_paused_due_of_disapprove':{name:'Размещение товара приостановлено ввиду того, что товар не прошел проверку',t:'warning'},
     },
     loading: false,
     shopInfo: {

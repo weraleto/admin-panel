@@ -43,7 +43,9 @@
                                         Статус публикации
                                     </th>
                                     <th class="client-base-table-cell cli-date">Срок публикации</th>
-                                    <!-- <th class="client-base-table-cell aside"></th> -->
+                                    <th class="client-base-table-cell aside">
+                                        
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -70,12 +72,20 @@
                                         <td class="client-base-table-cell cli-date">
                                             {{item.state.type === 'placed' ? '' : '-'}}
                                             </td>
-                                        <!-- <td class="client-base-table-cell aside"> </td> -->
+                                        <td class="client-base-table-cell aside" >
+                                            <template v-if="filtrationName === 'draft'">
+
+                                            <button class="client-base-filtration-link btn btn-active"
+                                            @click="sendToReview(item.id)"
+                                            style="max-height: unset;"
+                                            >Отправить на проверку</button>
+                                                    </template>
+                                        </td>
                                     </tr>
                                 </template>
                                 <template v-else>
                                     <tr>
-                                        <td colspan="4" style="text-align: center">
+                                        <td colspan="5" style="text-align: center">
                                              В данной категории нет товаров
                                         </td>
                                     </tr>
@@ -112,7 +122,18 @@
                                     </div>
                                     <div class="client-base-table-el">
                                         <div class="client-base-table-label">Срок публикации</div>
-                                        <div class="client-base-table-content">{{item.state.type === 'placed' ? '' : '-'}}</div>
+                                        <div class="client-base-table-content">{{item.state.type === 'placed' ? item.placed_until : '-'}}</div>
+                                    </div>
+                                    <div class="client-base-table-el" >
+                                        
+
+                                            <template v-if="filtrationName === 'draft'">
+
+                                            <button class="client-base-filtration-link btn btn-active"
+                                            @click="sendToReview(item.id)"
+                                            style="max-height: unset;"
+                                            >Отправить на проверку</button>
+                                                    </template>
                                     </div>
                                 </div>
                             </template>
@@ -231,6 +252,23 @@ export default {
                 }
             )
         },
+        sendToReview(id){
+            this.$http.post(`/api/shops/products/${id}/send_to_review`)
+                .then(
+                    res=>{
+                        this.$notify({
+                           'title': 'Готово',
+                            'message': 'Товар отправлен на проверку',
+                            type: 'success' 
+                        })
+                    }
+                )
+                .then(
+                    res=>{
+                        this.getCatalog()
+                    }
+                )
+        }
         
         
     },
