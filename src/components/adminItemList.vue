@@ -44,7 +44,7 @@
                                             </template>
                                         </td> -->
                                         <td class="client-base-table-cell cli-fio" ><div>
-                                            <img :src="`https://dizi.foresco.site/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
+                                            <img :src="`/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
                                         </div></td>
                                         <td class="client-base-table-cell cli-birth"><a :href="`/item/${item.id}`" @click.prevent="showItemCard(item.id); productId = item.id">{{item.name}}</a></td>
                                     </tr>
@@ -74,7 +74,7 @@
                                     </div>
                                     <div class="client-base-table-el" @click="showItemCard(item.id); productId = item.id">
                                         <div class="client-base-table-label">Фото</div>
-                                        <img :src="`https://dizi.foresco.site/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
+                                        <img :src="`/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
                                     </div>
                                     <div class="client-base-table-el">
                                         <div class="client-base-table-label">Название</div>
@@ -166,12 +166,13 @@ export default {
         showItemCard(id){
             this.$router.push(`/item-moderation/${id}`)
         },
-        getCatalog(name=null){
+        getCatalog(){
             this.$http.get(`/api/get_products_under_review?page=${this.currentPage}&limit=${this.sortNum}`)
             .then(
                 res=>{
+                    if (res){
                     this.itemsData = res.data;
-                    this.totalPages = res.data.total_pages
+                    this.totalPages = res.data.total_pages}
                 }
             )
         },

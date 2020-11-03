@@ -232,9 +232,9 @@ export default {
             .then(
                 res=>{
                     this.form = res.data
-                    this.pngImg = `https://dizi.foresco.site/api/shops/products/editor_images/${res.data.editor_image_id}`
+                    this.pngImg = `/api/shops/products/editor_images/${res.data.editor_image_id}`
                     this.images = res.data.catalog_image_ids.map(it=>{
-                        return `https://dizi.foresco.site/api/shops/products/catalog_images/${it}`
+                        return `/api/shops/products/catalog_images/${it}`
                     })
                 }
             )
