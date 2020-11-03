@@ -13,7 +13,7 @@
                             <div class="form-grop-blocks">
                                 <div class="form-group-block" >
                                     <label for="item_name">Сумма пополнения (руб.) <span>*</span> </label>
-                                    <ValidationProvider class="input" :rules="{ regex:/^\d+$/, required: true, min_value: 10 }"
+                                    <ValidationProvider class="input" :rules="{ regex:/^\d+$/, required: true, min_value: 100 }"
                                         v-slot="{classes}"
                                     >
                                         <input
@@ -53,6 +53,12 @@ export default {
     methods: {
         proceedPayment(){
             this.$http.post('/api/payments', {amount: this.num.toString()})
+                .then(()=>{
+                    return this.$http.get('/api/get_shop_info') 
+                })
+                .then(res=>{
+                    this.$store.commit('setShopInfo', res.data)
+                })
         }
     }
 }

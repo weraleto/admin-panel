@@ -49,34 +49,40 @@ export const router = new VueRouter({
 let noAuthRoutes = ['auth', 'reg', 'email', 'respass', 'changepass', 'welcome'];
 
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem('token')
-  if(token && !store.state.isAuth) {
-    Vue.$http.post('/api/accounts/refresh_token', {refresh_token: token })
-             .then(
-               res=>{
-                 store.state.refresh_token = res.data.refresh_token
-                 store.state.userRole = res.data.role
-                 store.state.isAuth = true
-                 Vue.$http.defaults.headers.common['Authorization'] = `Bearer ${res.data.access_token}`
-                 localStorage.setItem('token', res.data.refresh_token)
-                 if(to.path === '/') {
-                   router.push('/base')
-                 }else {
-                   router.push({name: to.name})
-                 }
-               }
-             )
-             .catch(
-               err=>{
-                 Vue.$http.defaults.headers.common['Authorization'] = ''
-                 router.push('/auth')
-                 Vue.prototype.$notify.error({
-                   'title':'Ошибка',
-                   'message':'Что-то пошло не так. Попробуйте авторизоваться снова.'
-                 })
-                 return Promise.reject(err)
-               }
-             )
+  
+  
+  if(['item-user-info','item-admin-info'].includes(to.name) && !store.state.currItemId ) {
+    
+    const href = window.location.href.split('/');
+    store.commit('setProductId', href[href.length - 1])
+  }
+
+  if(store.state.isAuth && store.state.userRole==='seller'){
+    Vue.$http.get('/api/get_shop_info')
+    .then(
+      res=>{res ? store.commit('setShopInfo', res.data) : ''}
+    )
+  }
+
+  if(localStorage.getItem('acs_token') && !store.state.isAuth) {
+      Vue.$http.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('acs_token')}`
+      store.state.isAuth = true;
+      store.state.userRole = localStorage.getItem('role')
+
+      
+      
+      if(store.state.isAuth) {
+            
+    
+    
+        if(to.path === '/') {
+          router.push('/base')
+        }
+        else {
+          router.push({name: to.name})
+        }
+      }
+   
   }
   else if ( noAuthRoutes.indexOf(to.name) == -1 && !store.state.isAuth) next({ name: 'auth' })
   else next()

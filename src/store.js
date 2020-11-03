@@ -8,6 +8,7 @@ export const store = new Vuex.Store({
     isAuth: false,
     access_token: null,
     refresh_token: null,
+    currItemId: null,
     productStatuses: {
       'draft':{name:'Черновик',t:'info'},
       'under_review':{name:'На модерации',t:'warning'},
@@ -30,6 +31,9 @@ export const store = new Vuex.Store({
     },
     setShopInfo (state, val) {
       state.shopInfo = val
+    },
+    setProductId (state, val) {
+      state.currItemId = val
     }
   }
 })

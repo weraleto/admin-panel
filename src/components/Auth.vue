@@ -95,13 +95,18 @@ export default {
                         this.$store.state.refresh_token = res.data.refresh_token
                         this.$store.state.userRole = res.data.role
                         this.$router.push('base')
+                        localStorage.setItem('acs_token', token)
                         localStorage.setItem('token', res.data.refresh_token)
                         localStorage.setItem('role', res.data.role)
                     }
                 )
                 .then(
                     ()=>{
-                        return this.$http.get('/api/get_shop_info')
+                        if(this.$store.state.userRole==='seller'){
+                            return this.$http.get('/api/get_shop_info')
+                        }else{
+                            return
+                        }
                     }
                 )
                 .then(

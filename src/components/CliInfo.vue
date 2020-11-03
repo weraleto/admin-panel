@@ -5,11 +5,11 @@
             <header>
                 <h1 class="page-header">{{form.name}}</h1> 
                 
-                <!-- <el-tooltip effect="light" content="Товар опубликован" placement="bottom"> -->
-                    <el-tag effect="dark" v-if="productStatus"  :type="statuses[productStatus].t" > {{statuses[productStatus].name}}  
-                        <!-- <i class="el-icon-question"></i> -->
-                    </el-tag>
-                <!-- </el-tooltip> -->
+                <el-tag effect="dark" v-if="productStatus"  :type="statuses[productStatus].t" > {{statuses[productStatus].name}}  
+                    <el-tooltip v-if="productStatus == 'disapproved'" effect="light" :content="form.state.reason"  placement="bottom">
+                        <i class="el-icon-question"></i>
+                    </el-tooltip>
+                </el-tag>
             </header>
             <!-- auth form -->
             <div class="form-content step--1">
@@ -20,7 +20,7 @@
 
                     <div class="form-group">
                         <div class="btn-group">
-                            <button v-if="productStatus === 'published'"
+                            <button v-if="productStatus === 'placed'"
                             @click.prevent="stopProduct"
                              class="btn btn-active">Приостановить размещение</button>
 
@@ -67,21 +67,20 @@
                                 <label for="item_subcat">Категория <span>*</span> </label>
                                  <v-select label="name" 
                                  :options="categoriesData" 
-                                 disabled
-                                 :value="form.category_name"
+                                v-model="form.category_name"
                                  placeholder="Категория товара"></v-select>
                             </div>
 
                             <div class="form-group-block" >
                                 <label for="item_subcat">Подкатегория <span>*</span> </label>
-                                 <v-select label="name" :options="subCatList ? subCatList : []" 
-                                 disabled
-                                 :value="form.subcategory_name"
+                                 <v-select label="name" :options="form.category_name.subcategories ? form.category_name.subcategories : form.subcategory_name" 
+                                 :resetOnOptionsChange="true"
+                                  v-model="form.subcategory_name"
                                  placeholder="Подкатегория товара"></v-select>
                             </div>
 
                             <div class="form-group-block" 
-                                v-for="(field, index) in form.specs_data" :key="index"
+                                v-for="(field, index) in productSpecs" :key="index"
                             >
                                 <label >{{isMetric(field.name)}}  </label>
 
@@ -208,6 +207,7 @@ export default {
         FileUpload
     },
     mounted(){
+
         
         this.getProduct()
 
@@ -220,13 +220,18 @@ export default {
     },
     computed: {
         subCatList(){
-            return this.currentCats.cat ? this.currentCats.cat.subcategories : [];
+            return this.form.category_name.subcategories ? this.form.category_name.subcategories : [];
         },
         productSpecs(){
-            return this.currentCats.subcat ? this.currentCats.subcat.product_specs : [];
+            return this.form.subcategory_name.product_specs ? this.form.subcategory_name.product_specs : this.form.specs_data;
         },
-        productId(){
-            return this.$store.state.currItemId
+        productId: {
+            get: function(){
+                return this.$store.state.currItemId
+            },
+            set: function(val){
+                this.$store.state.currItemId = val
+            }
         },
         statuses(){
             return this.$store.state.productStatuses
@@ -239,15 +244,19 @@ export default {
         isMetric(it){
             return ['Длина', 'Ширина', 'Высота', 'Глубина'].includes(it)  ? it += ' (мм)' : it
         },
-        async getProduct(){
-            await this.$http.get(`/api/shops/products/${this.productId}/for_edit`)
+        getProduct(){
+
+            this.$http.get(`/api/shops/products/${this.productId}/for_edit`)
             .then(
                 res=>{
                     this.form = res.data
-                    this.pngImg = `https://dizi.foresco.site/api/shops/products/editor_images/${res.data.editor_image_id}`
+                    this.pngImg = `/api/shops/products/editor_images/${res.data.editor_image_id}`
                     this.images = res.data.catalog_image_ids.map(it=>{
-                        return `https://dizi.foresco.site/api/shops/products/catalog_images/${it}`
+                        return `/api/shops/products/catalog_images/${it}`
                     })
+
+                    this.currentCats.cat = this.form.category_name
+                    this.currentCats.subcat = this.form.subcategory_name
                 }
             )
         },

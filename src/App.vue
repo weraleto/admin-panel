@@ -100,10 +100,13 @@ export default {
         .then(
           res=>{
              this.$http.defaults.headers.common['Authorization'] = ''
-             this.$router.push('/auth')
              this.isAuth = !this.isAuth
              this.showNav = !this.showNav
+             this.userRole = null
+             localStorage.removeItem('acs_token')
              localStorage.removeItem('token')
+             localStorage.removeItem('role')
+             this.$router.push('/auth')
           }
         )
         .catch(
@@ -134,11 +137,23 @@ export default {
     navLinks(){
       return this.$store.state.userRole === 'admin' ? this.navLinksAdmin : this.navLinksUser
     },
-    shopInfo(){
-      return this.$store.state.shopInfo
+    shopInfo:{
+      get: function() {
+				return this.$store.state.shopInfo;
+			},
+			set: function(newValue) {
+				this.$store.commit('setShopInfo', newValue)
+			}
+      
     },
-    userRole(){
-      return this.$store.state.userRole
+    userRole:{
+      get: function() {
+				return this.$store.state.userRole
+			},
+			set: function(newValue) {
+				return this.$store.state.userRole = newValue;
+			}
+      
     }
   }
 }
