@@ -54,14 +54,14 @@
                                         v-for="(item, index) in itemsData.products" :key="index"
                                         
                                     >
-                                        <!-- <td class="client-base-table-cell cli-number">
-                                            <template v-if="item.state.type==='approved'">
-                                                <input type="checkbox" v-model="itemsForConfirm[item.id]" :name="`base-${index}`" :id="`base-${index}`" >
+                                        <td class="client-base-table-cell cli-number">
+                                            <template v-if="item.state.type==='approved'||item.state.type=== 'placement_paused'">
+                                                <input type="checkbox" @change="pushState" :data-id="item.id" :name="`base-${index}`" :id="`base-${index}`" >
                                                 <label class="label-checkbox" :for="`base-${index}`"
                                                 >                                               
                                                 </label>
                                             </template>
-                                        </td> -->
+                                        </td>
                                         <td class="client-base-table-cell cli-fio" ><div>
                                             <img :src="`/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
                                         </div></td>
@@ -99,9 +99,11 @@
                                     
                                 >
                                     <div class="client-base-table-num">
-                                        <template v-if="item.state.type==='approved'">
-                                                <input type="checkbox" :name="`base-${index}`" :id="`base-${index}`" >
-                                                <label class="label-checkbox" :for="`base-${index}`">                                               
+                                        <template v-if="item.state.type==='approved'||item.state.type=== 'placement_paused'">
+                                                <input 
+                                                @change="pushState" :data-id="item.id"
+                                                type="checkbox" :name="`base-mobile-${index}`" :id="`base-mobile-${index}`" >
+                                                <label class="label-checkbox" :for="`base-mobile-${index}`">                                               
                                                 </label>
                                             </template>
                                     </div>
@@ -171,12 +173,9 @@
                             <router-link :to="{name:'add'}" class="client-base-navigation-link page-link">
                                 <button class="btn btn-active">Добавить товар</button>
                             </router-link>
-            
-                            <!-- <el-tooltip effect="light" content="У вас нет подтвержденных товаров" :disabled="!itemsForConfirm" placement="bottom">
-                            <router-link :to="''" class="client-base-navigation-link page-link">
-                                <button :disabled="itemsForConfirm ? Object.keys(itemsForConfirm).length  < 1 : true" @click.prevent="publishItems" class="btn btn-active">Опубликовать товары</button>
+                            <router-link :to="''" v-if="filtrationName=='under_review'" class="client-base-navigation-link page-link">
+                                <button :disabled="itemsForConfirm ? Object.keys(itemsForConfirm).length  < 1 : true" @click.prevent="publishItems" class="btn btn-active">Опубликовать товары за {{publishTotalCost}} руб.</button>
                             </router-link>
-                            </el-tooltip> -->
                             <!-- <button class="btn btn-light client-base-navigation-link page-link">Экспорт базы</button> -->
                         </div>
                     </div>
@@ -208,6 +207,8 @@ export default {
                 {label:'Черновики', name: 'draft'},
             ],
             itemsData: [],
+            itemsForConfirm: [],
+            publishCost: 57
         }
     },
     mounted(){
@@ -225,8 +226,32 @@ export default {
 				return this.$store.state.currItemId = newValue;
 			}
         },
+        publishTotalCost(){
+            return this.publishCost * this.itemsForConfirm.length
+        }
     },
     methods: {
+        pushState(e){
+            if(e.target.checked){
+                this.itemsForConfirm.push(e.target.dataset.id)
+                console.log(this.itemsForConfirm)
+            }else{
+                this.itemsForConfirm.splice(this.itemsForConfirm.indexOf(e.target.dataset.id),1)
+                console.log(this.itemsForConfirm)
+            }
+        },
+        publishItems(){
+            this.$http.post('/api/shops/products/place',this.itemsForConfirm)
+                .then(()=>{
+                    this.$notify({
+                        title: 'Товары размещены',
+                        type: 'success'
+                    })
+                })
+                .then(()=>{
+                    return this.getCatalog()
+                })
+        },
         secondsIntoTime(secs){
             const d = Math.floor(secs / (3600 * 24));
             secs = secs - (d*3600*24)
