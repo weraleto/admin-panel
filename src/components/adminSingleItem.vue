@@ -228,7 +228,7 @@ export default {
             return ['Длина', 'Ширина', 'Высота', 'Глубина'].includes(it)  ? it += ' (мм)' : it
         },
         async getProduct(){
-            await this.$http.get(`/api/get_product_for_review?product_id=${this.productId}`)
+            return this.$http.get(`/api/get_product_for_review?product_id=${this.productId}`)
             .then(
                 res=>{
                     this.form = res.data
@@ -259,6 +259,11 @@ export default {
                         }
                     )
             })
+            .catch(err=>{
+                if(err && err.type === 'staled_product_data_version'){
+                    return this.getProduct()
+                }
+            })
         },
         approveProduct(){
             this.$http.post(`/api/shops/${this.form.shop_id}/products/${this.productId}/approve`,{
@@ -274,6 +279,11 @@ export default {
                         this.$router.push('/base')
                     }
                 )
+                .catch(err=>{
+                    if(err && err.type === 'staled_product_data_version'){
+                        return this.getProduct()
+                    }
+                })
         }
 
     }
