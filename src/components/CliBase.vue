@@ -42,7 +42,7 @@
                                     <th class="client-base-table-cell cli-phone">
                                         Статус публикации
                                     </th>
-                                    <th class="client-base-table-cell cli-date">Срок публикации</th>
+                                    <th class="client-base-table-cell cli-date">Срок публикации / Оставшееся время</th>
                                     <th class="client-base-table-cell aside">
                                         
                                     </th>
@@ -70,7 +70,7 @@
                                             {{statuses[item.state.type] ? statuses[item.state.type].name : ''}}
                                         </td>
                                         <td class="client-base-table-cell cli-date">
-                                            {{item.state.type === 'placed' ? item.state.placed_until : '-'}}
+                                            {{item.state.type === 'placed' ? stringifyDate(item.state.placed_until) : item.state.type === 'placement_paused' ? secondsIntoTime(item.state.remaining_placement_time) : '-'}}
                                             </td>
                                         <td class="client-base-table-cell aside" >
                                             <template v-if="filtrationName === 'draft'">
@@ -105,13 +105,13 @@
                                                 </label>
                                             </template>
                                     </div>
-                                    <div class="client-base-table-el" @click="showItemCard(item.id); productId = item.id">
+                                    <div class="client-base-table-el" >
                                         <div class="client-base-table-label">Фото</div>
                                         <img :src="`/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
                                     </div>
                                     <div class="client-base-table-el">
                                         <div class="client-base-table-label">Название</div>
-                                        <div class="client-base-table-content">{{item.name}}</div>
+                                        <div class="client-base-table-content"><a :href="`/item/${item.id}`" @click.prevent="showItemCard(item.id); productId = item.id">{{item.name}}</a></div>
                                     </div>
                                     <div class="client-base-table-el">
                                         <div class="client-base-table-label">Статус публикации</div>
@@ -120,8 +120,10 @@
                                         </div>
                                     </div>
                                     <div class="client-base-table-el">
-                                        <div class="client-base-table-label">Срок публикации</div>
-                                        <div class="client-base-table-content">{{item.state.type === 'placed' ? item.state.placed_until : '-'}}</div>
+                                        <div class="client-base-table-label">{{item.state.type === 'placement_paused' ? 'Оставшееся время' : 'Срок публикации'}}</div>
+                                        <div class="client-base-table-content">
+                                            {{item.state.type === 'placed' ? stringifyDate(item.state.placed_until) : item.state.type === 'placement_paused' ? secondsIntoTime(item.state.remaining_placement_time) : '-'}}
+                                        </div>
                                     </div>
                                     <div class="client-base-table-el" >
                                         
@@ -225,6 +227,20 @@ export default {
         },
     },
     methods: {
+        secondsIntoTime(secs){
+            const d = Math.floor(secs / (3600 * 24));
+            secs = secs - (d*3600*24)
+            const h = Math.floor(secs / 3600);
+            secs = secs - (h*3600)
+            const m = Math.floor(secs / 60)
+            secs = secs - (m*60)
+            return `${d} д ${h} ч ${m} мин ${secs} сек`
+
+        },
+        stringifyDate(d){
+            const expDate = new Date(d);
+            return `${expDate.getDay()}.${+expDate.getMonth()+1}.${expDate.getFullYear()} ${expDate.getHours()}:${expDate.getMinutes()}`
+        },
         sortType(){
             var optgroup=event.target.closest('.sort-type').querySelector('.sort-type-optgroup');
             optgroup.classList.toggle('hide')
