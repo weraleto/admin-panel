@@ -32,7 +32,7 @@
                 <button v-if="isMultiple" :disabled="images.length >= 5" @click.prevent="initFileUpload" class="btn btn-active btn-upload">Загрузить изображения ( {{ this.images.length }} / 5 )</button>
                 <button v-else :disabled="images.length >= 1" @click.prevent="initFileUpload" class="btn btn-active btn-upload">Загрузить изображение </button>
                 <div class="remark">
-                    * Максимальный размер фото - 500 kb. Формат {{fileFormat}}
+                    * Максимальный размер фото - {{maxFileSizeKb}} kb. Формат {{fileFormat}}
                 </div>
             </div>
         </template>
@@ -54,7 +54,7 @@
                 <input ref="inputField" style="display:none" type="file" :accept="fileFormat" @change="handleImage" :multiple="isMultiple">
                 <button @click.prevent="replaceImages" v-if="changeAllowed" class="btn btn-active btn-upload">Заменить изображения</button>
                 <div class="remark" v-if="changeAllowed">
-                    * Максимальный размер фото - 500 kb. Формат {{fileFormat}}
+                    * Максимальный размер фото - {{maxFileSizeKb}} kb. Формат {{fileFormat}}
                 </div>
             </div>
         </template>
@@ -83,7 +83,6 @@ export default {
     },
     data(){
         return {
-            maxFileSize: 500000,
             image: '',
             images: [],
             files: [],
@@ -92,7 +91,13 @@ export default {
     computed: {
         maxFileAmount(){
             return this.isMultiple ? 4 : 0;
-        }
+        },
+        maxFileSize(){
+            return this.isMultiple ? 500000 : 1024000;
+        },
+        maxFileSizeKb(){
+            return (this.maxFileSize / 1000).toFixed(0);
+        },
     },
     methods: { 
         
