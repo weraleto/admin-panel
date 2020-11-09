@@ -21,7 +21,7 @@
                         <div class="btn-group">
                             <button class="client-base-filtration-link btn"
                             :class="item.name===filtrationName?'btn-active':'btn-light'"
-                            @click="filtrationName=item.name; getCatalog()"
+                            @click="changeTab(item.name)"
                             v-for="(item, index) in filtrationCategories" :key="index"
                             >{{item.label}}</button>
                         </div>
@@ -29,11 +29,11 @@
                     </div>
                     <div class="client-base-table">
                         <table>
-                            <thead>
+                            <thead ref="thead">
                                 <tr>
-                                    <!-- <th class="client-base-table-cell cli-number">
+                                    <th class="client-base-table-cell cli-number" v-if="filtrationName!=='draft'">
                                         
-                                    </th> -->
+                                    </th>
                                     <th class="client-base-table-cell cli-fio">Фото</th>
                                     <th class="client-base-table-cell cli-birth">
                                         Название
@@ -54,7 +54,7 @@
                                         v-for="(item, index) in itemsData.products" :key="index"
                                         
                                     >
-                                        <td class="client-base-table-cell cli-number">
+                                        <td class="client-base-table-cell cli-number"  v-if="filtrationName!=='draft'">
                                             <template v-if="item.state.type==='approved'||item.state.type=== 'placement_paused'">
                                                 <input type="checkbox" @change="pushState" :data-id="item.id" :name="`base-${index}`" :id="`base-${index}`" >
                                                 <label class="label-checkbox" :for="`base-${index}`"
@@ -84,7 +84,7 @@
                                 </template>
                                 <template v-else>
                                     <tr>
-                                        <td colspan="5" style="text-align: center">
+                                        <td :colspan="tableWidth" style="text-align: center">
                                              В данной категории нет товаров
                                         </td>
                                     </tr>
@@ -208,7 +208,8 @@ export default {
             ],
             itemsData: [],
             itemsForConfirm: [],
-            publishCost: 57
+            publishCost: 57,
+            tableWidth: 5
         }
     },
     mounted(){
@@ -228,9 +229,15 @@ export default {
         },
         publishTotalCost(){
             return this.publishCost * this.itemsForConfirm.length
-        }
+        },
+        
     },
     methods: {
+        changeTab(name){
+            this.filtrationName=name;  
+            this.tableWidth = this.$refs.thead.firstElementChild.chidren.length
+            this.getCatalog()
+        },
         pushState(e){
             if(e.target.checked){
                 this.itemsForConfirm.push(e.target.dataset.id)
@@ -287,7 +294,6 @@ export default {
                 res=>{
                     this.itemsData = res.data;
                     this.totalPages = res.data.total_pages
-
                 }
             )
         },

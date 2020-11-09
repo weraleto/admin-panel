@@ -135,7 +135,7 @@
                                 <ValidationProvider v-if="!isSetting" class="form-group-block agreement" :rules="{required:{ allowFalse: false }}">
                                 <input v-model="confirmPolicy" type="checkbox" name="step-1_agree" id="step-1_agree" >
                                 <label class="label-checkbox" for="step-1_agree">
-                                    Я согласен(на) с условиями <span> Политики конфиденциальности. </span>
+                                    Я согласен(на) с условиями <router-link :to="{name:'policy'}"> Пользовательского соглашения. </router-link>
                                 </label>
                                 </ValidationProvider>
                             <!-- </div> -->
