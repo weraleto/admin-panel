@@ -5,11 +5,17 @@
             <header>
                 <h1 class="page-header">{{form.name}}</h1> 
                 
-                <el-tag effect="dark" v-if="productStatus"  :type="statuses[productStatus].t" > {{statuses[productStatus].name}}  
-                    <el-tooltip v-if="productStatus == 'disapproved'" effect="light" :content="form.state.reason"  placement="bottom">
-                        <i class="el-icon-question"></i>
+                <template v-if="productStatus == 'disapproved'">
+                    <el-tooltip effect="light" :content="form.state.reason"  placement="bottom">
+                        <el-tag effect="dark" v-if="productStatus"  :type="statuses[productStatus].t" > {{statuses[productStatus].name}}  
+                                <i class="el-icon-question"></i>
+                        </el-tag>
                     </el-tooltip>
-                </el-tag>
+                </template>
+                <template v-else>
+                    <el-tag effect="dark" v-if="productStatus"  :type="statuses[productStatus].t" > {{statuses[productStatus].name}}  
+                    </el-tag>
+                </template>
             </header>
             <!-- auth form -->
             <div class="form-content step--1">
@@ -24,7 +30,7 @@
                             @click.prevent="stopProduct"
                              class="btn btn-active">Приостановить размещение</button>
 
-                            <button v-if="productStatus === 'approved'"
+                            <button v-if="productStatus === 'approved'||productStatus=== 'placement_paused'"
                             @click.prevent="publishItem"
                              class="btn btn-active">Опубликовать</button>
 
@@ -67,20 +73,20 @@
                                 <label for="item_subcat">Категория <span>*</span> </label>
                                  <v-select label="name" 
                                  :options="categoriesData" 
-                                v-model="form.category_name"
+                                v-model="currentCats.cat"
                                  placeholder="Категория товара"></v-select>
                             </div>
 
                             <div class="form-group-block" >
                                 <label for="item_subcat">Подкатегория <span>*</span> </label>
-                                 <v-select label="name" :options="form.category_name.subcategories ? form.category_name.subcategories : form.subcategory_name" 
+                                 <v-select label="name" :options="subCatList ? subCatList : []" 
                                  :resetOnOptionsChange="true"
-                                  v-model="form.subcategory_name"
+                                  v-model="currentCats.subcat"
                                  placeholder="Подкатегория товара"></v-select>
                             </div>
 
                             <div class="form-group-block" 
-                                v-for="(field, index) in productSpecs" :key="index"
+                                v-for="(field, index) in productSpecs.data ? productSpecs.data : []" :key="index"
                             >
                                 <label >{{isMetric(field.name)}}  </label>
 
@@ -192,7 +198,8 @@ export default {
             pngImg: '',
             categoriesData: [],
             currentCats: {
-                cat:null,
+                cat: null,
+                product_specs:null,
                 subcat: null
             },
             form: {
@@ -209,7 +216,6 @@ export default {
     mounted(){
 
         
-        this.getProduct()
 
         this.$http.get('/api/shops/product_categories')
             .then(
@@ -217,13 +223,20 @@ export default {
                     this.categoriesData = res.data;
                 }
             )
+            .then(()=>{
+                return this.getProduct()
+            }
+
+            )
     },
     computed: {
         subCatList(){
-            return this.form.category_name.subcategories ? this.form.category_name.subcategories : [];
+            return this.currentCats.cat ? this.currentCats.cat.subcategories : [];
         },
         productSpecs(){
-            return this.form.subcategory_name.product_specs ? this.form.subcategory_name.product_specs : this.form.specs_data;
+            let a = this.currentCats.subcat ? this.currentCats.subcat[0] ? this.currentCats.subcat[0].product_specs : this.currentCats.subcat.product_specs : [];
+
+            return a
         },
         productId: {
             get: function(){
@@ -244,6 +257,11 @@ export default {
         isMetric(it){
             return ['Длина', 'Ширина', 'Высота', 'Глубина'].includes(it)  ? it += ' (мм)' : it
         },
+        filterCats(arr, filter_name){
+            return arr.filter(it=>{
+                        return it.name === filter_name
+                    })
+        },
         getProduct(){
 
             this.$http.get(`/api/shops/products/${this.productId}/for_edit`)
@@ -255,10 +273,15 @@ export default {
                         return `/api/shops/products/catalog_images/${it}`
                     })
 
-                    this.currentCats.cat = this.form.category_name
-                    this.currentCats.subcat = this.form.subcategory_name
+                    this.currentCats.cat = this.filterCats(this.categoriesData, res.data.category_name)[0]
+                    this.currentCats.product_specs = res.data.specs_data
+                    
+                    return res
                 }
             )
+            .then(res=>{
+                this.currentCats.subcat = this.filterCats(this.currentCats.cat.subcategories, res.data.subcategory_name)
+            })
         },
         stopProduct(){
             this.$http.post(`/api/shops/products/${this.productId}/pause_placement`)
