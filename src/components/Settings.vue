@@ -100,25 +100,33 @@
                             </div>
                             <div class="form-group-block" >
                                 <label for="auth_website">Сайт </label>
+                                <ValidationProvider class="input" :rules="{ regex: /^.{1,}$/}"
+                                     v-slot="{classes}"
+                                >
                                     <input
                                         placeholder="Сайт"
                                         id="auth_website"
                                         type="text"
+                                        :class="classes"
                                         v-model="form.shop.website_url"
                                     >
+                                </ValidationProvider>
+                                
                             </div>
                             <div class="form-group-block" >
                                 <label for="auth_whatsapp">Номер телефона WhatsApp </label>
                                 <ValidationProvider class="input" 
                                 >
 
-                                    <input
+                                    <masked-input
                                         placeholder="Номер телефона WhatsApp"
                                         id="auth_whatsapp"
-                                        type="text"
-                                        v-mask="'+79999999999'"
                                         v-model="form.shop.whats_app_phone_number"
+                                        type="tel"
+                                        :mask="['+','7',' ','(', /[9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]"
+                                        :guide="true"
                                     >
+                                    </masked-input>
 
                                 </ValidationProvider>
                                     
@@ -170,8 +178,9 @@
 </template>
 
 <script>
-
+import MaskedInput from 'vue-text-mask'
 export default {
+    components: { MaskedInput },
     data() {
         return {
             confirmPassword: '',
@@ -192,8 +201,17 @@ export default {
     methods: {
         async sendForm(){
             let url = this.isSetting ? '/api/edit_shop' : '/api/register';
-           this.form.shop.whats_app_phone_number =  this.form.shop.whats_app_phone_number ? this.form.shop.whats_app_phone_number.replace('+','') : null
-           let formRequest = this.isSetting ? this.form.shop : this.form
+           let formRequest = {} 
+           Object.assign(formRequest, this.form);
+           const {shop} = formRequest;
+           let ph = shop.whats_app_phone_number.replace(/[-\+\(\)\s]/g,'');
+
+           formRequest.shop = {
+                name: shop.name,
+                website_url: shop.website_url,
+                whats_app_phone_number: ph && ph.length > 0 ? ph : null
+           }
+           formRequest = this.isSetting ? formRequest.shop : formRequest;
             await this.$http.post(url, formRequest)
                 .then(response => {
                     if(this.isSetting){
