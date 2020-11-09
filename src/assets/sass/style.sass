@@ -88,7 +88,7 @@ a
     width: 58px
     height: 58px
     top: 58px
-    right: 7.81%
+    right: 10px
     cursor: pointer
 .hamburger-icon
     z-index: 100
@@ -126,6 +126,15 @@ a
         @include FontSemiheader
         color: $white
         text-decoration: none
+        &.link
+            border: 1px solid transparent
+            border-radius: $border-radius
+            text-align: center
+            padding: 0 10px
+        &.router-link-active, &.link:hover 
+            border: 1px solid $white
+            
+
         &.link:not(:last-child)
             margin-bottom: 23px
     &-stats 
@@ -359,6 +368,10 @@ input[type=checkbox]:checked + .label-checkbox::after
     padding-bottom: 16px 
     max-height: 54px
     line-height: inherit
+    &-send
+        max-height: unset
+        width: 100%
+        padding: 16px 5px
     &-active,
         background-color: $accent
     &-light
