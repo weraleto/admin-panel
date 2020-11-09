@@ -72,13 +72,13 @@
                                                 </label>
                                             </template> -->
                                     </div>
-                                    <div class="client-base-table-el" @click="showItemCard(item.id); productId = item.id">
+                                    <div class="client-base-table-el">
                                         <div class="client-base-table-label">Фото</div>
                                         <img :src="`/api/shops/products/editor_images/${item.editor_image_id}`" :alt="item.name" >
                                     </div>
                                     <div class="client-base-table-el">
                                         <div class="client-base-table-label">Название</div>
-                                        <div class="client-base-table-content">{{item.name}}</div>
+                                        <div class="client-base-table-content"><a :href="`/item-moderation/${item.id}`" @click.prevent="showItemCard(item.id); productId = item.id">{{item.name}}</a></div>
                                     </div>
                                     
                                 </div>
