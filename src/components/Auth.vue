@@ -102,38 +102,34 @@ export default {
                 )
                 .then(
                     ()=>{
-                        if(this.$store.state.userRole==='seller'){
+                        if(localStorage.getItem('role')==='seller'){
                             return this.$http.get('/api/get_shop_info')
+                            .then(
+                                res=>{this.$store.commit('setShopInfo', res.data)}
+                            )
                         }else{
                             return
                         }
                     }
                 )
-                .then(
-                    res=>{this.$store.commit('setShopInfo', res.data)}
-                )
                 .catch(
                     err=>{
-                        if (err.response.status == 422 && err.response.data.type === 'unverified_email_address') {
-                            this.$confirm('Аккаунт не активирован. Подтвердите регистрацию пройдя по ссылке отправленной на Ваш email', 'Ошибка', {
-                                confirmButtonText: 'Отправить повторно',
-                                cancelButtonText: 'Закрыть',
-                                type: 'warning'
-                                }).then(() => {
-                                    this.$http.post('/api/accounts/accounts/resend_email_address_verification_message', {email_address: this.form.email_address})
+                        // if(err.response){
+                            if (err.response.status == 422 && err.response.data.type === 'unverified_email_address') {
+                                this.$confirm('Аккаунт не активирован. Подтвердите регистрацию пройдя по ссылке отправленной на Ваш email', 'Ошибка', {
+                                    confirmButtonText: 'Отправить повторно',
+                                    cancelButtonText: 'Закрыть',
+                                    type: 'warning'
+                                    })
+                                    .then(() => {return this.$http.post('/api/accounts/accounts/resend_email_address_verification_message', {email_address: this.form.email_address}) })
                                     .then(() => {
                                         this.$message({
                                             type: 'success',
                                             message: 'Письмо отправлено'
                                         });
-                                        }).catch(() => {
-                                        this.$message({
-                                            type: 'info',
-                                            message: 'Что-то пошло не так. Попробуйте еще раз'
-                                        });          
-                                        });
-                                })
-                        }
+                                    })         
+                            }
+                        // }
                         
                     }
                 )

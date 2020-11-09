@@ -49,13 +49,7 @@ export const router = new VueRouter({
 let noAuthRoutes = ['auth', 'reg', 'email', 'respass', 'changepass', 'welcome'];
 
 router.beforeEach((to, from, next) => {
-  
-  
-  if(['item-user-info','item-admin-info'].includes(to.name) && !store.state.currItemId ) {
-    
-    const href = window.location.href.split('/');
-    store.commit('setProductId', href[href.length - 1])
-  }
+
 
   if(store.state.isAuth && store.state.userRole==='seller'){
     Vue.$http.get('/api/get_shop_info')
@@ -72,16 +66,21 @@ router.beforeEach((to, from, next) => {
       
       
       if(store.state.isAuth) {
-            
-    
-    
+         
         if(to.path === '/') {
           router.push('/base')
         }
+        
         else {
-          router.push({name: to.name})
+          if(['item-user-info','item-admin-info'].includes(to.name) && !store.state.currItemId ) {
+    
+            const href = window.location.href.split('/');
+            store.commit('setProductId', href[href.length - 1])
+            router.push(to.path)
+          }else router.push({name: to.name})
         }
       }
+      
    
   }
   else if ( noAuthRoutes.indexOf(to.name) == -1 && !store.state.isAuth) next({ name: 'auth' })

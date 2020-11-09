@@ -29,10 +29,10 @@
                 <router-link v-for="(link, index) in navLinks" 
                       :key="index"
                       class="nav-panel-item link" :to="{name:link.alias}">{{link.name}}</router-link>
-                <a href="/logout" @click.prevent="logout" class="nav-panel-item" >Выйти</a>
+                <a href="/logout" @click.prevent="logout" class="nav-panel-item link" >Выйти</a>
               </div>
 
-              <div class="nav-panel-stats" v-show="userRole && userRole === 'seller'">
+              <div class="nav-panel-stats" v-show="userRole === 'seller'">
                 <div class="nav-panel-item">
                   {{shopInfo.name}}
                 </div>
@@ -88,8 +88,12 @@ export default {
       ],
       navLinksAdmin: [
         {name: 'Все товары', alias: 'client-base'}
-      ]
+      ],
+      userRole: null
     }
+  },
+  beforeUpdate(){
+    this.getUserRole()
   },
   methods: {
     beforeLeave(){
@@ -100,25 +104,21 @@ export default {
         .then(
           res=>{
              this.$http.defaults.headers.common['Authorization'] = ''
-             this.isAuth = !this.isAuth
-             this.showNav = !this.showNav
-             this.userRole = null
+             this.isAuth = false
+             this.showNav = false
+             this.setUserRole( null)
              localStorage.removeItem('acs_token')
              localStorage.removeItem('token')
              localStorage.removeItem('role')
              this.$router.push('/auth')
           }
         )
-        .catch(
-          err => {
-            let errMsg = err.data ? err.data : 'Что-то пошло не так'
-            this.$notify.error({
-              title: 'Ошибка',
-              message: errMsg
-            })
-            this.showNav = !this.showNav
-          }
-        )
+    },
+    getUserRole(){
+      this.userRole = localStorage.getItem('role')
+    },
+    setUserRole(x){
+      localStorage.setItem('role',x)
     }
   },
   computed:{
@@ -135,7 +135,7 @@ export default {
       return this.$store.state.loading
     },
     navLinks(){
-      return this.$store.state.userRole === 'admin' ? this.navLinksAdmin : this.navLinksUser
+      return this.userRole === 'admin' ? this.navLinksAdmin : this.navLinksUser
     },
     shopInfo:{
       get: function() {
@@ -143,15 +143,6 @@ export default {
 			},
 			set: function(newValue) {
 				this.$store.commit('setShopInfo', newValue)
-			}
-      
-    },
-    userRole:{
-      get: function() {
-				return this.$store.state.userRole
-			},
-			set: function(newValue) {
-				return this.$store.state.userRole = newValue;
 			}
       
     }

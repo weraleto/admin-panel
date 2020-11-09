@@ -9,7 +9,7 @@ import {ErrorHandler} from './errHandler'
 
 Vue.use(axiosVue, {
     globalDefaults: {
-      // baseURL: '/',
+      baseURL: 'https://mydizi.design/',
       // headers: {
       //   common: {
       //     Authorization: ''
@@ -51,8 +51,7 @@ Vue.use(axiosVue, {
                  localStorage.setItem('acs_token', res.data.access_token)
                  localStorage.setItem('token', res.data.refresh_token)
                  localStorage.setItem('role', res.data.role)
-                 return Vue.$http.request(error.config.url);
-                //  return Promise.resolve(error.config)
+                 return Promise.resolve(error.config)
                }
              )
              .catch(
