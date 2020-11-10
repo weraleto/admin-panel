@@ -51,6 +51,9 @@
               </router-link>
             </div>
             <footer class="sidebar-footer">
+              <router-link class="policy-link" to="/policy">
+                Пользовательское соглашение
+              </router-link>
                 DIZI - EASY DESIGN <span>© 2020</span>
             </footer>
         </aside>
@@ -59,6 +62,9 @@
               <router-view></router-view>
           </transition>
         <footer class="footer-mobile">
+          <router-link class="policy-link" to="/policy">
+                Пользовательское соглашение
+              </router-link>
           DIZI - EASY DESIGN © 2020
         </footer>
 

@@ -64,13 +64,16 @@ a
     height: 100vh
 .sidebar
     background-color: $white
-    padding-left: 80px
+    padding-left: 35px
     display: flex
     flex-direction: column
     justify-content: space-between
     overflow: hidden
     &-footer
         @include FontGray14
+        .policy-link
+            display: block
+            margin-bottom: 10px
         span
             display: block
 .main-content:not(.table-content)
