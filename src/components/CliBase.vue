@@ -215,6 +215,9 @@ export default {
     mounted(){
         this.getCatalog()
     },
+    updated(){
+       this.tableWidth = this.$refs.thead.firstElementChild.children ? this.$refs.thead.firstElementChild.children.length : 5
+    },
     computed: {
         statuses(){
             return this.$store.state.productStatuses
@@ -235,7 +238,6 @@ export default {
     methods: {
         changeTab(name){
             this.filtrationName=name;  
-            this.tableWidth = this.$refs.thead.firstElementChild.chidren.length
             this.getCatalog()
         },
         pushState(e){
