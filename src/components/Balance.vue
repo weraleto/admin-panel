@@ -53,12 +53,15 @@ export default {
     methods: {
         proceedPayment(){
             this.$http.post('/api/payments', {amount: this.num.toString()})
-                .then(()=>{
-                    return this.$http.get('/api/get_shop_info') 
-                })
                 .then(res=>{
-                    this.$store.commit('setShopInfo', res.data)
+                    window.open(res.data.confirmation_url, '_blank')
                 })
+                // .then(()=>{
+                //     return this.$http.get('/api/get_shop_info') 
+                // })
+                // .then(res=>{
+                //     this.$store.commit('setShopInfo', res.data)
+                // })
         }
     }
 }
