@@ -30,9 +30,13 @@
                             @click.prevent="stopProduct"
                              class="btn btn-active">Приостановить размещение</button>
 
-                            <button v-if="productStatus === 'approved'||productStatus=== 'placement_paused'"
+                            <button v-if="productStatus === 'approved'"
                             @click.prevent="publishItem"
                              class="btn btn-active">Опубликовать (57 руб.)</button>
+
+                            <button v-if="productStatus=== 'placement_paused'"
+                            @click.prevent="publishItem"
+                             class="btn btn-active">Возобновить публикацию</button>
 
                             <button v-if="productStatus === 'draft'"
                             @click.prevent="sendProduct"
