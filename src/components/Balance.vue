@@ -39,6 +39,15 @@
                 </ValidationObserver>
             </div>
             <!-- end auth form -->
+            <div class="form-content auth-form" v-show="showPayLink">
+                <p>Вы будете автоматически перенаправлены на страницу оплаты. </p>
+                <p>В случае, если переход на произошел, вы можете перейти самостоятельно по ссылке ниже для завершения оплаты. </p>
+
+                <a :href="paylink" target="_blank" rel="noopener noreferrer">
+                    <button class="btn btn-active"
+                    >Заверить оплату</button>
+                </a>
+            </div>
         </main>
 </template>
 
@@ -47,21 +56,20 @@
 export default {
     data() {
         return {
-            num: null
+            num: null,
+            paylink: '',
+            showPayLink: false
         }
     },
     methods: {
         proceedPayment(){
             this.$http.post('/api/payments', {amount: this.num.toString()})
                 .then(res=>{
-                    window.open(res.data.confirmation_url, '_blank')
+                    const paylink = res.data.confirmation_url;
+                    window.open(paylink, '_blank')
+                    this.paylink = paylink
+                    this.showPayLink = true;
                 })
-                // .then(()=>{
-                //     return this.$http.get('/api/get_shop_info') 
-                // })
-                // .then(res=>{
-                //     this.$store.commit('setShopInfo', res.data)
-                // })
         }
     }
 }
