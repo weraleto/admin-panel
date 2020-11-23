@@ -173,8 +173,8 @@
                             <router-link :to="{name:'add'}" class="client-base-navigation-link page-link">
                                 <button class="btn btn-active">Добавить товар</button>
                             </router-link>
-                            <router-link :to="''" v-if="filtrationName=='under_review'" class="client-base-navigation-link page-link">
-                                <button :disabled="itemsForConfirm ? Object.keys(itemsForConfirm).length  < 1 : true" @click.prevent="publishItems" class="btn btn-active">Опубликовать товары за {{publishTotalCost}} руб.</button>
+                            <router-link :to="''" v-if="filtrationName=='under_review'||filtrationName=='placed'" class="client-base-navigation-link page-link">
+                                <button :disabled="itemsForConfirm ? Object.keys(itemsForConfirm).length  < 1 : true" @click.prevent="publishItems" class="btn btn-active">Опубликовать товары {{filtrationName==='under_review'?`за ${publishTotalCost} руб.`:''}} </button>
                             </router-link>
                             <!-- <button class="btn btn-light client-base-navigation-link page-link">Экспорт базы</button> -->
                         </div>
