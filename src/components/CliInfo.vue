@@ -92,7 +92,7 @@
                             <div class="form-group-block" 
                                 v-for="(field, index) in productSpecs.data ? productSpecs.data : []" :key="index"
                             >
-                                <label >{{isMetric(field.name)}}  </label>
+                                <label >{{field.name}}  </label>
 
                                 
                             
@@ -258,9 +258,6 @@ export default {
         }
     },
     methods: {
-        isMetric(it){
-            return ['Длина', 'Ширина', 'Высота', 'Глубина'].includes(it)  ? it += ' (мм)' : it
-        },
         filterCats(arr, filter_name){
             return arr.filter(it=>{
                         return it.name === filter_name
