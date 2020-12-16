@@ -123,6 +123,7 @@ a
         background-color: $black
     &-inner
         // transform: translateY(-50%)
+        padding: 0 20px
         display: flex
         flex-direction: column
     &-item
@@ -135,7 +136,8 @@ a
             text-align: center
             padding: 0 10px
         &.router-link-active, &.link:hover 
-            border: 1px solid $white
+            // border: 1px solid $white
+            text-decoration: underline
             
 
         &.link:not(:last-child)
@@ -183,6 +185,10 @@ a
             
 .policy 
     padding-bottom: 2rem
+
+    &-paragraph 
+        margin-bottom: 20px
+        white-space: pre-line
 
 // headers and forms
 .page-header

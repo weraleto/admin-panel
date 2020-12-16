@@ -89,11 +89,14 @@ export default {
         {name: 'Добавить товар', alias: 'add'},
         {name: 'Баланс', alias: 'balance'},
         {name: 'Настройки', alias: 'settings'},
+        {name: 'Контакты', alias: 'contacts'},
         // {name: 'Помощь', alias: ''},
         // {name: 'Выйти', alias: 'auth'},
       ],
       navLinksAdmin: [
-        {name: 'Все товары', alias: 'client-base'}
+        {name: 'Все товары', alias: 'client-base'},
+        {name: 'Контакты', alias: 'contacts'},
+
       ],
       userRole: null
     }

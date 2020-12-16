@@ -13,6 +13,7 @@ import CliInfo from './components/CliInfo'
 import AdminItem from './components/adminSingleItem.vue'
 import Welcome from './components/Welcome'
 import Policy from './components/Policy'
+import Contacts from './components/Contacts'
 import Forgot from './components/ResetPassReq'
 import ChangePass from './components/ResetPassRes'
 
@@ -24,6 +25,7 @@ export const router = new VueRouter({
     {path:'/auth', name:'auth', component: Auth}, //авторизация
     {path:'/reg', name:'reg', component: Settings}, // регистрация 
     {path:'/policy', name:'policy', component: Policy}, // регистрация 
+    {path:'/contacts', name:'contacts', component: Contacts}, // регистрация 
     
 
     {path:'/welcome', name:'welcome', component: Welcome}, // регистрация завершена
@@ -48,7 +50,7 @@ export const router = new VueRouter({
   }
 })
 
-let noAuthRoutes = ['auth', 'reg', 'email', 'respass', 'changepass', 'welcome', 'policy'];
+let noAuthRoutes = ['auth', 'reg', 'email', 'respass', 'changepass', 'welcome', 'policy', 'contacts'];
 
 router.beforeEach((to, from, next) => {
 
