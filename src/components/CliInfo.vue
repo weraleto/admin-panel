@@ -370,7 +370,8 @@ export default {
                 catalog_images: imgArray,
                 editor_image: rPNG.test(this.pngImg) ? this.pngImg.replace('data:image/png;base64,','') : null,
                 name: this.form.name,
-                price: this.form.price
+                price: this.form.price,
+                url: this.form.url ? this.form.url : null
             })
                 .then(
                     res=>{
