@@ -2,7 +2,7 @@
     <div class="client-base-pagination-pages">
         <div class="label">Страница</div>
         <div class="pages">
-            <div class="pages-item "  v-for="(page, index) in pages" :key="index"
+            <div class="pages-item "  v-for="(page, index) in total" :key="index"
                 :class="{ current: current == page }"
                 @click="changePage(page)"
             >
@@ -23,14 +23,6 @@ export default {
             type: Number,
             default: 0
         },
-        perPage: {
-            type: Number,
-            default: 10
-        },
-        pageRange: {
-            type: Number,
-            default: 5
-        }
     },
     computed: {
       pages: function () {
@@ -53,7 +45,7 @@ export default {
         return (end < this.totalPages) ? end : this.totalPages
       },
       totalPages: function () {
-        return Math.ceil(this.total / this.perPage)
+        return Math.ceil(this.total)
       }
     },
     methods: {

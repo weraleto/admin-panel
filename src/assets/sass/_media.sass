@@ -97,7 +97,8 @@
             
 
     .client-base-list
-        display: block
+        display: flex
+        flex-direction: column
         &>*:not(.client-base-table)
             padding-left: 4.69%
             padding-right: 4.69%
@@ -236,7 +237,9 @@
                 max-width: 46.74%
 
     .client-base-pagination
-        display: none
+        order: 3
+    .client-base-navigation
+        margin-top: 0px
     .client-base-sign
         margin-top: 30px
         p, ul, li, textarea

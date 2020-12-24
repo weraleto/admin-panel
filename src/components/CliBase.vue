@@ -118,7 +118,12 @@
                                     <div class="client-base-table-el">
                                         <div class="client-base-table-label">Статус публикации</div>
                                         <div class="client-base-table-content">
-                                             {{statuses[item.state.type] ? statuses[item.state.type].name : ''}}
+                                            <!-- <template v-if="dateObj(item.state.placed_until)">
+                                                Время публикации истекло
+                                            </template>
+                                            <template v-else> -->
+                                                {{statuses[item.state.type] ? statuses[item.state.type].name : ''}}
+                                            <!-- </template> -->
                                         </div>
                                     </div>
                                     <div class="client-base-table-el">
@@ -151,7 +156,7 @@
                     </div>
 
                     <div class="client-base-pagination">
-                        <pagination :current="currentPage" :total="totalPages" :per-page="(+sortNum)" @page-changed="changePageNum($event)" ></pagination>
+                        <pagination :current="currentPage" :total="totalPages" @page-changed="changePageNum($event)" ></pagination>
                         
                         <div class="client-base-pagination-sort">
                             <div class="label">
@@ -176,7 +181,6 @@
                             <router-link :to="''" v-if="filtrationName=='under_review'||filtrationName=='placed'" class="client-base-navigation-link page-link">
                                 <button :disabled="itemsForConfirm ? Object.keys(itemsForConfirm).length  < 1 : true" @click.prevent="publishItems" class="btn btn-active">Опубликовать товары {{filtrationName==='under_review'?`за ${publishTotalCost} руб.`:''}} </button>
                             </router-link>
-                            <!-- <button class="btn btn-light client-base-navigation-link page-link">Экспорт базы</button> -->
                         </div>
                     </div>
                 </div>
@@ -219,6 +223,9 @@ export default {
        this.tableWidth = this.$refs.thead.firstElementChild.children ? this.$refs.thead.firstElementChild.children.length : 5
     },
     computed: {
+        currentDate(){
+            return new Date();
+        },
         statuses(){
             return this.$store.state.productStatuses
         }, 
@@ -243,10 +250,8 @@ export default {
         pushState(e){
             if(e.target.checked){
                 this.itemsForConfirm.push(e.target.dataset.id)
-                console.log(this.itemsForConfirm)
             }else{
                 this.itemsForConfirm.splice(this.itemsForConfirm.indexOf(e.target.dataset.id),1)
-                console.log(this.itemsForConfirm)
             }
         },
         publishItems(){
@@ -271,6 +276,13 @@ export default {
             return `${d} д ${h} ч ${m} мин ${secs} сек`
 
         },
+        dateObj(d){
+            if(d != undefined){
+                const expDate = new Date(d.toString());
+                return expDate < new Date() ;
+            }
+            else return
+        },
         stringifyDate(d){
             const expDate = new Date(d);
             return `${expDate.getDay()}.${+expDate.getMonth()+1}.${expDate.getFullYear()} ${expDate.getHours()}:${expDate.getMinutes()}`
@@ -280,12 +292,14 @@ export default {
             optgroup.classList.toggle('hide')
             optgroup.classList.toggle('show')
             if(event.target==event.target.closest('.sort-type-option')){
-                this.getCatalog()
                 this.sortNum=event.target.closest('.sort-type-option').textContent;
+                this.currentPage=1;
+                this.getCatalog()
             }
         },
         changePageNum(num){
             this.currentPage=num;
+            this.getCatalog()
         },
         showItemCard(id){
             this.$router.push(`/item/${id}`)
@@ -320,9 +334,6 @@ export default {
         
     },
     watch: {
-        currentPage(){
-            this.getCatalog()
-        },
         searchIn(){
             this.getCatalog(this.searchIn)
         }
