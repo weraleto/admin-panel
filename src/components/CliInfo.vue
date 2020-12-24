@@ -12,6 +12,10 @@
                         </el-tag>
                     </el-tooltip>
                 </template>
+                <template v-else-if="placedStopped">
+                    <el-tag effect="dark" type="danger" > Срок публикации истек  
+                    </el-tag>
+                </template>
                 <template v-else>
                     <el-tag effect="dark" v-if="productStatus"  :type="statuses[productStatus].t" > {{statuses[productStatus].name}}  
                     </el-tag>
@@ -26,11 +30,11 @@
 
                     <div class="form-group">
                         <div class="btn-group">
-                            <button v-if="productStatus === 'placed'"
+                            <button v-if="productStatus === 'placed' && !placedStopped"
                             @click.prevent="stopProduct"
                              class="btn btn-active">Приостановить размещение</button>
 
-                            <button v-if="productStatus === 'approved'"
+                            <button v-if="productStatus === 'approved'||placedStopped"
                             @click.prevent="publishItem"
                              class="btn btn-active">Опубликовать (57 руб.)</button>
 
@@ -209,6 +213,10 @@ export default {
             form: {
                 attrs:{
                     data: {}
+                },
+                state: {
+                    placed_until: null,
+                    type: null
                 }
             },
             
@@ -255,7 +263,13 @@ export default {
         },
         productStatus(){
             return this.form.state ? this.form.state.type : '';
+        },
+        placedStopped(){
+            const date = new Date();
+            const expDate = new Date(this.form.state.placed_until);
+            return date > expDate;
         }
+
     },
     methods: {
         filterCats(arr, filter_name){
