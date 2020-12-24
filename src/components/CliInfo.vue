@@ -12,10 +12,10 @@
                         </el-tag>
                     </el-tooltip>
                 </template>
-                <!-- <template v-else-if="placedStopped">
+                <template v-else-if="placedStopped">
                     <el-tag effect="dark" type="danger" > Срок публикации истек  
                     </el-tag>
-                </template> -->
+                </template>
                 <template v-else>
                     <el-tag effect="dark" v-if="productStatus"  :type="statuses[productStatus].t" > {{statuses[productStatus].name}}  
                     </el-tag>
@@ -406,6 +406,7 @@ export default {
                             type: 'success',
                             title: 'Товар опубликован'
                         })
+                        this.getProduct()
                     }
                 )
         }

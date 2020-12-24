@@ -59,7 +59,7 @@
         display: none
 
     .main-content
-        overflow: hidden
+        overflow-x: hidden
         text-align: center
         margin-top: 56px
         padding-top: 32px
@@ -238,6 +238,17 @@
 
     .client-base-pagination
         order: 3
+        display: flex
+        flex-wrap: wrap
+        & > *
+            margin-bottom: 10px
+            flex-direction: column
+            align-self: flex-start
+        .label 
+            font-size: 12px
+            margin-right: 0
+            margin-bottom: 10px
+            align-self: flex-start
     .client-base-navigation
         margin-top: 0px
     .client-base-sign

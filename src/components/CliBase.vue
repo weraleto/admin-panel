@@ -67,7 +67,12 @@
                                         </div></td>
                                         <td class="client-base-table-cell cli-birth"><a :href="`/item/${item.id}`" @click.prevent="showItemCard(item.id); productId = item.id">{{item.name}}</a></td>
                                         <td class="client-base-table-cell cli-phone">
-                                            {{statuses[item.state.type] ? statuses[item.state.type].name : ''}}
+                                            <template v-if="dateObj(item.state.placed_until)">
+                                                Время публикации истекло
+                                            </template>
+                                            <template v-else>
+                                                {{statuses[item.state.type] ? statuses[item.state.type].name : ''}}
+                                            </template>
                                         </td>
                                         <td class="client-base-table-cell cli-date">
                                             {{item.state.type === 'placed' ? stringifyDate(item.state.placed_until) : item.state.type === 'placement_paused' ? secondsIntoTime(item.state.remaining_placement_time) : '-'}}
@@ -118,12 +123,12 @@
                                     <div class="client-base-table-el">
                                         <div class="client-base-table-label">Статус публикации</div>
                                         <div class="client-base-table-content">
-                                            <!-- <template v-if="dateObj(item.state.placed_until)">
+                                            <template v-if="dateObj(item.state.placed_until)">
                                                 Время публикации истекло
                                             </template>
-                                            <template v-else> -->
+                                            <template v-else>
                                                 {{statuses[item.state.type] ? statuses[item.state.type].name : ''}}
-                                            <!-- </template> -->
+                                            </template>
                                         </div>
                                     </div>
                                     <div class="client-base-table-el">
