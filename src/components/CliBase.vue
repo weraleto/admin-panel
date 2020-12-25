@@ -284,12 +284,12 @@ export default {
         dateObj(d){
             if(d != undefined){
                 const expDate = new Date(d.toString());
-                return expDate < new Date() ;
+                return expDate < this.currentDate ;
             }
             else return
         },
         stringifyDate(d){
-            const expDate = new Date(d);
+            const expDate = new Date(d.toString());
             return `${expDate.getDay()}.${+expDate.getMonth()+1}.${expDate.getFullYear()} ${expDate.getHours()}:${expDate.getMinutes()}`
         },
         sortType(){
