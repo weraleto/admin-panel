@@ -290,7 +290,7 @@ export default {
         },
         stringifyDate(d){
             const expDate = new Date(d.toString());
-            return `${expDate.getDay()}.${+expDate.getMonth()+1}.${expDate.getFullYear()} ${expDate.getHours()}:${expDate.getMinutes()}`
+            return `${expDate.getDate()}.${+expDate.getMonth()+1}.${expDate.getFullYear()} ${expDate.getHours()}:${expDate.getMinutes()}`
         },
         sortType(){
             var optgroup=event.target.closest('.sort-type').querySelector('.sort-type-optgroup');
