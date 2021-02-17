@@ -265,8 +265,8 @@ export default {
             return this.form.state ? this.form.state.type : '';
         },
         placedStopped(){
-            const date = new Date();
-            const expDate = new Date(this.form.state.placed_until);
+            const date = this.$moment.utc().format();
+            const expDate = this.$moment(this.form.state.placed_until).utc().format();
             return date > expDate;
         }
 

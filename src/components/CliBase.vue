@@ -229,7 +229,7 @@ export default {
     },
     computed: {
         currentDate(){
-            return new Date();
+            return this.$moment.utc().format();
         },
         statuses(){
             return this.$store.state.productStatuses
@@ -283,14 +283,14 @@ export default {
         },
         dateObj(d){
             if(d != undefined){
-                const expDate = new Date(d.toString());
+                const expDate = this.$moment(d).utc().format();
                 return expDate < this.currentDate ;
             }
             else return
         },
         stringifyDate(d){
-            const expDate = new Date(d.toString());
-            return `${expDate.getDate()}.${+expDate.getMonth()+1}.${expDate.getFullYear()} ${expDate.getHours()}:${expDate.getMinutes()}`
+            let date = this.$moment.utc(d);
+            return date.local().format('DD.MM.YYYY HH:mm')
         },
         sortType(){
             var optgroup=event.target.closest('.sort-type').querySelector('.sort-type-optgroup');
